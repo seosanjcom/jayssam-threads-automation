@@ -24,20 +24,10 @@ on:
   schedule:
     # KST 10:05 - collect previous reaction metrics
     - cron: "5 1 * * *"
-    # KST 10:55 - create/refresh lunch draft queue
-    - cron: "55 1 * * *"
-    # KST 11:10 and 12:10 - lunch Telegram previews
-    - cron: "10 2 * * *"
-    - cron: "10 3 * * *"
-    # KST 13:10 - lunch publish
-    - cron: "10 4 * * *"
-    # KST 17:55 - create/refresh evening draft queue from week 2
-    - cron: "55 8 * * *"
-    # KST 18:10 and 19:10 - evening Telegram previews from week 2
-    - cron: "10 9 * * *"
-    - cron: "10 10 * * *"
-    # KST 20:10 - evening publish from week 2
-    - cron: "10 11 * * *"
+    # KST lunch window. The resolver picks one randomized active-time slot per day.
+    - cron: "*/10 1-4 * * *"
+    # KST evening window from week 2. The resolver skips this before 2026-05-28.
+    - cron: "*/10 8-12 * * *"
 
 permissions:
   contents: read
@@ -89,32 +79,20 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             MODE="${{ inputs.mode }}"
             SLOT="${{ inputs.slot }}"
+            RUN="true"
+            echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+            echo "slot=$SLOT" >> "$GITHUB_OUTPUT"
+            echo "run=$RUN" >> "$GITHUB_OUTPUT"
           else
-            case "${{ github.event.schedule }}" in
-              "5 1 * * *") MODE="metrics"; SLOT="lunch" ;;
-              "55 1 * * *") MODE="draft"; SLOT="lunch" ;;
-              "10 2 * * *"|"10 3 * * *") MODE="preview"; SLOT="lunch" ;;
-              "10 4 * * *") MODE="publish"; SLOT="lunch" ;;
-              "55 8 * * *") MODE="draft"; SLOT="evening" ;;
-              "10 9 * * *"|"10 10 * * *") MODE="preview"; SLOT="evening" ;;
-              "10 11 * * *") MODE="publish"; SLOT="evening" ;;
-              *) MODE="noop"; SLOT="lunch" ;;
-            esac
+            node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT"
           fi
-          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
-          echo "slot=$SLOT" >> "$GITHUB_OUTPUT"
-
-      - name: Phase gate
-        id: gate
-        shell: bash
-        run: node scripts/github_phase_gate.mjs "${{ steps.route.outputs.mode }}" "${{ steps.route.outputs.slot }}" >> "$GITHUB_OUTPUT"
 
       - name: Create runtime env
-        if: steps.gate.outputs.run == 'true'
+        if: steps.route.outputs.run == 'true'
         run: node scripts/create_jayssam_github_env.mjs
 
       - name: Setup card image runtime
-        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode != 'metrics'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode != 'metrics'
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-noto-cjk
@@ -122,9 +100,10 @@ jobs:
           python -m pip install pillow
 
       - name: Validate scripts
-        if: steps.gate.outputs.run == 'true'
+        if: steps.route.outputs.run == 'true'
         run: |
           node --check scripts/collect_threads_metrics.mjs
+          node --check scripts/github_resolve_run.mjs
           python -m py_compile scripts/generate_jayssam_daily_post.py
           node --check scripts/send_telegram_preview.mjs
           node --check scripts/publish_latest_approved.mjs
@@ -132,23 +111,23 @@ jobs:
           node --check scripts/upload_cardnews_to_catbox.mjs
 
       - name: Collect Threads metrics
-        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'metrics'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'metrics'
         run: node scripts/collect_threads_metrics.mjs
 
       - name: Create draft queue
-        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'draft'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'draft'
         run: |
           python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           node scripts/send_telegram_preview.mjs
 
       - name: Send Telegram preview
-        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
         run: |
           python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           node scripts/send_telegram_preview.mjs
 
       - name: Publish latest approved
-        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'publish'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'publish'
         run: |
           python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           node scripts/upload_cardnews_to_catbox.mjs "$(cat outputs/automation/latest-draft-path.txt)"
