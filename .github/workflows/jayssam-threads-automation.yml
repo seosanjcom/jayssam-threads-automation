@@ -113,13 +113,23 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: node scripts/create_jayssam_github_env.mjs
 
+      - name: Setup card image runtime
+        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode != 'metrics'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+          python -m pip install --upgrade pip
+          python -m pip install pillow
+
       - name: Validate scripts
         if: steps.gate.outputs.run == 'true'
         run: |
           node --check scripts/collect_threads_metrics.mjs
+          python -m py_compile scripts/generate_jayssam_daily_post.py
           node --check scripts/send_telegram_preview.mjs
           node --check scripts/publish_latest_approved.mjs
           node --check scripts/threads_publish.mjs
+          node --check scripts/upload_cardnews_to_catbox.mjs
 
       - name: Collect Threads metrics
         if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'metrics'
@@ -128,14 +138,18 @@ jobs:
       - name: Create draft queue
         if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'draft'
         run: |
-          echo "Draft generation is intentionally conservative in GitHub Actions."
-          echo "Use Codex or a separate AI/API content generator to create approved queue files."
+          python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           node scripts/send_telegram_preview.mjs
 
       - name: Send Telegram preview
         if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
-        run: node scripts/send_telegram_preview.mjs
+        run: |
+          python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+          node scripts/send_telegram_preview.mjs
 
       - name: Publish latest approved
         if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'publish'
-        run: node scripts/publish_latest_approved.mjs
+        run: |
+          python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+          node scripts/upload_cardnews_to_catbox.mjs "$(cat outputs/automation/latest-draft-path.txt)"
+          node scripts/publish_latest_approved.mjs

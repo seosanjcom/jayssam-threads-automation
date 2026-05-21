@@ -35,6 +35,13 @@ function walkJson(dir) {
 }
 
 function localImagesForDraft(draft) {
+  const mediaPaths = Array.isArray(draft.local_media_paths) ? draft.local_media_paths : [];
+  if (mediaPaths.length) {
+    return mediaPaths
+      .map((item) => path.resolve(root, item))
+      .filter((item) => item.startsWith(root) && fs.existsSync(item));
+  }
+
   if (!draft.local_card_dir) return [];
   const dir = path.resolve(root, draft.local_card_dir);
   if (!dir.startsWith(root) || !fs.existsSync(dir)) return [];
@@ -58,7 +65,7 @@ function splitMessage(text, max = 3500) {
 }
 
 async function telegram(method, body, isForm = false) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const token = pickConfigured(process.env.JAYSSAM_TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_BOT_TOKEN);
   const res = await fetch(`https://api.telegram.org/bot${token}/${method}`, {
     method: "POST",
     body: isForm ? body : JSON.stringify(body),
@@ -70,9 +77,10 @@ async function telegram(method, body, isForm = false) {
 }
 
 async function sendMessage(text) {
+  const chatId = pickConfigured(process.env.JAYSSAM_TELEGRAM_CHAT_ID, process.env.TELEGRAM_CHAT_ID);
   for (const chunk of splitMessage(text)) {
     await telegram("sendMessage", {
-      chat_id: process.env.TELEGRAM_CHAT_ID,
+      chat_id: chatId,
       text: chunk,
       disable_web_page_preview: true,
     });
@@ -80,8 +88,9 @@ async function sendMessage(text) {
 }
 
 async function sendPhoto(filePath, caption = "") {
+  const chatId = pickConfigured(process.env.JAYSSAM_TELEGRAM_CHAT_ID, process.env.TELEGRAM_CHAT_ID);
   const form = new FormData();
-  form.set("chat_id", process.env.TELEGRAM_CHAT_ID);
+  form.set("chat_id", chatId);
   if (caption) form.set("caption", caption.slice(0, 1000));
   const data = await fs.promises.readFile(filePath);
   const ext = path.extname(filePath).toLowerCase();
@@ -106,8 +115,12 @@ function findNextDraft() {
 
 loadEnv();
 
-const telegramBotToken = process.env.JAYSSAM_TELEGRAM_BOT_TOKEN || "";
-const telegramChatId = process.env.JAYSSAM_TELEGRAM_CHAT_ID || "";
+function pickConfigured(...values) {
+  return values.find((value) => value && !String(value).startsWith("replace_")) || "";
+}
+
+const telegramBotToken = pickConfigured(process.env.JAYSSAM_TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_BOT_TOKEN);
+const telegramChatId = pickConfigured(process.env.JAYSSAM_TELEGRAM_CHAT_ID, process.env.TELEGRAM_CHAT_ID);
 const hasTelegramConfig =
   telegramBotToken &&
   telegramChatId &&
@@ -115,7 +128,7 @@ const hasTelegramConfig =
   !telegramChatId.startsWith("replace_");
 
 if (!hasTelegramConfig) {
-  console.log("Jayssam Telegram preview skipped: JAYSSAM_TELEGRAM_BOT_TOKEN or JAYSSAM_TELEGRAM_CHAT_ID is missing in .env");
+  console.log("Telegram preview skipped: bot token or chat id is missing.");
   process.exit(0);
 }
 
@@ -136,7 +149,7 @@ const sources = [
 ].filter(Boolean);
 
 const message = [
-  `[제이쌤 게시 전 미리보기]`,
+  "[제이쌤 게시 전 미리보기]",
   `상태: ${draft.status}`,
   `제목: ${title}`,
   `파일: ${path.relative(root, file)}`,
