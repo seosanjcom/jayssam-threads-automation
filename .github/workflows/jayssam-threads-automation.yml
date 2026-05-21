@@ -1,0 +1,141 @@
+name: Jayssam Threads Automation
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: "preview"
+        type: choice
+        options:
+          - metrics
+          - draft
+          - preview
+          - publish
+      slot:
+        description: "Posting slot"
+        required: true
+        default: "lunch"
+        type: choice
+        options:
+          - lunch
+          - evening
+  schedule:
+    # KST 10:05 - collect previous reaction metrics
+    - cron: "5 1 * * *"
+    # KST 10:55 - create/refresh lunch draft queue
+    - cron: "55 1 * * *"
+    # KST 11:10 and 12:10 - lunch Telegram previews
+    - cron: "10 2 * * *"
+    - cron: "10 3 * * *"
+    # KST 13:10 - lunch publish
+    - cron: "10 4 * * *"
+    # KST 17:55 - create/refresh evening draft queue from week 2
+    - cron: "55 8 * * *"
+    # KST 18:10 and 19:10 - evening Telegram previews from week 2
+    - cron: "10 9 * * *"
+    - cron: "10 10 * * *"
+    # KST 20:10 - evening publish from week 2
+    - cron: "10 11 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jayssam-threads-automation
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      SCHOOLINFO_API_KEY: ${{ secrets.SCHOOLINFO_API_KEY }}
+      CAREERNET_API_KEY: ${{ secrets.CAREERNET_API_KEY }}
+      THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+      THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
+      THREADS_APP_ID: ${{ secrets.THREADS_APP_ID }}
+      THREADS_APP_SECRET: ${{ secrets.THREADS_APP_SECRET }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      THREADS_ACCOUNT_HANDLE: "@jayssam_edu"
+      THREADS_AUTO_PUBLISH: "true"
+      THREADS_SAFETY_MODE: "true"
+      THREADS_DAILY_POST_LIMIT: "2"
+      THREADS_MIN_INTERVAL_HOURS: "6"
+      THREADS_PUBLISH_WAIT_MS: "30000"
+      THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true"
+      THREADS_EXPECTED_USERNAME: "jayssam_edu"
+      THREADS_REDIRECT_URI: "https://blog.naver.com/taemomjoo"
+      THREADS_PUBLISH_LOG: "outputs/meta-publish-log.json"
+      THREADS_OAUTH_SCOPES: "threads_basic,threads_content_publish,threads_manage_insights"
+      THREADS_REQUIRE_MEDIA: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Resolve mode and slot
+        id: route
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            MODE="${{ inputs.mode }}"
+            SLOT="${{ inputs.slot }}"
+          else
+            case "${{ github.event.schedule }}" in
+              "5 1 * * *") MODE="metrics"; SLOT="lunch" ;;
+              "55 1 * * *") MODE="draft"; SLOT="lunch" ;;
+              "10 2 * * *"|"10 3 * * *") MODE="preview"; SLOT="lunch" ;;
+              "10 4 * * *") MODE="publish"; SLOT="lunch" ;;
+              "55 8 * * *") MODE="draft"; SLOT="evening" ;;
+              "10 9 * * *"|"10 10 * * *") MODE="preview"; SLOT="evening" ;;
+              "10 11 * * *") MODE="publish"; SLOT="evening" ;;
+              *) MODE="noop"; SLOT="lunch" ;;
+            esac
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "slot=$SLOT" >> "$GITHUB_OUTPUT"
+
+      - name: Phase gate
+        id: gate
+        shell: bash
+        run: node scripts/github_phase_gate.mjs "${{ steps.route.outputs.mode }}" "${{ steps.route.outputs.slot }}" >> "$GITHUB_OUTPUT"
+
+      - name: Create runtime env
+        if: steps.gate.outputs.run == 'true'
+        run: node scripts/create_jayssam_github_env.mjs
+
+      - name: Validate scripts
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          node --check scripts/collect_threads_metrics.mjs
+          node --check scripts/send_telegram_preview.mjs
+          node --check scripts/publish_latest_approved.mjs
+          node --check scripts/threads_publish.mjs
+
+      - name: Collect Threads metrics
+        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'metrics'
+        run: node scripts/collect_threads_metrics.mjs
+
+      - name: Create draft queue
+        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'draft'
+        run: |
+          echo "Draft generation is intentionally conservative in GitHub Actions."
+          echo "Use Codex or a separate AI/API content generator to create approved queue files."
+          node scripts/send_telegram_preview.mjs
+
+      - name: Send Telegram preview
+        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
+        run: node scripts/send_telegram_preview.mjs
+
+      - name: Publish latest approved
+        if: steps.gate.outputs.run == 'true' && steps.route.outputs.mode == 'publish'
+        run: node scripts/publish_latest_approved.mjs

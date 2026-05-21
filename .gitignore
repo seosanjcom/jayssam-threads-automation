@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+node_modules/
+outputs/jayssam/*.png
+outputs/
+!outputs/
+!outputs/.gitkeep
+.playwright-mcp/
+.serena/
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.log
+__pycache__/
