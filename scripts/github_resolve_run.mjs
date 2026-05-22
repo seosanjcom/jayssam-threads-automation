@@ -43,6 +43,7 @@ const schedule = process.argv[2] || "";
 const now = kstNow();
 const today = dateText(now);
 const current = minutesOfDay(now);
+const graceMinutes = 45;
 
 if (schedule === "5 1 * * *") {
   emit({ mode: "metrics", slot: "lunch", run: "true", kst_date: today });
@@ -62,10 +63,14 @@ const draft = publish - 130;
 const preview1 = publish - 120;
 const preview2 = publish - 60;
 
+function inWindow(start, width = graceMinutes) {
+  return current >= start && current <= start + width;
+}
+
 let mode = "noop";
-if (current === draft) mode = "draft";
-if (current === preview1 || current === preview2) mode = "preview";
-if (current === publish) mode = "publish";
+if (inWindow(draft, 50)) mode = "draft";
+if (inWindow(preview1, 50) || inWindow(preview2, 50)) mode = "preview";
+if (inWindow(publish, 70)) mode = "publish";
 
 emit({
   mode,

@@ -28,6 +28,10 @@ on:
     - cron: "*/10 1-4 * * *"
     # KST evening window from week 2. The resolver skips this before 2026-05-28.
     - cron: "*/10 8-12 * * *"
+    # Reliability fallback: one fixed lunch preview/publish route if GitHub delays or drops dense schedules.
+    - cron: "30 2 * * *"
+    - cron: "30 3 * * *"
+    - cron: "30 4 * * *"
 
 permissions:
   contents: read
@@ -84,7 +88,12 @@ jobs:
             echo "slot=$SLOT" >> "$GITHUB_OUTPUT"
             echo "run=$RUN" >> "$GITHUB_OUTPUT"
           else
-            node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT"
+            case "${{ github.event.schedule }}" in
+              "30 2 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "30 3 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "30 4 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              *) node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT" ;;
+            esac
           fi
 
       - name: Create runtime env
