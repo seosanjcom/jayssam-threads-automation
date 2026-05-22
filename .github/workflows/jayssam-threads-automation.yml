@@ -12,6 +12,7 @@ on:
           - metrics
           - draft
           - preview
+          - verify_publish_path
           - publish
       slot:
         description: "Posting slot"
@@ -141,6 +142,18 @@ jobs:
         run: |
           python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           node scripts/send_telegram_preview.mjs
+
+      - name: Verify publish path without posting
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'verify_publish_path'
+        run: |
+          python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+          node scripts/use_github_raw_media.mjs "$(cat outputs/automation/latest-draft-path.txt)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f outputs/automation outputs/cards
+          git commit -m "Verify Jayssam generated assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
+          git push
+          node scripts/verify_media_urls.mjs "$(cat outputs/automation/latest-draft-path.txt)"
 
       - name: Publish latest approved
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'publish'
