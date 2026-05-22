@@ -23,6 +23,8 @@ on:
   schedule:
     # KST 17:30 - daily preview for week 1.
     - cron: "30 8 * * *"
+    # KST 20:30 - second daily preview from week 2, gated in the route step.
+    - cron: "30 11 * * *"
     # Approval checker. GitHub may delay scheduled jobs, so publishing remains approval-gated.
     - cron: "*/5 * * * *"
     # KST 21:15 - health watchdog.
@@ -90,6 +92,18 @@ jobs:
 
           case "${{ github.event.schedule }}" in
             "30 8 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+            "30 11 * * *")
+              TODAY=$(TZ=Asia/Seoul date +%F)
+              if [[ "$TODAY" < "2026-05-30" ]]; then
+                echo "mode=preview" >> "$GITHUB_OUTPUT"
+                echo "slot=night" >> "$GITHUB_OUTPUT"
+                echo "run=false" >> "$GITHUB_OUTPUT"
+              else
+                echo "mode=preview" >> "$GITHUB_OUTPUT"
+                echo "slot=night" >> "$GITHUB_OUTPUT"
+                echo "run=true" >> "$GITHUB_OUTPUT"
+              fi
+              ;;
             "15 12 * * *") echo "mode=health" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             "*/5 * * * *")
               echo "mode=approval_check" >> "$GITHUB_OUTPUT"
