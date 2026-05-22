@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import textwrap
+import urllib.request
+import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -13,6 +16,8 @@ ROOT = Path.cwd()
 OUT_ROOT = ROOT / "outputs" / "automation"
 CARD_ROOT = ROOT / "outputs" / "cards" / "github-daily"
 KST = timezone(timedelta(hours=9))
+KOREA_POLICY_MOE_RSS = "https://www.korea.kr/rss/dept_moe.xml"
+ISSUE_KEYWORDS = ("AI", "디지털", "정보", "진로", "교육과정", "학교", "학생", "교사", "미래교육")
 
 
 TOPICS = [
@@ -119,6 +124,51 @@ def pick_topic(date_text: str, slot: str) -> dict:
     }
     seed = int(date_text.replace("-", "")) + seed_offsets.get(slot, 0)
     return TOPICS[seed % len(TOPICS)]
+
+
+def fetch_latest_signal() -> dict | None:
+    try:
+        req = urllib.request.Request(
+            KOREA_POLICY_MOE_RSS,
+            headers={"User-Agent": "Mozilla/5.0 jayssam-threads-automation/1.0"},
+        )
+        with urllib.request.urlopen(req, timeout=8) as response:
+            xml_text = response.read().decode("utf-8", errors="replace")
+    except Exception:
+        try:
+            completed = subprocess.run(
+                ["curl", "-L", "-A", "Mozilla/5.0", "--max-time", "10", KOREA_POLICY_MOE_RSS],
+                check=True,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            xml_text = completed.stdout
+        except Exception:
+            return None
+
+    try:
+        root = ET.fromstring(xml_text)
+    except Exception:
+        return None
+
+    items = root.findall(".//item")
+    for item in items[:12]:
+        title = (item.findtext("title") or "").strip()
+        link = (item.findtext("link") or "").strip()
+        pub_date = (item.findtext("pubDate") or "").strip()
+        if any(keyword.lower() in title.lower() for keyword in ISSUE_KEYWORDS):
+            return {"title": title, "link": link, "pub_date": pub_date, "source": "대한민국 정책브리핑 교육부 RSS"}
+    if items:
+        item = items[0]
+        return {
+            "title": (item.findtext("title") or "").strip(),
+            "link": (item.findtext("link") or "").strip(),
+            "pub_date": (item.findtext("pubDate") or "").strip(),
+            "source": "대한민국 정책브리핑 교육부 RSS",
+        }
+    return None
 
 
 def font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
@@ -232,13 +282,18 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
     out_dir = OUT_ROOT / date_text
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    threads_text = "\n\n".join(
-        [
-            topic["hook"],
-            *topic["body"],
-            f"출처는 {topic['source_name']} 흐름을 기준으로 확인했습니다.",
-        ]
-    )
+    latest_signal = fetch_latest_signal()
+    text_parts = [
+        topic["hook"],
+        *topic["body"],
+    ]
+    if latest_signal:
+        text_parts.append(
+            f"오늘 참고한 최신 교육 이슈는 “{latest_signal['title']}”입니다. "
+            "단순 기사 복붙이 아니라, 부모님과 강사가 이해할 수 있는 관점으로 다시 풀어봅니다."
+        )
+    text_parts.append(f"출처는 {topic['source_name']}을 기준으로 확인했습니다.")
+    threads_text = "\n\n".join(text_parts)
 
     draft = {
         "id": draft_id,
@@ -254,8 +309,9 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
         "carousel_slides": [f"{h}\n{b}" for _, h, b in topic["slides"]],
         "local_card_dir": str(card_dir.relative_to(ROOT)).replace("\\", "/"),
         "local_media_paths": media_paths,
-        "source_urls": topic["source_urls"],
+        "source_urls": [*topic["source_urls"], *([latest_signal["link"]] if latest_signal and latest_signal.get("link") else [])],
         "source_note": topic["source_name"],
+        "latest_signal": latest_signal,
         "created_at": datetime.now(KST).isoformat(timespec="seconds"),
     }
 
