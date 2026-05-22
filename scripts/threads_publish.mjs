@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 
 function loadEnv() {
   if (!fs.existsSync(".env")) return;
@@ -50,7 +50,11 @@ function writeJson(filePath, value) {
 function enforceLocalSafety({ logPath, account, dailyLimit, minIntervalHours }) {
   const now = Date.now();
   const log = readJsonIfExists(logPath, []);
-  const recent = log.filter((item) => item.account === account && now - Date.parse(item.published_at) < 24 * 60 * 60 * 1000);
+  const recent = log.filter((item) => {
+    if (item.account !== account) return false;
+    if (String(item.status || "").startsWith("deleted_")) return false;
+    return now - Date.parse(item.published_at) < 24 * 60 * 60 * 1000;
+  });
   if (recent.length >= dailyLimit) {
     throw new Error(`Safety stop: ${account} already has ${recent.length} post(s) in the last 24h. Limit=${dailyLimit}.`);
   }
@@ -75,6 +79,38 @@ function appendPublishLog({ logPath, account, draft, publish }) {
   writeJson(logPath, log);
 }
 
+function assertPublishableDraft(draft) {
+  const threadsText = String(draft.threads_text || "");
+  const collectedText = JSON.stringify({
+    topic: draft.topic,
+    threads_text: draft.threads_text,
+    thread_comments: draft.thread_comments,
+    cardnews_slides: draft.cardnews_slides,
+  });
+  const hangul = (collectedText.match(/[\uAC00-\uD7A3]/g) || []).length;
+  const han = (collectedText.match(/[\u4E00-\u9FFF]/g) || []).length;
+  const questionMarks = (collectedText.match(/\?/g) || []).length;
+  const replacement = (collectedText.match(/\uFFFD/g) || []).length;
+  const suspiciousFragments = ["\u5A9B", "\u0080", "\u75AB", "\u6930", "\u7B4C", "\u91CE", "\u56A5", "\u63F6", "\u923A"].filter((item) =>
+    collectedText.includes(item),
+  );
+
+  if (draft.account === "offnote.kr") {
+    if (threadsText.length < 180) {
+      throw new Error(`Safety stop: offnote.kr threads_text is too short (${threadsText.length}/180).`);
+    }
+    if (threadsText.length > 500) {
+      throw new Error(`Safety stop: offnote.kr threads_text exceeds Threads API limit (${threadsText.length}/500).`);
+    }
+    if (hangul < 120) {
+      throw new Error(`Safety stop: too little Korean text detected (${hangul}).`);
+    }
+    if (han > hangul * 0.25 || questionMarks > 5 || replacement > 0 || suspiciousFragments.length > 0) {
+      throw new Error("Safety stop: possible mojibake detected in offnote.kr draft.");
+    }
+  }
+}
+
 loadEnv();
 
 const draftPath = process.argv[2];
@@ -93,6 +129,7 @@ const expectedUsername = (process.env.THREADS_EXPECTED_USERNAME || "").trim().to
 const dailyLimit = Number(process.env.THREADS_DAILY_POST_LIMIT || "1");
 const minIntervalHours = Number(process.env.THREADS_MIN_INTERVAL_HOURS || "8");
 const publishLogPath = process.env.THREADS_PUBLISH_LOG || "outputs/meta-publish-log.json";
+const carouselEnabled = String(process.env.THREADS_CAROUSEL_ENABLED || "false").toLowerCase() === "true";
 const draft = JSON.parse(fs.readFileSync(draftPath, "utf8").replace(/^\uFEFF/, ""));
 
 if (!autoPublish) {
@@ -111,8 +148,11 @@ if (draft.status !== "approved") {
 
 const base = "https://graph.threads.net/v1.0";
 const account = draft.account || userId;
-const mediaUrls = Array.isArray(draft.media_urls) ? draft.media_urls.filter(Boolean) : [];
+const allMediaUrls = Array.isArray(draft.media_urls) ? draft.media_urls.filter(Boolean) : [];
+const mediaUrls = carouselEnabled ? allMediaUrls : allMediaUrls.slice(0, 1);
 const requiresCardnews = draft.account === "offnote.kr" || process.env.THREADS_REQUIRE_MEDIA === "true";
+
+assertPublishableDraft(draft);
 
 if (requiresCardnews && mediaUrls.length === 0) {
   throw new Error("Refusing to publish offnote.kr without cardnews media_urls.");
@@ -180,3 +220,4 @@ if (safetyMode) {
 }
 
 console.log(JSON.stringify({ creation: create, publish }, null, 2));
+
