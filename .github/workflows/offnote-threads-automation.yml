@@ -92,16 +92,9 @@ jobs:
             "30 8 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             "15 12 * * *") echo "mode=health" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             "*/5 * * * *")
-              HOUR=$(TZ=Asia/Seoul date +%H)
-              if [[ "$HOUR" -ge 17 && "$HOUR" -le 22 ]]; then
-                echo "mode=approval_check" >> "$GITHUB_OUTPUT"
-                echo "slot=evening" >> "$GITHUB_OUTPUT"
-                echo "run=true" >> "$GITHUB_OUTPUT"
-              else
-                echo "mode=approval_check" >> "$GITHUB_OUTPUT"
-                echo "slot=evening" >> "$GITHUB_OUTPUT"
-                echo "run=false" >> "$GITHUB_OUTPUT"
-              fi
+              echo "mode=approval_check" >> "$GITHUB_OUTPUT"
+              echo "slot=evening" >> "$GITHUB_OUTPUT"
+              echo "run=true" >> "$GITHUB_OUTPUT"
               ;;
             *) echo "mode=skip" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=false" >> "$GITHUB_OUTPUT" ;;
           esac
