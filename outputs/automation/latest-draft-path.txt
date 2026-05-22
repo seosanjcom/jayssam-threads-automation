@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-22/GHA-20260522-afternoon-career-no-dream.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-22/GHA-20260522-afternoon-ai-class-check.json
