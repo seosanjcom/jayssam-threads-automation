@@ -66,6 +66,7 @@ jobs:
       THREADS_PUBLISH_LOG: "outputs/meta-publish-log.json"
       THREADS_OAUTH_SCOPES: "threads_basic,threads_content_publish,threads_manage_insights"
       THREADS_REQUIRE_MEDIA: "true"
+      THREADS_CAROUSEL_ENABLED: "true"
 
     steps:
       - name: Checkout
@@ -119,6 +120,7 @@ jobs:
           node --check scripts/threads_publish.mjs
           node --check scripts/upload_cardnews_to_catbox.mjs
           node --check scripts/use_github_raw_media.mjs
+          node --check scripts/verify_media_urls.mjs
 
       - name: Collect Threads metrics
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'metrics'
@@ -143,7 +145,11 @@ jobs:
           node scripts/use_github_raw_media.mjs "$(cat outputs/automation/latest-draft-path.txt)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add outputs/automation outputs/cards
+          git add -f outputs/automation outputs/cards
           git commit -m "Add generated Jayssam assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git push
+          node scripts/verify_media_urls.mjs "$(cat outputs/automation/latest-draft-path.txt)"
           node scripts/publish_latest_approved.mjs
+          git add -f outputs/meta-publish-log.json
+          git commit -m "Record Jayssam publish $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
+          git push

@@ -19,6 +19,7 @@ const keys = [
   "THREADS_APP_SECRET",
   "THREADS_OAUTH_SCOPES",
   "THREADS_REQUIRE_MEDIA",
+  "THREADS_CAROUSEL_ENABLED",
   "TELEGRAM_BOT_TOKEN",
   "TELEGRAM_CHAT_ID",
 ];
@@ -36,6 +37,7 @@ const defaults = {
   THREADS_PUBLISH_LOG: "outputs/meta-publish-log.json",
   THREADS_OAUTH_SCOPES: "threads_basic,threads_content_publish,threads_manage_insights",
   THREADS_REQUIRE_MEDIA: "true",
+  THREADS_CAROUSEL_ENABLED: "true",
 };
 
 const lines = [];
