@@ -21,7 +21,9 @@ on:
         type: choice
         options:
           - lunch
+          - afternoon
           - evening
+          - night
   schedule:
     # KST 10:05 - collect previous reaction metrics
     - cron: "5 1 * * *"
