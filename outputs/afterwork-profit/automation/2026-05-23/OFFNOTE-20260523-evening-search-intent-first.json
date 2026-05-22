@@ -4,7 +4,7 @@
   "account_name": "오프노트",
   "project": "afterwork-profit",
   "topic": "블로그/유튜브 부업에서 먼저 잡아야 할 검색 의도",
-  "status": "approved",
+  "status": "pending_approval",
   "created_at": "2026-05-22T16:24:15.127Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -53,5 +53,12 @@
     "outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_03.png",
     "outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_04.png"
   ],
-  "cardnews_quality_rule": "Cardnews must add separate criteria, checklist, comparison, or examples. Do not split the post summary into images."
+  "cardnews_quality_rule": "Cardnews must add separate criteria, checklist, comparison, or examples. Do not split the post summary into images.",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_04.png"
+  ],
+  "approval_requested_at": "2026-05-22T16:34:17.830Z"
 }
