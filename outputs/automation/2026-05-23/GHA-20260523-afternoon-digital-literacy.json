@@ -1,0 +1,49 @@
+{
+  "id": "GHA-20260523-afternoon-digital-literacy",
+  "date": "2026-05-23",
+  "slot": "afternoon",
+  "account": "26746590168375878",
+  "status": "approved",
+  "pillar": "디지털문해력",
+  "keyword": "디지털문해력",
+  "title": "아이에게 필요한 건 검색 실력보다 판단하는 힘입니다",
+  "topic": "아이에게 필요한 건 검색 실력보다 판단하는 힘입니다",
+  "threads_text": "검색을 잘하는 아이와\n판단을 잘하는 아이는 다릅니다.\n\nAI와 검색 도구가 쉬워질수록 아이들은 더 많은 답을 빠르게 만납니다.\n\n그래서 이제 중요한 질문은 “찾았니?”가 아니라 “왜 이 답을 믿었니?”에 가깝습니다.\n\n자료의 출처, 작성 시점, 다른 관점의 자료가 있는지를 확인하는 습관이 디지털 시대의 기본 공부가 됩니다.\n\n오늘 참고한 최신 교육 이슈는 “AI 인재 양성·돌봄 강화 등 '국가가 책임지는 교육' 확대”입니다. 단순 기사 복붙이 아니라, 부모님과 강사가 이해할 수 있는 관점으로 다시 풀어봅니다.\n\n출처는 디지털 소양 교육 방향 / 학교 현장 미디어 리터러시 흐름을 기준으로 확인했습니다.",
+  "carousel_slides": [
+    "검색보다 중요한 것\n답을 찾는 속도보다 판단의 근거입니다.",
+    "아이에게 물어볼 질문\n이 자료는 어디에서 나온 거야?",
+    "두 번째 질문\n언제 작성된 자료야?",
+    "세 번째 질문\n다른 설명을 하는 자료도 있었어?",
+    "여기서 생기는 힘\n정보를 고르고 비교하고 책임 있게 쓰는 힘입니다.",
+    "오늘의 한 문장\n디지털 문해력은 많이 찾는 능력이 아니라 덜 속는 능력입니다."
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_01.png",
+    "outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_02.png",
+    "outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_03.png",
+    "outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_04.png",
+    "outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_05.png",
+    "outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.moe.go.kr/",
+    "https://www.korea.kr/news/policyNewsView.do?newsId=148964990&call_from=rsslink"
+  ],
+  "source_note": "디지털 소양 교육 방향 / 학교 현장 미디어 리터러시 흐름",
+  "latest_signal": {
+    "title": "AI 인재 양성·돌봄 강화 등 '국가가 책임지는 교육' 확대",
+    "link": "https://www.korea.kr/news/policyNewsView.do?newsId=148964990&call_from=rsslink",
+    "pub_date": "Fri, 22 May 2026 07:31:00 GMT",
+    "source": "대한민국 정책브리핑 교육부 RSS"
+  },
+  "created_at": "2026-05-23T00:08:04+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-23/afternoon/digital-literacy/card_06.png"
+  ]
+}
