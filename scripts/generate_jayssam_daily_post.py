@@ -20,6 +20,12 @@ CARD_ROOT = ROOT / "outputs" / "cards" / "github-daily"
 KST = timezone(timedelta(hours=9))
 KOREA_POLICY_MOE_RSS = "https://www.korea.kr/rss/dept_moe.xml"
 ISSUE_KEYWORDS = ("AI", "디지털", "정보", "진로", "교육과정", "학교", "학생", "교사", "미래교육")
+PUBLISH_LOG = ROOT / "outputs" / "meta-publish-log.json"
+RECENT_DEDUPE_DAYS = 7
+LEGACY_SLUG_ALIASES = {
+    "READY-20260520-career-dream-no-panic": "career-no-dream",
+    "READY-20260521-informatics-hours-why": "info-hours",
+}
 
 
 TOPICS = [
@@ -125,7 +131,56 @@ def pick_topic(date_text: str, slot: str) -> dict:
         "night": 1,
     }
     seed = int(date_text.replace("-", "")) + seed_offsets.get(slot, 0)
+    recent_slugs = recent_published_slugs(date_text)
+    for offset in range(len(TOPICS)):
+        topic = TOPICS[(seed + offset) % len(TOPICS)]
+        if topic["slug"] not in recent_slugs:
+            return topic
     return TOPICS[seed % len(TOPICS)]
+
+
+def recent_published_slugs(date_text: str) -> set[str]:
+    log = read_json(PUBLISH_LOG, [])
+    if not isinstance(log, list):
+        return set()
+
+    try:
+        target_date = datetime.fromisoformat(date_text).date()
+    except ValueError:
+        target_date = datetime.now(KST).date()
+
+    recent: set[str] = set()
+    topic_slugs = {topic["slug"] for topic in TOPICS}
+
+    for item in log:
+        if not isinstance(item, dict):
+            continue
+        if item.get("status") == "deleted_after_mojibake_publish":
+            continue
+        published_at = str(item.get("published_at") or "")
+        try:
+            published_date = datetime.fromisoformat(published_at.replace("Z", "+00:00")).astimezone(KST).date()
+        except ValueError:
+            published_date = target_date
+        if not (timedelta(days=0) <= target_date - published_date <= timedelta(days=RECENT_DEDUPE_DAYS)):
+            continue
+
+        draft_id = str(item.get("draft_id") or "")
+        slug = LEGACY_SLUG_ALIASES.get(draft_id)
+        if not slug:
+            slug = next((candidate for candidate in topic_slugs if candidate in draft_id), "")
+        if slug:
+            recent.add(slug)
+    return recent
+
+
+def read_json(path: Path, fallback):
+    if not path.exists():
+        return fallback
+    try:
+        return json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception:
+        return fallback
 
 
 def fetch_latest_signal() -> dict | None:
