@@ -408,19 +408,8 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
 
     latest_signal = fetch_latest_signal()
     angle = PRACTICAL_ANGLES.get(topic["slug"], {})
-    text_parts = [
-        topic["hook"],
-        angle.get("benefit", ""),
-        angle.get("mistake", ""),
-        angle.get("check", ""),
-        angle.get("use_for", ""),
-    ]
-    text_parts = [part for part in text_parts if part]
-    if latest_signal:
-        text_parts.append(
-            f"오늘 참고한 이슈는 “{latest_signal['title']}”입니다. "
-            "이슈 자체보다, 그 이슈를 보고 부모님과 강사가 어떤 기준을 가져야 하는지가 더 중요합니다."
-        )
+    content_type = content_type_for_slot(slot)
+    text_parts = build_threads_text_parts(topic, angle, latest_signal, content_type)
     text_parts.append(f"출처는 {topic['source_name']}을 기준으로 확인했습니다.")
     threads_text = "\n\n".join(text_parts)
 
@@ -434,7 +423,7 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
         "keyword": topic["keyword"],
         "title": topic["title"],
         "topic": topic["title"],
-        "content_type": "practical_saveable_tip",
+        "content_type": content_type,
         "practical_angle": angle,
         "threads_text": threads_text,
         "carousel_slides": [f"{h}\n{b}" for _, h, b in topic["slides"]],
@@ -450,6 +439,40 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
     draft_path.write_text(json.dumps(draft, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (OUT_ROOT / "latest-draft-path.txt").write_text(str(draft_path).replace("\\", "/"), encoding="utf-8")
     return draft_path
+
+
+def content_type_for_slot(slot: str) -> str:
+    if slot == "night":
+        return "must_know_practical_tip"
+    return "education_news_interpretation"
+
+
+def build_threads_text_parts(topic: dict, angle: dict, latest_signal: dict | None, content_type: str) -> list[str]:
+    if content_type == "education_news_interpretation":
+        if latest_signal:
+            return [
+                f"오늘 교육 이슈 하나,\n그냥 뉴스로 넘기기엔 아깝습니다.",
+                f"“{latest_signal['title']}”",
+                "중요한 건 이 소식 자체보다, 이 흐름이 아이 교육 기준을 어떻게 바꾸는지입니다.",
+                angle.get("benefit", ""),
+                angle.get("check", ""),
+                "제이쌤 관점에서는 뉴스보다 ‘부모님이 내일 바로 물어볼 질문’이 더 중요합니다.",
+            ]
+        return [
+            topic["hook"],
+            "오늘은 새 이슈를 억지로 붙이기보다, 부모님과 강사가 바로 판단에 쓸 기준을 정리합니다.",
+            angle.get("benefit", ""),
+            angle.get("check", ""),
+        ]
+
+    return [
+        topic["hook"],
+        "이건 그냥 알아두면 좋은 정보가 아니라, 상담이나 수업을 고를 때 기준이 되는 내용입니다.",
+        angle.get("benefit", ""),
+        angle.get("mistake", ""),
+        angle.get("check", ""),
+        angle.get("use_for", ""),
+    ]
 
 
 def main() -> None:
