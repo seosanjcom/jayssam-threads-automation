@@ -7,6 +7,7 @@ import textwrap
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import quote
 
@@ -128,7 +129,7 @@ def pick_topic(date_text: str, slot: str) -> dict:
 
 
 def fetch_latest_signal() -> dict | None:
-    query = quote("교육부 AI 교육 정보교육 진로교육")
+    query = quote("교육부 AI 교육 정보교육 진로교육 when:14d")
     sources = [
         ("대한민국 정책브리핑 교육부 RSS", KOREA_POLICY_MOE_RSS),
         ("Google News 교육 이슈 RSS", f"https://news.google.com/rss/search?q={query}&hl=ko&gl=KR&ceid=KR:ko"),
@@ -172,8 +173,34 @@ def fetch_rss_signal(source_name: str, source_url: str) -> dict | None:
         title = (item.findtext("title") or "").strip()
         link = (item.findtext("link") or "").strip()
         pub_date = (item.findtext("pubDate") or "").strip()
-        if any(keyword.lower() in title.lower() for keyword in ISSUE_KEYWORDS):
+        if is_recent_pub_date(pub_date) and any(keyword.lower() in title.lower() for keyword in ISSUE_KEYWORDS):
             return {"title": title, "link": link, "pub_date": pub_date, "source": source_name}
+    recent_items = [item for item in items if is_recent_pub_date((item.findtext("pubDate") or "").strip())]
+    if recent_items:
+        item = recent_items[0]
+        return {
+            "title": (item.findtext("title") or "").strip(),
+            "link": (item.findtext("link") or "").strip(),
+            "pub_date": (item.findtext("pubDate") or "").strip(),
+            "source": source_name,
+        }
+    return None
+
+
+def is_recent_pub_date(pub_date: str, days: int = 14) -> bool:
+    if not pub_date:
+        return False
+    try:
+        published = parsedate_to_datetime(pub_date)
+        if published.tzinfo is None:
+            published = published.replace(tzinfo=timezone.utc)
+        now = datetime.now(timezone.utc)
+        return now - timedelta(days=days) <= published <= now + timedelta(days=1)
+    except Exception:
+        return False
+
+
+def first_item_signal(items: list[ET.Element], source_name: str) -> dict | None:
     if items:
         item = items[0]
         return {
