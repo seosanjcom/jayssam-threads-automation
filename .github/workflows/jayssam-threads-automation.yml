@@ -25,14 +25,14 @@ on:
   schedule:
     # KST 10:05 - collect previous reaction metrics
     - cron: "5 1 * * *"
-    # KST fixed lunch route for reliability.
-    - cron: "30 2 * * *"
-    - cron: "30 3 * * *"
-    - cron: "30 4 * * *"
-    # KST fixed evening route from week 2. The resolver skips this before 2026-05-28.
-    - cron: "30 9 * * *"
-    - cron: "30 10 * * *"
-    - cron: "30 11 * * *"
+    # KST 15:00 post route: 13:00 preview, 14:00 preview, 15:00 publish.
+    - cron: "0 4 * * *"
+    - cron: "0 5 * * *"
+    - cron: "0 6 * * *"
+    # KST 21:00 post route from week 2: 19:00 preview, 20:00 preview, 21:00 publish.
+    - cron: "0 10 * * *"
+    - cron: "0 11 * * *"
+    - cron: "0 12 * * *"
 
 permissions:
   contents: write
@@ -92,12 +92,12 @@ jobs:
           else
             case "${{ github.event.schedule }}" in
               "5 1 * * *") echo "mode=metrics" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "30 2 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "30 3 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "30 4 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "30 9 * * *") node scripts/github_phase_gate.mjs "preview" "evening" >> "$GITHUB_OUTPUT" ;;
-              "30 10 * * *") node scripts/github_phase_gate.mjs "preview" "evening" >> "$GITHUB_OUTPUT" ;;
-              "30 11 * * *") node scripts/github_phase_gate.mjs "publish" "evening" >> "$GITHUB_OUTPUT" ;;
+              "0 4 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "0 5 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "0 6 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "0 10 * * *") node scripts/github_phase_gate.mjs "preview" "night" >> "$GITHUB_OUTPUT" ;;
+              "0 11 * * *") node scripts/github_phase_gate.mjs "preview" "night" >> "$GITHUB_OUTPUT" ;;
+              "0 12 * * *") node scripts/github_phase_gate.mjs "publish" "night" >> "$GITHUB_OUTPUT" ;;
               *) node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT" ;;
             esac
           fi

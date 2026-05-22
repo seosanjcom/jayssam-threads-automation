@@ -1,5 +1,5 @@
 const mode = process.argv[2] || "";
-const slot = process.argv[3] || "lunch";
+const slot = process.argv[3] || "afternoon";
 
 function kstNow() {
   return new Date(Date.now() + 9 * 60 * 60 * 1000);
@@ -11,7 +11,8 @@ function formatDate(date) {
 
 const today = formatDate(kstNow());
 const phase2Start = "2026-05-28";
-const run = !(slot === "evening" && today < phase2Start);
+const secondPostSlots = new Set(["evening", "night"]);
+const run = !(secondPostSlots.has(slot) && today < phase2Start);
 
 console.log(`mode=${mode}`);
 console.log(`slot=${slot}`);

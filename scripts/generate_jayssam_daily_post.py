@@ -90,7 +90,13 @@ def kst_today() -> str:
 
 
 def pick_topic(date_text: str, slot: str) -> dict:
-    seed = int(date_text.replace("-", "")) + (0 if slot == "lunch" else 1)
+    seed_offsets = {
+        "lunch": 0,
+        "afternoon": 0,
+        "evening": 1,
+        "night": 1,
+    }
+    seed = int(date_text.replace("-", "")) + seed_offsets.get(slot, 0)
     return TOPICS[seed % len(TOPICS)]
 
 
