@@ -119,6 +119,34 @@ TOPICS = [
 ]
 
 
+PRACTICAL_ANGLES = {
+    "info-hours": {
+        "benefit": "정보교과 시간이 왜 늘었는지 알면, 아이 수업을 볼 때 ‘코딩을 얼마나 했나’보다 ‘문제를 어떻게 쪼개서 설명했나’를 먼저 볼 수 있습니다.",
+        "mistake": "초반에 문법 진도만 빠른 수업은 그럴듯해 보여도, 아이가 혼자 문제를 해석하는 힘은 늦게 자랄 수 있습니다.",
+        "check": "수업 후에는 “오늘 만든 것 설명해봐”보다 “어디서 막혔고 어떻게 고쳤어?”라고 물어보세요.",
+        "use_for": "학부모에게는 수업 선택 기준, 강사에게는 수업 마무리 질문으로 바로 쓸 수 있습니다.",
+    },
+    "career-no-dream": {
+        "benefit": "이 관점을 알면 아이가 “꿈이 없어요”라고 말해도 바로 학원, 검사, 직업명 찾기로 몰아가지 않을 수 있습니다.",
+        "mistake": "진로를 너무 빨리 직업명으로 고정하면 아이가 잘하는 행동의 패턴을 놓치기 쉽습니다.",
+        "check": "이번 주 아이가 오래 붙잡은 것, 반복해서 찾아본 것, 친구들이 자주 부탁한 일을 3개만 적어보세요.",
+        "use_for": "상담 전 부모 질문지로도 좋고, 진로 수업 도입 활동으로도 바로 쓸 수 있습니다.",
+    },
+    "ai-class-check": {
+        "benefit": "AI 수업을 볼 때 이 기준을 알면 화려한 도구 이름에 덜 흔들리고, 진짜 배움이 있는 수업인지 구분할 수 있습니다.",
+        "mistake": "툴 사용법만 따라 하는 수업은 결과물이 빨리 나오지만, 아이가 판단한 흔적은 남지 않을 수 있습니다.",
+        "check": "좋은 AI 수업에는 질문 만들기, 답 비교하기, 근거 말하기가 최소 한 번씩 들어갑니다.",
+        "use_for": "학부모는 수업 상담 때 물어볼 질문으로, 강사는 차시 설계 기준으로 쓸 수 있습니다.",
+    },
+    "digital-literacy": {
+        "benefit": "이걸 알면 아이가 검색이나 AI 답을 가져왔을 때, 맞다 틀리다보다 먼저 확인해야 할 기준이 보입니다.",
+        "mistake": "자료를 많이 찾는 아이가 곧 정보를 잘 다루는 아이는 아닙니다. 핵심은 출처와 근거를 따지는 힘입니다.",
+        "check": "아이에게 딱 세 가지만 물어보세요. “어디서 나온 자료야?”, “언제 나온 자료야?”, “다른 설명도 있었어?”",
+        "use_for": "숙제, 발표, 탐구보고서, AI 활용 과제에서 바로 써먹을 수 있는 확인 질문입니다.",
+    },
+}
+
+
 def kst_today() -> str:
     return datetime.now(KST).date().isoformat()
 
@@ -379,14 +407,19 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
     out_dir.mkdir(parents=True, exist_ok=True)
 
     latest_signal = fetch_latest_signal()
+    angle = PRACTICAL_ANGLES.get(topic["slug"], {})
     text_parts = [
         topic["hook"],
-        *topic["body"],
+        angle.get("benefit", ""),
+        angle.get("mistake", ""),
+        angle.get("check", ""),
+        angle.get("use_for", ""),
     ]
+    text_parts = [part for part in text_parts if part]
     if latest_signal:
         text_parts.append(
-            f"오늘 참고한 최신 교육 이슈는 “{latest_signal['title']}”입니다. "
-            "단순 기사 복붙이 아니라, 부모님과 강사가 이해할 수 있는 관점으로 다시 풀어봅니다."
+            f"오늘 참고한 이슈는 “{latest_signal['title']}”입니다. "
+            "이슈 자체보다, 그 이슈를 보고 부모님과 강사가 어떤 기준을 가져야 하는지가 더 중요합니다."
         )
     text_parts.append(f"출처는 {topic['source_name']}을 기준으로 확인했습니다.")
     threads_text = "\n\n".join(text_parts)
@@ -401,6 +434,8 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
         "keyword": topic["keyword"],
         "title": topic["title"],
         "topic": topic["title"],
+        "content_type": "practical_saveable_tip",
+        "practical_angle": angle,
         "threads_text": threads_text,
         "carousel_slides": [f"{h}\n{b}" for _, h, b in topic["slides"]],
         "local_card_dir": str(card_dir.relative_to(ROOT)).replace("\\", "/"),
