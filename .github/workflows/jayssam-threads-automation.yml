@@ -14,6 +14,7 @@ on:
           - preview
           - verify_publish_path
           - publish
+          - watchdog
       slot:
         description: "Posting slot"
         required: true
@@ -31,10 +32,12 @@ on:
     - cron: "0 4 * * *"
     - cron: "0 5 * * *"
     - cron: "0 6 * * *"
+    - cron: "20 6 * * *"
     # KST 21:00 post route from week 2: 19:00 preview, 20:00 preview, 21:00 publish.
     - cron: "0 10 * * *"
     - cron: "0 11 * * *"
     - cron: "0 12 * * *"
+    - cron: "20 12 * * *"
 
 permissions:
   contents: write
@@ -97,9 +100,11 @@ jobs:
               "0 4 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
               "0 5 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
               "0 6 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "20 6 * * *") echo "mode=watchdog" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
               "0 10 * * *") node scripts/github_phase_gate.mjs "preview" "night" >> "$GITHUB_OUTPUT" ;;
               "0 11 * * *") node scripts/github_phase_gate.mjs "preview" "night" >> "$GITHUB_OUTPUT" ;;
               "0 12 * * *") node scripts/github_phase_gate.mjs "publish" "night" >> "$GITHUB_OUTPUT" ;;
+              "20 12 * * *") node scripts/github_phase_gate.mjs "watchdog" "night" >> "$GITHUB_OUTPUT" ;;
               *) node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT" ;;
             esac
           fi
@@ -128,6 +133,8 @@ jobs:
           node --check scripts/upload_cardnews_to_catbox.mjs
           node --check scripts/use_github_raw_media.mjs
           node --check scripts/verify_media_urls.mjs
+          node --check scripts/send_telegram_message.mjs
+          node --check scripts/check_daily_publish_status.mjs
 
       - name: Collect Threads metrics
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'metrics'
@@ -169,6 +176,15 @@ jobs:
           git push
           node scripts/verify_media_urls.mjs "$(cat outputs/automation/latest-draft-path.txt)"
           node scripts/publish_latest_approved.mjs
+          node scripts/send_telegram_message.mjs "[제이쌤 게시 완료] ${{ steps.route.outputs.slot }} 슬롯 게시 완료"
           git add -f outputs/meta-publish-log.json
           git commit -m "Record Jayssam publish $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git push
+
+      - name: Watch publish status
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'watchdog'
+        run: node scripts/check_daily_publish_status.mjs "${{ steps.route.outputs.slot }}"
+
+      - name: Notify failure
+        if: failure()
+        run: node scripts/send_telegram_message.mjs "[제이쌤 자동화 실패] mode=${{ steps.route.outputs.mode }} slot=${{ steps.route.outputs.slot }} run=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

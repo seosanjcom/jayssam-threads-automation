@@ -14,7 +14,11 @@ function loadEnv() {
   }
 }
 
-function readJson(filePath, fallback) {
+function pickConfigured(...values) {
+  return values.find((value) => value && !String(value).startsWith("replace_")) || "";
+}
+
+function readJson(filePath, fallback = null) {
   if (!fs.existsSync(filePath)) return fallback;
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, ""));
@@ -115,10 +119,6 @@ function findNextDraft() {
 
 loadEnv();
 
-function pickConfigured(...values) {
-  return values.find((value) => value && !String(value).startsWith("replace_")) || "";
-}
-
 const telegramBotToken = pickConfigured(process.env.JAYSSAM_TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_BOT_TOKEN);
 const telegramChatId = pickConfigured(process.env.JAYSSAM_TELEGRAM_CHAT_ID, process.env.TELEGRAM_CHAT_ID);
 const hasTelegramConfig =
@@ -134,7 +134,7 @@ if (!hasTelegramConfig) {
 
 const next = findNextDraft();
 if (!next) {
-  await sendMessage("[제이쌤 미리보기]\n아직 보낼 게시 후보가 없습니다. approved 또는 ready_to_review 큐가 생기면 다시 보냅니다.");
+  await sendMessage("[제이쌤 미리보기]\n아직 보낼 게시 후보가 없습니다. approved 또는 ready_to_review 상태의 초안이 생기면 다시 보냅니다.");
   console.log("No preview draft found.");
   process.exit(0);
 }
