@@ -8,6 +8,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -127,9 +128,22 @@ def pick_topic(date_text: str, slot: str) -> dict:
 
 
 def fetch_latest_signal() -> dict | None:
+    query = quote("교육부 AI 교육 정보교육 진로교육")
+    sources = [
+        ("대한민국 정책브리핑 교육부 RSS", KOREA_POLICY_MOE_RSS),
+        ("Google News 교육 이슈 RSS", f"https://news.google.com/rss/search?q={query}&hl=ko&gl=KR&ceid=KR:ko"),
+    ]
+    for source_name, source_url in sources:
+        signal = fetch_rss_signal(source_name, source_url)
+        if signal:
+            return signal
+    return None
+
+
+def fetch_rss_signal(source_name: str, source_url: str) -> dict | None:
     try:
         req = urllib.request.Request(
-            KOREA_POLICY_MOE_RSS,
+            source_url,
             headers={"User-Agent": "Mozilla/5.0 jayssam-threads-automation/1.0"},
         )
         with urllib.request.urlopen(req, timeout=8) as response:
@@ -137,7 +151,7 @@ def fetch_latest_signal() -> dict | None:
     except Exception:
         try:
             completed = subprocess.run(
-                ["curl", "-L", "-A", "Mozilla/5.0", "--max-time", "10", KOREA_POLICY_MOE_RSS],
+                ["curl", "-L", "-A", "Mozilla/5.0", "--max-time", "10", source_url],
                 check=True,
                 capture_output=True,
                 text=True,
@@ -159,14 +173,14 @@ def fetch_latest_signal() -> dict | None:
         link = (item.findtext("link") or "").strip()
         pub_date = (item.findtext("pubDate") or "").strip()
         if any(keyword.lower() in title.lower() for keyword in ISSUE_KEYWORDS):
-            return {"title": title, "link": link, "pub_date": pub_date, "source": "대한민국 정책브리핑 교육부 RSS"}
+            return {"title": title, "link": link, "pub_date": pub_date, "source": source_name}
     if items:
         item = items[0]
         return {
             "title": (item.findtext("title") or "").strip(),
             "link": (item.findtext("link") or "").strip(),
             "pub_date": (item.findtext("pubDate") or "").strip(),
-            "source": "대한민국 정책브리핑 교육부 RSS",
+            "source": source_name,
         }
     return None
 
