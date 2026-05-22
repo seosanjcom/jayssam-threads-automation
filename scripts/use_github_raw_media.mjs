@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 
 const draftPath = process.argv[2];
 const repo = process.env.GITHUB_REPOSITORY || "seosanjcom/jayssam-threads-automation";
@@ -15,6 +16,9 @@ if (!localPaths.length) {
   throw new Error("No local_media_paths found. Generate cardnews images first.");
 }
 
-draft.media_urls = localPaths.map((item) => `https://raw.githubusercontent.com/${repo}/${ref}/${item.replaceAll("\\", "/")}`);
+draft.media_urls = localPaths.map((item) => {
+  const relativePath = path.isAbsolute(item) ? path.relative(process.cwd(), item) : item;
+  return `https://raw.githubusercontent.com/${repo}/${ref}/${relativePath.replaceAll("\\", "/")}`;
+});
 fs.writeFileSync(draftPath, `${JSON.stringify(draft, null, 2)}\n`, "utf8");
 console.log(JSON.stringify({ draft: draftPath, media_urls: draft.media_urls }, null, 2));
