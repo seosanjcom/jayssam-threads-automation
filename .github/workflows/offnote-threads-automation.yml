@@ -77,13 +77,6 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Setup card image runtime
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y fonts-noto-cjk
-          python -m pip install --upgrade pip
-          python -m pip install pillow
-
       - name: Resolve mode
         id: route
         shell: bash
@@ -131,6 +124,14 @@ jobs:
             *) echo "mode=skip" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=false" >> "$GITHUB_OUTPUT" ;;
           esac
 
+      - name: Setup card image runtime
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+          python -m pip install --upgrade pip
+          python -m pip install pillow
+
       - name: Validate scripts
         if: steps.route.outputs.run == 'true'
         run: |
@@ -142,6 +143,8 @@ jobs:
           node --check scripts/use_github_raw_media.mjs
           node --check scripts/verify_media_urls.mjs
           node --check scripts/check_offnote_automation_health.mjs
+          node --check scripts/test_offnote_automation_guards.mjs
+          node scripts/test_offnote_automation_guards.mjs
           python -m py_compile scripts/generate_offnote_cardnews.py
 
       - name: Create preview draft and cards

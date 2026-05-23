@@ -41,7 +41,7 @@ function latestOffnoteDraft(root) {
       }
     })
     .filter(Boolean)
-    .filter((item) => item.data.account === "offnote.kr" && item.data.status !== "deleted_after_mojibake_publish")
+    .filter((item) => item.data.account === "offnote.kr")
     .sort((a, b) => b.mtime - a.mtime)[0];
 }
 
@@ -100,7 +100,13 @@ const draftItem = draftArg
 if (!draftItem) throw new Error("No offnote.kr draft found.");
 
 const draft = draftItem.data;
-if (draft.status === "approved") {
+const finalStatuses = new Set(["published", "held", "publish_failed"]);
+if (finalStatuses.has(draft.status)) {
+  console.log(`Preview skipped because draft is already ${draft.status}: ${draft.id || draftItem.file}`);
+  process.exit(0);
+}
+
+if (draft.status === "approved" || draft.status === "draft") {
   draft.status = "pending_approval";
   draft.approval_requested_at = new Date().toISOString();
   writeJson(draftItem.file, draft);
@@ -115,12 +121,12 @@ const message = trimTelegram(
     "[오프노트 미리보기]",
     `ID: ${draft.id || path.basename(draftItem.file, ".json")}`,
     `상태: ${draft.status || "draft"}`,
-    draft.recommended_publish_time ? `권장 발행: ${draft.recommended_publish_time}` : "",
-    draft.experiment_hypothesis ? `오늘의 가설: ${draft.experiment_hypothesis}` : "",
+    draft.recommended_publish_time ? `자동 발행 예정: ${draft.recommended_publish_time}` : "",
+    draft.experiment_hypothesis ? `오늘의 실험 방향: ${draft.experiment_hypothesis}` : "",
     runUrl ? `실행 로그: ${runUrl}` : "",
     "",
-    "아래 버튼에서 승인하면 offnote.kr 계정으로만 발행합니다.",
-    "버튼이 안 먹으면 이 채팅에 '승인' 또는 '승인 ID'라고 보내면 됩니다.",
+    "마음에 안 들면 '보류'를 눌러주세요. 보류하지 않으면 예정 시간에 자동 발행됩니다.",
+    "바로 올리고 싶으면 '승인하고 발행'을 누르면 됩니다.",
     "",
     "[본문]",
     draft.threads_text || "",
