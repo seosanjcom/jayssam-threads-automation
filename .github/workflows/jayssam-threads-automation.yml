@@ -180,6 +180,7 @@ jobs:
           node scripts/send_telegram_message.mjs "[제이쌤 게시 완료] ${{ steps.route.outputs.slot }} 슬롯 게시 완료"
           git add -f outputs/meta-publish-log.json
           git commit -m "Record Jayssam publish $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
+          git pull --rebase origin master
           git push
 
       - name: Watch publish status
