@@ -145,14 +145,20 @@ jobs:
           python -m py_compile scripts/generate_offnote_cardnews.py
 
       - name: Create preview draft and cards
+        id: preview
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
         run: |
           node scripts/generate_offnote_daily_post.mjs "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+          echo "created=$(cat outputs/afterwork-profit/preview-created.txt)" >> "$GITHUB_OUTPUT"
+          if [[ "$(cat outputs/afterwork-profit/preview-created.txt)" != "true" ]]; then
+            echo "Existing draft found; preview generation skipped."
+            exit 0
+          fi
           node scripts/validate_offnote_draft.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
           python scripts/generate_offnote_cardnews.py "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
 
       - name: Commit generated card assets before preview
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -162,17 +168,17 @@ jobs:
           git push
 
       - name: Attach GitHub raw media URLs
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
         run: |
           node scripts/use_github_raw_media.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
           node scripts/verify_media_urls.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
 
       - name: Send Telegram preview
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
         run: node scripts/send_offnote_preview_telegram.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
 
       - name: Commit pending approval state
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

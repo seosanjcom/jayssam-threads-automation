@@ -169,6 +169,20 @@ const draft = makeDraft(date, slot);
 const outDir = path.join("outputs", "afterwork-profit", "automation", date);
 fs.mkdirSync(outDir, { recursive: true });
 const outPath = path.join(outDir, `${draft.id}.json`);
+const createdFlagPath = path.join("outputs", "afterwork-profit", "preview-created.txt");
+
+if (fs.existsSync(outPath)) {
+  const existing = JSON.parse(fs.readFileSync(outPath, "utf8").replace(/^\uFEFF/, ""));
+  const protectedStatuses = new Set(["pending_approval", "published", "held", "publish_failed"]);
+  if (protectedStatuses.has(existing.status)) {
+    fs.writeFileSync(path.join("outputs", "afterwork-profit", "latest-draft-path.txt"), `${outPath}\n`, "utf8");
+    fs.writeFileSync(createdFlagPath, "false\n", "utf8");
+    console.log(JSON.stringify({ ok: true, created: false, draft: outPath, id: existing.id, status: existing.status }, null, 2));
+    process.exit(0);
+  }
+}
+
 fs.writeFileSync(outPath, `${JSON.stringify(draft, null, 2)}\n`, "utf8");
 fs.writeFileSync(path.join("outputs", "afterwork-profit", "latest-draft-path.txt"), `${outPath}\n`, "utf8");
-console.log(JSON.stringify({ ok: true, draft: outPath, id: draft.id }, null, 2));
+fs.writeFileSync(createdFlagPath, "true\n", "utf8");
+console.log(JSON.stringify({ ok: true, created: true, draft: outPath, id: draft.id }, null, 2));

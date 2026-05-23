@@ -84,6 +84,23 @@ const pending = findJsonFiles(automationRoot)
   .filter((item) => !slot || String(item.data.id || "").includes(`-${slot}-`) || item.data.recommended_publish_time)
   .sort((a, b) => b.mtime - a.mtime)[0];
 
+const alreadyPublished = findJsonFiles(automationRoot)
+  .map((file) => {
+    try {
+      return { file, data: readJson(file), mtime: fs.statSync(file).mtimeMs };
+    } catch {
+      return null;
+    }
+  })
+  .filter(Boolean)
+  .filter((item) => item.data.account === "offnote.kr")
+  .find((item) => item.data.status === "published");
+
+if (alreadyPublished) {
+  console.log(`Offnote already published for ${date}: ${alreadyPublished.data.id}. Auto-publish skipped.`);
+  process.exit(0);
+}
+
 if (!pending) {
   console.log(`No pending offnote draft to auto-publish for ${date} ${slot}.`);
   process.exit(0);
