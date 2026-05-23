@@ -4,8 +4,8 @@
   "account_name": "오프노트",
   "project": "afterwork-profit",
   "topic": "블로그/유튜브 부업에서 먼저 잡아야 할 검색 의도",
-  "status": "published",
-  "created_at": "2026-05-22T16:24:15.127Z",
+  "status": "approved",
+  "created_at": "2026-05-23T10:12:26.831Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
   "experiment_hypothesis": "플랫폼 선택보다 '검색자가 이미 돈을 쓰려는 순간'을 잡으면 저장과 댓글이 같이 오른다.",
@@ -53,25 +53,5 @@
     "outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_03.png",
     "outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_04.png"
   ],
-  "cardnews_quality_rule": "Cardnews must add separate criteria, checklist, comparison, or examples. Do not split the post summary into images.",
-  "media_urls": [
-    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_01.png",
-    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_02.png",
-    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_03.png",
-    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260523-evening-search-intent-first/card_04.png"
-  ],
-  "approval_requested_at": "2026-05-22T16:34:17.830Z",
-  "approved_at": "2026-05-23T08:29:12.071Z",
-  "approval_source": "telegram_callback:1421706840694236882",
-  "published_at": "2026-05-23T08:29:48.793Z",
-  "telegram_approval": {
-    "source": "telegram_callback:1421706840694236882",
-    "approved_at": "2026-05-23T08:29:12.071Z"
-  },
-  "published_reply_ids": [
-    "18017123441688714",
-    "17938836723236271",
-    "18017554673688905"
-  ],
-  "reply_published_at": "2026-05-23T08:32:34.426Z"
+  "cardnews_quality_rule": "Cardnews must add separate criteria, checklist, comparison, or examples. Do not split the post summary into images."
 }
