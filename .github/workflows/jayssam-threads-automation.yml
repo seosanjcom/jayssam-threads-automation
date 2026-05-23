@@ -73,6 +73,7 @@ jobs:
       THREADS_OAUTH_SCOPES: "threads_basic,threads_content_publish,threads_manage_insights"
       THREADS_REQUIRE_MEDIA: "true"
       THREADS_CAROUSEL_ENABLED: "true"
+      THREADS_ALLOW_SINGLE_IMAGE_FALLBACK: "true"
 
     steps:
       - name: Checkout

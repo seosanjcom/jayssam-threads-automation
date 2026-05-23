@@ -18,6 +18,26 @@ async function graphPost(url, params) {
   return JSON.parse(text);
 }
 
+async function graphPostWithRetry(url, params, { retries = 3, delayMs = 10000, label = "request" } = {}) {
+  let lastError;
+  for (let attempt = 1; attempt <= retries; attempt += 1) {
+    try {
+      return await graphPost(url, params);
+    } catch (error) {
+      lastError = error;
+      const message = String(error?.message || "");
+      const retryable =
+        message.includes("Invalid Carousel Children") ||
+        message.includes("is_transient") ||
+        message.includes("temporarily");
+      if (!retryable || attempt === retries) break;
+      console.log(`${label} failed on attempt ${attempt}/${retries}; retrying after ${delayMs}ms.`);
+      await sleep(delayMs);
+    }
+  }
+  throw lastError;
+}
+
 async function graphGet(url, params) {
   const requestUrl = new URL(url);
   for (const [key, value] of Object.entries(params)) {
@@ -185,12 +205,27 @@ if (mediaUrls.length > 1) {
     });
     children.push(child.id);
   }
-  create = await graphPost(`${base}/${userId}/threads`, {
-    media_type: "CAROUSEL",
-    children: children.join(","),
-    text: draft.threads_text,
-    access_token: token,
-  });
+  await sleep(Math.max(10000, Math.min(publishWaitMs, 30000)));
+  try {
+    create = await graphPostWithRetry(`${base}/${userId}/threads`, {
+      media_type: "CAROUSEL",
+      children: children.join(","),
+      text: draft.threads_text,
+      access_token: token,
+    }, { retries: 4, delayMs: 15000, label: "carousel container" });
+  } catch (error) {
+    if (process.env.THREADS_ALLOW_SINGLE_IMAGE_FALLBACK === "true") {
+      console.log(`Carousel creation failed, falling back to first image: ${error.message}`);
+      create = await graphPost(`${base}/${userId}/threads`, {
+        media_type: "IMAGE",
+        image_url: mediaUrls[0],
+        text: draft.threads_text,
+        access_token: token,
+      });
+    } else {
+      throw error;
+    }
+  }
 } else if (mediaUrls.length === 1) {
   create = await graphPost(`${base}/${userId}/threads`, {
     media_type: "IMAGE",
