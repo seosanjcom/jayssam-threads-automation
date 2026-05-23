@@ -94,9 +94,21 @@ function appendPublishLog({ logPath, account, draft, publish }) {
     draft_id: draft.id,
     topic: draft.topic,
     threads_media_id: publish.id,
+    reply_ids: Array.isArray(draft.published_reply_ids) ? draft.published_reply_ids : [],
     published_at: new Date().toISOString(),
   });
   writeJson(logPath, log);
+}
+
+function collectReplyTexts(draft) {
+  const source = draft.thread_comments || draft.reply_comments || draft.comment_replies || draft.comments || [];
+  if (!Array.isArray(source)) return [];
+  return source
+    .map((item) => (typeof item === "string" ? item : item.text || item.body || item.comment || ""))
+    .map((item) => String(item).trim())
+    .filter(Boolean)
+    .map((item) => (item.length > 500 ? item.slice(0, 497).trimEnd() + "..." : item))
+    .slice(0, 5);
 }
 
 function assertPublishableDraft(draft) {
@@ -150,6 +162,8 @@ const dailyLimit = Number(process.env.THREADS_DAILY_POST_LIMIT || "1");
 const minIntervalHours = Number(process.env.THREADS_MIN_INTERVAL_HOURS || "8");
 const publishLogPath = process.env.THREADS_PUBLISH_LOG || "outputs/meta-publish-log.json";
 const carouselEnabled = String(process.env.THREADS_CAROUSEL_ENABLED || "false").toLowerCase() === "true";
+const publishReplies = String(process.env.THREADS_PUBLISH_REPLIES || "true").toLowerCase() !== "false";
+const replyWaitMs = Number(process.env.THREADS_REPLY_WAIT_MS || "8000");
 const draft = JSON.parse(fs.readFileSync(draftPath, "utf8").replace(/^\uFEFF/, ""));
 
 if (!autoPublish) {
@@ -250,9 +264,33 @@ const publish = await graphPost(`${base}/${userId}/threads_publish`, {
   access_token: token
 });
 
+const replyPublishes = [];
+if (publishReplies) {
+  let replyToId = publish.id;
+  for (const replyText of collectReplyTexts(draft)) {
+    const replyCreate = await graphPost(`${base}/${userId}/threads`, {
+      media_type: "TEXT",
+      text: replyText,
+      reply_to_id: replyToId,
+      access_token: token,
+    });
+    if (replyWaitMs > 0) await sleep(replyWaitMs);
+    const replyPublish = await graphPost(`${base}/${userId}/threads_publish`, {
+      creation_id: replyCreate.id,
+      access_token: token,
+    });
+    replyPublishes.push(replyPublish);
+    replyToId = replyPublish.id;
+  }
+  if (replyPublishes.length > 0) {
+    draft.published_reply_ids = replyPublishes.map((item) => item.id);
+    fs.writeFileSync(draftPath, `${JSON.stringify(draft, null, 2)}\n`, "utf8");
+  }
+}
+
 if (safetyMode) {
   appendPublishLog({ logPath: publishLogPath, account, draft, publish });
 }
 
-console.log(JSON.stringify({ creation: create, publish }, null, 2));
+console.log(JSON.stringify({ creation: create, publish, replies: replyPublishes }, null, 2));
 

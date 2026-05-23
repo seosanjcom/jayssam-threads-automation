@@ -67,5 +67,11 @@
   "telegram_approval": {
     "source": "telegram_callback:1421706840694236882",
     "approved_at": "2026-05-23T08:29:12.071Z"
-  }
+  },
+  "published_reply_ids": [
+    "18017123441688714",
+    "17938836723236271",
+    "18017554673688905"
+  ],
+  "reply_published_at": "2026-05-23T08:32:34.426Z"
 }
