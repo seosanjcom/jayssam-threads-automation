@@ -28,14 +28,12 @@ on:
   schedule:
     # KST 10:05 - collect previous reaction metrics
     - cron: "5 1 * * *"
-    # KST 15:00 post route: 13:00 preview, 14:00 preview, 15:00 publish.
-    - cron: "0 4 * * *"
-    - cron: "0 5 * * *"
+    # KST 15:00 post route: 12:00 preview, 15:00 publish.
+    - cron: "0 3 * * *"
     - cron: "0 6 * * *"
     - cron: "20 6 * * *"
-    # KST 21:00 post route from week 2: 19:00 preview, 20:00 preview, 21:00 publish.
-    - cron: "0 10 * * *"
-    - cron: "0 11 * * *"
+    # KST 21:00 post route from week 2: 18:00 preview, 21:00 publish.
+    - cron: "0 9 * * *"
     - cron: "0 12 * * *"
     - cron: "20 12 * * *"
 
@@ -98,12 +96,10 @@ jobs:
           else
             case "${{ github.event.schedule }}" in
               "5 1 * * *") echo "mode=metrics" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 4 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 5 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "0 3 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
               "0 6 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
               "20 6 * * *") echo "mode=watchdog" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 10 * * *") node scripts/github_phase_gate.mjs "preview" "night" >> "$GITHUB_OUTPUT" ;;
-              "0 11 * * *") node scripts/github_phase_gate.mjs "preview" "night" >> "$GITHUB_OUTPUT" ;;
+              "0 9 * * *") node scripts/github_phase_gate.mjs "preview" "night" >> "$GITHUB_OUTPUT" ;;
               "0 12 * * *") node scripts/github_phase_gate.mjs "publish" "night" >> "$GITHUB_OUTPUT" ;;
               "20 12 * * *") node scripts/github_phase_gate.mjs "watchdog" "night" >> "$GITHUB_OUTPUT" ;;
               *) node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT" ;;
@@ -180,7 +176,7 @@ jobs:
           node scripts/send_telegram_message.mjs "[제이쌤 게시 완료] ${{ steps.route.outputs.slot }} 슬롯 게시 완료"
           git add -f outputs/meta-publish-log.json
           git commit -m "Record Jayssam publish $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
-          git pull --rebase origin master
+          git pull --rebase --autostash origin master
           git push
 
       - name: Watch publish status

@@ -121,20 +121,14 @@ loadEnv();
 
 const telegramBotToken = pickConfigured(process.env.JAYSSAM_TELEGRAM_BOT_TOKEN, process.env.TELEGRAM_BOT_TOKEN);
 const telegramChatId = pickConfigured(process.env.JAYSSAM_TELEGRAM_CHAT_ID, process.env.TELEGRAM_CHAT_ID);
-const hasTelegramConfig =
-  telegramBotToken &&
-  telegramChatId &&
-  !telegramBotToken.startsWith("replace_") &&
-  !telegramChatId.startsWith("replace_");
-
-if (!hasTelegramConfig) {
+if (!telegramBotToken || !telegramChatId) {
   console.log("Telegram preview skipped: bot token or chat id is missing.");
   process.exit(0);
 }
 
 const next = findNextDraft();
 if (!next) {
-  await sendMessage("[제이쌤 미리보기]\n아직 보낼 게시 후보가 없습니다. approved 또는 ready_to_review 상태의 초안이 생기면 다시 보냅니다.");
+  await sendMessage("[제이쌤 미리보기]\n아직 보낼 게시 후보가 없습니다.");
   console.log("No preview draft found.");
   process.exit(0);
 }
@@ -148,8 +142,9 @@ const sources = [
   ...(Array.isArray(draft.source_urls) ? draft.source_urls : []),
 ].filter(Boolean);
 
+const slotLabel = draft.slot === "night" ? "21시 꿀정보형" : "15시 교육뉴스 해석형";
 const message = [
-  "[제이쌤 게시 전 미리보기]",
+  `[제이쌤 미리보기] ${slotLabel}`,
   `상태: ${draft.status}`,
   `제목: ${title}`,
   `파일: ${path.relative(root, file)}`,
