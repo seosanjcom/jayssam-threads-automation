@@ -418,6 +418,137 @@ TOPICS = [
 ]
 
 
+TOPICS = [
+    {
+        "slug": "career-direct-free-tests",
+        "keyword": "무료진로검사",
+        "title": "아이 진로검사, 돈 내기 전에 이 무료 공식검사부터 해보세요",
+        "source_name": "커리어넷 진로심리검사 / EBSi 진로탐색검사",
+        "source_urls": [
+            "https://www.career.go.kr/inspct/web/psycho/vocation",
+            "https://www.career.go.kr/inspct/web/psycho/value2",
+            "https://www.career.go.kr/inspct/web/psycho/grow2",
+            "https://www.career.go.kr/inspct/web/psycho/interest",
+            "https://www.career.go.kr/inspct/web/psycho/holland",
+            "https://www.ebsi.co.kr/ebs/xip/career/careerHome.ebs",
+        ],
+        "hook": "진로검사, 처음부터 돈 내고 받을 필요 없습니다.\n공식 무료검사부터 먼저 해보세요.",
+        "body": [
+            "커리어넷에는 직업적성검사, 직업가치관검사, 진로성숙도검사, 직업흥미검사가 무료로 열려 있습니다.",
+            "EBSi 진로탐색검사는 고등학생이 흥미, 능력, 적성에 맞는 학과와 직업을 확인할 때 참고하기 좋습니다.",
+            "검사 결과는 정답표가 아니라 아이의 흥미와 적성을 비교해보는 출발점으로 쓰면 됩니다.",
+        ],
+        "slides": [
+            ("01", "무료 진로검사", "사설검사 전에 공식 무료검사부터 확인하세요."),
+            ("02", "직업적성검사", "career.go.kr/inspct/web/psycho/vocation"),
+            ("03", "직업가치관검사", "career.go.kr/inspct/web/psycho/value2"),
+            ("04", "진로성숙도검사", "career.go.kr/inspct/web/psycho/grow2"),
+            ("05", "직업흥미검사", "interest 또는 holland 링크를 확인하세요."),
+            ("06", "EBSi 진로탐색", "ebsi.co.kr/ebs/xip/career/careerHome.ebs"),
+        ],
+        "resource": {
+            "site": "커리어넷 + EBSi",
+            "url_label": "career.go.kr/inspct/web/psycho/vocation",
+            "free": "직업적성, 직업가치관, 진로성숙도, 직업흥미, EBSi 진로탐색검사",
+            "menu": "커리어넷 진로심리검사 또는 EBSi 진로탐색검사",
+            "use": "검사 2개 이상을 해보고 반복되는 흥미, 적성, 가치관을 비교하기",
+            "check": "직업명보다 흥미·적성·가치관 결과의 공통점 보기",
+            "caution": "검사 결과를 진로 확정표처럼 쓰지 말고 탐색 후보로만 보기",
+            "search": "커리어넷 직업적성검사 / EBSi 진로탐색검사",
+        },
+        "expert": {
+            "news_frame": "진로검사는 처음부터 유료 검사로 갈 필요가 없습니다. 공식 무료검사만 제대로 써도 아이의 흥미와 적성을 볼 자료가 생깁니다.",
+            "must_know": "커리어넷에는 직업적성검사, 직업가치관검사, 진로성숙도검사, 직업흥미검사가 무료로 제공됩니다. EBSi 진로탐색검사도 함께 확인할 수 있습니다.",
+            "avoid": "검사 결과에 나온 추천 직업을 그대로 목표로 정하면 아이의 가능성을 좁힐 수 있습니다.",
+            "check": "좋은 활용법은 검사 여러 개에서 반복되는 흥미, 적성, 가치관의 공통점을 보는 것입니다.",
+            "use_for": "저장할 링크: career.go.kr/inspct/web/psycho/vocation, career.go.kr/inspct/web/psycho/value2, career.go.kr/inspct/web/psycho/grow2, ebsi.co.kr/ebs/xip/career/careerHome.ebs",
+        },
+    },
+    {
+        "slug": "career-interest-tests",
+        "keyword": "직업흥미검사",
+        "title": "아이가 좋아하는 일을 모르겠다면, 커리어넷 직업흥미검사부터 보세요",
+        "source_name": "커리어넷 직업흥미검사(K) / 직업흥미검사(H)",
+        "source_urls": [
+            "https://www.career.go.kr/inspct/web/psycho/interest",
+            "https://www.career.go.kr/inspct/web/psycho/holland",
+        ],
+        "hook": "아이가 뭘 좋아하는지 모르겠다면\n직업명부터 묻지 말고 흥미검사부터 보세요.",
+        "body": [
+            "커리어넷 직업흥미검사(K)는 직업과 관련된 흥미를 확인하는 데 쓸 수 있습니다.",
+            "직업흥미검사(H)는 흥미 유형과 관련 직업을 함께 볼 때 유용합니다.",
+            "결과는 직업을 고르는 정답이 아니라 아이가 반복해서 끌리는 활동을 찾는 자료로 쓰는 편이 좋습니다.",
+        ],
+        "slides": [
+            ("01", "흥미검사", "좋아하는 일을 모를 때 먼저 볼 검사입니다."),
+            ("02", "K 검사", "career.go.kr/inspct/web/psycho/interest"),
+            ("03", "H 검사", "career.go.kr/inspct/web/psycho/holland"),
+            ("04", "볼 것", "추천 직업보다 흥미 유형을 먼저 봅니다."),
+            ("05", "활용법", "반복해서 끌리는 활동을 기록하세요."),
+            ("06", "저장팁", "검색어: 커리어넷 직업흥미검사"),
+        ],
+        "resource": {
+            "site": "커리어넷",
+            "url_label": "career.go.kr/inspct/web/psycho/interest",
+            "free": "직업흥미검사(K), 직업흥미검사(H)",
+            "menu": "진로심리검사 > 직업흥미검사",
+            "use": "흥미 유형과 추천 직업을 비교해 아이가 끌리는 활동군 찾기",
+            "check": "추천 직업보다 흥미 유형과 활동 키워드 먼저 보기",
+            "caution": "흥미검사 결과를 아이의 한계로 해석하지 않기",
+            "search": "커리어넷 직업흥미검사",
+        },
+        "expert": {
+            "news_frame": "진로 고민의 시작은 직업명을 정하는 것이 아니라 아이가 어떤 활동에 반복해서 끌리는지 보는 일입니다.",
+            "must_know": "커리어넷 직업흥미검사(K/H)는 직업 관련 흥미와 유형을 확인할 수 있는 무료 공식 검사입니다.",
+            "avoid": "추천 직업 목록만 보고 진로를 결정하면 흥미 유형을 제대로 활용하지 못합니다.",
+            "check": "결과표에서 먼저 볼 것은 직업명보다 아이가 어떤 활동군에 반응하는지입니다.",
+            "use_for": "저장할 링크: career.go.kr/inspct/web/psycho/interest, career.go.kr/inspct/web/psycho/holland",
+        },
+    },
+    {
+        "slug": "ebsi-career-test-direct",
+        "keyword": "EBSi진로검사",
+        "title": "고등학생 진로검사는 EBSi 진로탐색검사도 같이 보면 좋습니다",
+        "source_name": "EBSi 진로탐색검사 / EBSi 학습유형검사",
+        "source_urls": [
+            "https://www.ebsi.co.kr/ebs/xip/career/careerHome.ebs",
+            "https://www.ebsi.co.kr/ebs/xip/learnStyle/learnStyleHome.ebs",
+        ],
+        "hook": "고등학생이라면 커리어넷만 보지 말고\nEBSi 진로탐색검사도 같이 확인해보세요.",
+        "body": [
+            "EBSi 진로탐색검사는 직업적 흥미, 능력, 적성에 맞는 학과와 직업을 확인하는 검사입니다.",
+            "EBSi 학습유형검사는 학습 특성과 추천 학습전략을 보는 데 도움이 됩니다.",
+            "진로와 공부 방향이 같이 흔들릴 때 두 검사를 함께 보면 대화할 자료가 더 구체적입니다.",
+        ],
+        "slides": [
+            ("01", "EBSi 무료검사", "고등학생 진로·학습 방향을 같이 볼 수 있습니다."),
+            ("02", "진로탐색검사", "ebsi.co.kr/ebs/xip/career/careerHome.ebs"),
+            ("03", "학습유형검사", "ebsi.co.kr/ebs/xip/learnStyle/learnStyleHome.ebs"),
+            ("04", "문항수", "진로탐색 192문항, 학습유형 120문항입니다."),
+            ("05", "활용법", "학과·직업 추천과 학습전략을 함께 봅니다."),
+            ("06", "저장팁", "검색어: EBSi 진로탐색검사"),
+        ],
+        "resource": {
+            "site": "EBSi",
+            "url_label": "ebsi.co.kr/ebs/xip/career/careerHome.ebs",
+            "free": "진로탐색검사, 학습유형검사",
+            "menu": "EBSi > 진로탐색검사 / 학습유형검사",
+            "use": "진로 추천과 학습전략을 함께 확인해 고등학생 상담 자료로 쓰기",
+            "check": "추천 학과·직업과 학습전략이 서로 연결되는지 보기",
+            "caution": "검사 결과를 성적 예측이나 진로 확정 자료로 쓰지 않기",
+            "search": "EBSi 진로탐색검사",
+        },
+        "expert": {
+            "news_frame": "고등학생은 진로와 공부 전략이 함께 움직이는 시기라 진로검사와 학습유형검사를 같이 보면 도움이 됩니다.",
+            "must_know": "EBSi 진로탐색검사는 192문항, 학습유형검사는 120문항으로 구성되어 무료로 확인할 수 있습니다.",
+            "avoid": "추천 학과나 직업을 정답처럼 받아들이면 검사 활용도가 떨어집니다.",
+            "check": "좋은 활용법은 진로 추천과 학습전략이 어디서 겹치는지 보는 것입니다.",
+            "use_for": "저장할 링크: ebsi.co.kr/ebs/xip/career/careerHome.ebs, ebsi.co.kr/ebs/xip/learnStyle/learnStyleHome.ebs",
+        },
+    },
+]
+
+
 def kst_today() -> str:
     return datetime.now(KST).date().isoformat()
 
