@@ -62,7 +62,7 @@ jobs:
       THREADS_AUTO_PUBLISH: "true"
       THREADS_SAFETY_MODE: "true"
       THREADS_DAILY_POST_LIMIT: "2"
-      THREADS_MIN_INTERVAL_HOURS: "6"
+      THREADS_MIN_INTERVAL_HOURS: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'publish' && '0' || '6' }}
       THREADS_PUBLISH_WAIT_MS: "30000"
       THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true"
       THREADS_EXPECTED_USERNAME: "jayssam_edu"
