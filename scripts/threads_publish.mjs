@@ -93,6 +93,7 @@ function appendPublishLog({ logPath, account, draft, publish }) {
     account,
     draft_id: draft.id,
     topic: draft.topic,
+    topic_tag: draft.topic_tag || draft.topicTag || "",
     threads_media_id: publish.id,
     reply_ids: Array.isArray(draft.published_reply_ids) ? draft.published_reply_ids : [],
     published_at: new Date().toISOString(),
@@ -185,6 +186,8 @@ const account = draft.account || userId;
 const allMediaUrls = Array.isArray(draft.media_urls) ? draft.media_urls.filter(Boolean) : [];
 const mediaUrls = carouselEnabled ? allMediaUrls : allMediaUrls.slice(0, 1);
 const requiresCardnews = process.env.THREADS_REQUIRE_MEDIA === "true";
+const topicTag = String(draft.topic_tag || draft.topicTag || "").trim();
+const topicParams = topicTag ? { topic_tag: topicTag.slice(0, 50) } : {};
 
 assertPublishableDraft(draft);
 
@@ -225,6 +228,7 @@ if (mediaUrls.length > 1) {
       media_type: "CAROUSEL",
       children: children.join(","),
       text: draft.threads_text,
+      ...topicParams,
       access_token: token,
     }, { retries: 4, delayMs: 15000, label: "carousel container" });
   } catch (error) {
@@ -234,6 +238,7 @@ if (mediaUrls.length > 1) {
         media_type: "IMAGE",
         image_url: mediaUrls[0],
         text: draft.threads_text,
+        ...topicParams,
         access_token: token,
       });
     } else {
@@ -245,12 +250,14 @@ if (mediaUrls.length > 1) {
     media_type: "IMAGE",
     image_url: mediaUrls[0],
     text: draft.threads_text,
+    ...topicParams,
     access_token: token,
   });
 } else {
   create = await graphPost(`${base}/${userId}/threads`, {
     media_type: "TEXT",
     text: draft.threads_text,
+    ...topicParams,
     access_token: token
   });
 }

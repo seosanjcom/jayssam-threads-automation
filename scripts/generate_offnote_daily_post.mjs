@@ -21,6 +21,7 @@ function pickTopic(date, slot) {
   const topics = [
     {
       slug: "cooling-bedding-keywords",
+      topicTag: "블로그수익화",
       topic: "여름 냉감침구 검색어 선점",
       hypothesis: "여름 상품은 추천보다 실패 회피 검색어가 강하다. 단점, 세탁, 실제 체감 키워드로 들어가면 저장과 클릭을 동시에 노릴 수 있다.",
       text:
@@ -59,6 +60,7 @@ function pickTopic(date, slot) {
     },
     {
       slug: "ai-document-automation-keywords",
+      topicTag: "AI부업",
       topic: "AI 문서 자동화 검색어 선점",
       hypothesis: "AI 부업은 넓게 말하면 약하다. 직장인이 매주 반복하는 문서 작업 하나를 줄이는 키워드가 전자책, 템플릿, 강의까지 연결된다.",
       text:
@@ -97,6 +99,7 @@ function pickTopic(date, slot) {
     },
     {
       slug: "rainy-shoe-odor-keywords",
+      topicTag: "쇼츠부업",
       topic: "장마철 신발 냄새 검색어 선점",
       hypothesis: "장마 시작 전 불편 검색어를 먼저 잡으면 쇼츠와 블로그에서 빠른 반응을 만들 수 있다. 냄새 제거, 말리는 법, 건조기 단점을 같이 묶는다.",
       text:
@@ -146,6 +149,7 @@ function makeDraft(date, slot) {
     account_name: "오프노트",
     project: "afterwork-profit",
     topic: picked.topic,
+    topic_tag: picked.topicTag,
     status: "approved",
     created_at: new Date().toISOString(),
     source: "github-actions-offnote-generator",
