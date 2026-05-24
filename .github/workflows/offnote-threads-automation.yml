@@ -225,6 +225,7 @@ jobs:
           DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt | tr '\\' '/')"
           node scripts/validate_offnote_draft.mjs "$DRAFT_PATH"
           THREADS_REQUIRE_MEDIA=false THREADS_DAILY_POST_LIMIT=3 THREADS_MIN_INTERVAL_HOURS=0 node scripts/threads_publish.mjs "$DRAFT_PATH"
+          node -e "const fs=require('fs');const p=process.argv[1];const d=JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,''));d.status='published';d.published_at=new Date().toISOString();d.manual_publish=true;fs.writeFileSync(p,JSON.stringify(d,null,2)+'\n','utf8');" "$DRAFT_PATH"
 
       - name: Commit approval check results
         if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'approval_check' || steps.route.outputs.mode == 'auto_publish' || steps.route.outputs.mode == 'manual_publish')

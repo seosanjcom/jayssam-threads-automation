@@ -4,7 +4,7 @@
   "account_name": "오프노트",
   "project": "afterwork-profit",
   "topic": "AI 문서 자동화 검색어 선점",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-05-24T11:51:56.207Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -44,12 +44,14 @@
   "safety_rules": [
     "No income guarantee.",
     "No account-mixing: publish only when Threads profile username is offnote.kr.",
-    "Cardnews required before publish.",
+    "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held."
   ],
   "published_reply_ids": [
     "18091004312594960",
     "18395085865159094",
     "18103915586051736"
-  ]
+  ],
+  "published_at": "2026-05-24T11:57:55.534Z",
+  "manual_publish": true
 }

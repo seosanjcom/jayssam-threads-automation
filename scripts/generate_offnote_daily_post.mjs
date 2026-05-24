@@ -157,7 +157,7 @@ function makeDraft(date, slot) {
     safety_rules: [
       "No income guarantee.",
       "No account-mixing: publish only when Threads profile username is offnote.kr.",
-      "Cardnews required before publish.",
+      "Cardnews optional; use it only for high-density posts.",
       "Auto-publish unless held.",
     ],
   };
