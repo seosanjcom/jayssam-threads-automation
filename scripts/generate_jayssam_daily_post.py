@@ -549,6 +549,124 @@ TOPICS = [
 ]
 
 
+TOPICS = [
+    {
+        "slug": "careernet-holland-interest",
+        "keyword": "직업흥미검사",
+        "title": "아이가 뭘 좋아하는지 모르겠다면, 커리어넷 직업흥미검사(H)부터 보세요",
+        "source_name": "커리어넷 직업흥미검사(H)",
+        "source_urls": ["https://www.career.go.kr/inspct/web/psycho/holland"],
+        "hook": "아이에게 ‘꿈이 뭐야?’라고 묻기 전에\n먼저 해볼 만한 무료 검사가 있습니다.",
+        "body": [
+            "커리어넷 직업흥미검사(H)는 아이의 흥미 유형과 관련 직업을 확인하는 무료 공식 검사입니다.",
+            "결과에서 바로 직업명을 고르기보다 아이가 어떤 활동군에 더 끌리는지 보는 데 쓰면 좋습니다.",
+            "진로가 막막할 때 직업명부터 정하려고 하기보다, 흥미의 방향을 먼저 확인하는 검사로 활용하세요.",
+        ],
+        "slides": [
+            ("01", "직업흥미검사(H)", "아이의 흥미 유형과 관련 직업을 볼 수 있는 무료 검사입니다."),
+            ("02", "바로가기", "career.go.kr/inspct/web/psycho/holland"),
+            ("03", "무엇을 보나요", "아이가 어떤 직업 활동에 흥미를 보이는지 확인합니다."),
+            ("04", "어떻게 쓰나요", "추천 직업보다 흥미 유형을 먼저 읽으세요."),
+            ("05", "주의할 점", "결과를 진로 확정표처럼 쓰면 안 됩니다."),
+            ("06", "저장팁", "직업명보다 반복되는 흥미 방향을 보세요."),
+        ],
+        "resource": {
+            "site": "커리어넷 직업흥미검사(H)",
+            "url_label": "https://www.career.go.kr/inspct/web/psycho/holland",
+            "free": "흥미 유형과 관련 직업 확인",
+            "menu": "바로가기 링크 접속 후 검사 진행",
+            "use": "추천 직업명보다 흥미 유형과 활동군을 먼저 보기",
+            "check": "아이의 말, 놀이, 과제 선택에서 반복되는 흥미와 비교하기",
+            "caution": "검사 결과를 아이의 한계나 정답으로 해석하지 않기",
+            "search": "커리어넷 직업흥미검사 H",
+        },
+        "expert": {
+            "news_frame": "직업흥미검사(H)는 아이가 어떤 직업 활동에 흥미를 보이는지 확인할 수 있는 커리어넷 무료 검사입니다.",
+            "must_know": "이 검사는 직업명을 정해주는 검사가 아니라, 흥미 유형과 관련 직업을 통해 아이가 끌리는 활동의 방향을 보는 검사입니다.",
+            "avoid": "결과에 나온 추천 직업을 그대로 목표로 정하면 오히려 진로 탐색이 좁아질 수 있습니다.",
+            "check": "결과표에서는 직업명보다 흥미 유형, 활동군, 반복해서 끌리는 키워드를 먼저 보세요.",
+            "use_for": "바로가기: https://www.career.go.kr/inspct/web/psycho/holland",
+        },
+    },
+    {
+        "slug": "careernet-vocation-aptitude",
+        "keyword": "직업적성검사",
+        "title": "아이의 적성이 궁금하다면, 커리어넷 직업적성검사를 먼저 확인하세요",
+        "source_name": "커리어넷 직업적성검사",
+        "source_urls": ["https://www.career.go.kr/inspct/web/psycho/vocation"],
+        "hook": "아이가 뭘 잘하는지 막연하다면\n무료 공식 적성검사부터 확인해볼 수 있습니다.",
+        "body": [
+            "커리어넷 직업적성검사는 직업과 관련된 다양한 능력을 어느 정도 갖추고 있는지 알아보는 검사입니다.",
+            "결과는 ‘이 직업을 해야 한다’가 아니라 아이가 어떤 능력 영역에서 강점 신호를 보이는지 보는 참고자료입니다.",
+            "흥미검사와 함께 보면 좋아하는 것과 잘하는 것의 교집합을 찾는 데 도움이 됩니다.",
+        ],
+        "slides": [
+            ("01", "직업적성검사", "직업 관련 능력의 강점 신호를 확인하는 무료 검사입니다."),
+            ("02", "바로가기", "career.go.kr/inspct/web/psycho/vocation"),
+            ("03", "무엇을 보나요", "직업 수행과 관련된 능력 영역을 봅니다."),
+            ("04", "어떻게 쓰나요", "흥미검사 결과와 겹치는 지점을 찾으세요."),
+            ("05", "주의할 점", "낮게 나온 영역을 아이의 한계로 보지 마세요."),
+            ("06", "저장팁", "좋아하는 것과 잘하는 것의 교집합을 보세요."),
+        ],
+        "resource": {
+            "site": "커리어넷 직업적성검사",
+            "url_label": "https://www.career.go.kr/inspct/web/psycho/vocation",
+            "free": "직업 관련 능력 영역 확인",
+            "menu": "바로가기 링크 접속 후 검사 진행",
+            "use": "흥미검사 결과와 비교해 강점과 관심의 교집합 찾기",
+            "check": "높게 나온 능력 영역이 실제 생활 속 선택과도 연결되는지 보기",
+            "caution": "적성검사를 성적표처럼 받아들이지 않기",
+            "search": "커리어넷 직업적성검사",
+        },
+        "expert": {
+            "news_frame": "직업적성검사는 아이가 직업과 관련된 여러 능력 영역에서 어떤 강점 신호를 보이는지 확인하는 무료 검사입니다.",
+            "must_know": "이 검사는 직업을 대신 정해주는 검사가 아니라, 흥미와 함께 비교할 때 진로 탐색의 단서가 됩니다.",
+            "avoid": "낮게 나온 영역을 약점 낙인처럼 받아들이면 검사 활용이 오히려 해로울 수 있습니다.",
+            "check": "결과표에서는 높은 능력 영역이 실제 활동 선택과도 이어지는지 확인해보세요.",
+            "use_for": "바로가기: https://www.career.go.kr/inspct/web/psycho/vocation",
+        },
+    },
+    {
+        "slug": "ebsi-career-exploration",
+        "keyword": "EBSi진로탐색",
+        "title": "고등학생이라면 EBSi 진로탐색검사를 한 번 확인해보세요",
+        "source_name": "EBSi 진로탐색검사",
+        "source_urls": ["https://www.ebsi.co.kr/ebs/xip/career/careerHome.ebs"],
+        "hook": "고등학생 진로가 애매할 때\nEBSi에서 무료로 해볼 수 있는 검사가 있습니다.",
+        "body": [
+            "EBSi 진로탐색검사는 직업적 흥미와 능력, 적성에 맞는 학과와 직업을 확인하는 검사입니다.",
+            "총 192문항으로 구성되어 있고, 고등학생이 학과와 직업 방향을 함께 볼 때 참고하기 좋습니다.",
+            "추천 학과나 직업을 정답으로 보기보다 아이가 어떤 분야에 반복해서 반응하는지 보는 자료로 쓰세요.",
+        ],
+        "slides": [
+            ("01", "EBSi 진로탐색검사", "고등학생이 학과와 직업 방향을 참고할 수 있는 무료 검사입니다."),
+            ("02", "바로가기", "ebsi.co.kr/ebs/xip/career/careerHome.ebs"),
+            ("03", "무엇을 보나요", "흥미, 능력, 적성에 맞는 학과와 직업을 봅니다."),
+            ("04", "문항수", "총 192문항으로 구성되어 있습니다."),
+            ("05", "어떻게 쓰나요", "추천 학과보다 반복되는 분야를 보세요."),
+            ("06", "주의할 점", "결과는 확정이 아니라 탐색 자료입니다."),
+        ],
+        "resource": {
+            "site": "EBSi 진로탐색검사",
+            "url_label": "https://www.ebsi.co.kr/ebs/xip/career/careerHome.ebs",
+            "free": "흥미, 능력, 적성 기반 학과·직업 정보 확인",
+            "menu": "바로가기 링크 접속 후 검사 진행",
+            "use": "추천 학과와 직업을 보고 반복되는 분야 키워드 찾기",
+            "check": "흥미, 능력, 적성 결과가 같은 방향을 가리키는지 보기",
+            "caution": "추천 학과와 직업을 진로 확정으로 받아들이지 않기",
+            "search": "EBSi 진로탐색검사",
+        },
+        "expert": {
+            "news_frame": "EBSi 진로탐색검사는 고등학생이 흥미, 능력, 적성을 바탕으로 학과와 직업 정보를 확인할 수 있는 무료 검사입니다.",
+            "must_know": "이 검사는 총 192문항으로 구성되어 있으며, 학과와 직업 방향을 함께 참고할 때 유용합니다.",
+            "avoid": "추천 학과나 직업을 그대로 확정하면 아이의 탐색 폭이 좁아질 수 있습니다.",
+            "check": "결과표에서는 추천명보다 반복되는 분야와 활동 키워드를 먼저 보세요.",
+            "use_for": "바로가기: https://www.ebsi.co.kr/ebs/xip/career/careerHome.ebs",
+        },
+    },
+]
+
+
 def kst_today() -> str:
     return datetime.now(KST).date().isoformat()
 
@@ -760,7 +878,9 @@ def draw_rows(draw: ImageDraw.ImageDraw, rows: list[tuple[str, str]], y: int, ac
         row_height = 166 if len(text) > 34 else 106
         draw.rounded_rectangle((82, y, 998, y + row_height), radius=18, fill="#f5f6f8", outline="#e5e7eb", width=2)
         draw_badge(draw, 110, y + 32, label, accent)
-        draw_multiline(draw, (250, y + 24), text, font(29, True), "#161616", 700, 10)
+        is_url = "http://" in text or "https://" in text or ".go.kr/" in text or ".ebs/" in text or ".co.kr/" in text
+        row_font = font(22 if is_url else 29, True)
+        draw_multiline(draw, (250, y + 24), text, row_font, "#161616", 720, 10)
         y += row_height + 22
     return y
 
@@ -1255,10 +1375,10 @@ def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_ty
     resource = topic.get("resource", {})
     parts = [
         topic["hook"],
-        f"오늘 저장할 곳은 {resource.get('site', '공식 사이트')}입니다.",
-        f"주소/검색어: {resource.get('url_label', '')} / {resource.get('search', topic['keyword'])}",
+        f"오늘 볼 검사는 {resource.get('site', '공식 검사')}입니다.",
+        f"바로가기: {resource.get('url_label', '')}",
         expert["must_know"],
-        f"어디서 보냐면: {resource.get('menu', '')}",
+        f"정확히는: {resource.get('free', '')}",
         f"이렇게 쓰세요: {resource.get('use', expert['check'])}",
         f"주의할 점: {resource.get('caution', expert['avoid'])}",
     ]
