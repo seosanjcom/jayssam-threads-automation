@@ -2,7 +2,7 @@
   "id": "GHA-20260524-afternoon-careernet-holland-interest",
   "date": "2026-05-24",
   "slot": "afternoon",
-  "account": "",
+  "account": "26746590168375878",
   "status": "approved",
   "pillar": "직업흥미검사",
   "keyword": "직업흥미검사",
@@ -36,14 +36,22 @@
   ],
   "source_urls": [
     "https://www.career.go.kr/inspct/web/psycho/holland",
-    "https://www.korea.kr/news/policyNewsView.do?newsId=148964990&call_from=rsslink"
+    "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9YZEM0SkN1bkpsYUhOX2hQQ29HMTM3T1hxMkZpT252WWxxczduU2pDZWlYR2pvQUdDblN6Z3RqWW5lRzg3QnJpTXhYZzFVT1hkeFpWRw?oc=5"
   ],
   "source_note": "커리어넷 직업흥미검사(H)",
   "latest_signal": {
-    "title": "AI 인재 양성·돌봄 강화 등 '국가가 책임지는 교육' 확대",
-    "link": "https://www.korea.kr/news/policyNewsView.do?newsId=148964990&call_from=rsslink",
-    "pub_date": "Fri, 22 May 2026 07:31:00 GMT",
-    "source": "대한민국 정책브리핑 교육부 RSS"
+    "title": "교육·연구·진로 잇는 AI 플랫폼 구축… 글로벌 고등교육 새 기준 정립 - v.daum.net",
+    "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9YZEM0SkN1bkpsYUhOX2hQQ29HMTM3T1hxMkZpT252WWxxczduU2pDZWlYR2pvQUdDblN6Z3RqWW5lRzg3QnJpTXhYZzFVT1hkeFpWRw?oc=5",
+    "pub_date": "Wed, 20 May 2026 15:06:00 GMT",
+    "source": "Google News 교육 이슈 RSS"
   },
-  "created_at": "2026-05-24T21:55:10+09:00"
+  "created_at": "2026-05-24T22:18:50+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-24/afternoon/careernet-holland-interest/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-24/afternoon/careernet-holland-interest/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-24/afternoon/careernet-holland-interest/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-24/afternoon/careernet-holland-interest/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-24/afternoon/careernet-holland-interest/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-24/afternoon/careernet-holland-interest/card_06.png"
+  ]
 }
