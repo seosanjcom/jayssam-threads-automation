@@ -50,7 +50,11 @@ function findDraftById(id) {
       }
     })
     .filter(Boolean)
-    .find((item) => item.data.account === "lifemagazine_" && item.data.id === id && item.data.status !== "published");
+    .find((item) =>
+      item.data.account === "lifemagazine_" &&
+      (item.data.id === id || item.data.telegram_approval_token === id) &&
+      item.data.status !== "published"
+    );
 }
 
 export function applyLifemagazineApprovalAction(draft, action) {
@@ -82,7 +86,7 @@ async function sendMessage(text) {
 }
 
 async function handleCallback(callback) {
-  if (!callback?.data?.startsWith("lifemagazine:")) return;
+  if (!callback?.data?.startsWith("lifemagazine:") && !callback?.data?.startsWith("life:")) return;
   const [, action, id] = callback.data.split(":");
   const item = findDraftById(id);
   if (!item) {

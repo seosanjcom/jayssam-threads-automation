@@ -191,6 +191,7 @@ test("telegram preview marks draft pending and renders readable Korean message",
 
   assert.equal(prepared.status, "pending_approval");
   assert.equal(prepared.approval_requested_at, "2026-05-24T10:00:00.000Z");
+  assert.match(prepared.telegram_approval_token, /^[a-f0-9]{16}$/);
   assert.match(message, /\[라이프매거진 미리보기\]/);
   assert.match(message, /승인하면 approved 상태/);
   assert.match(message, /댓글 1/);

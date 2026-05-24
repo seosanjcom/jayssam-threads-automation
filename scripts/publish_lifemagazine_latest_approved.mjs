@@ -7,6 +7,15 @@ const account = "lifemagazine_";
 const automationRoot = path.join("outputs", "lifemagazine", "automation");
 const publishLogPath = process.env.THREADS_PUBLISH_LOG || "outputs/lifemagazine/meta-publish-log.json";
 
+function loadEnv() {
+  if (!fs.existsSync(".env")) return;
+  for (const line of fs.readFileSync(".env", "utf8").split(/\r?\n/)) {
+    if (!line || line.trim().startsWith("#") || !line.includes("=")) continue;
+    const [key, ...rest] = line.split("=");
+    if (!process.env[key]) process.env[key] = rest.join("=").trim();
+  }
+}
+
 function readJsonIfExists(filePath, fallback) {
   if (!fs.existsSync(filePath)) return fallback;
   try {
@@ -51,6 +60,18 @@ export function latestApprovedLifemagazineDraft(options = {}) {
 const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isDirectRun) {
+  loadEnv();
+
+  if (!process.env.THREADS_ACCESS_TOKEN && process.env.LIFEMAGAZINE_THREADS_ACCESS_TOKEN) {
+    process.env.THREADS_ACCESS_TOKEN = process.env.LIFEMAGAZINE_THREADS_ACCESS_TOKEN;
+  }
+  if (!process.env.THREADS_APP_ID && process.env.LIFEMAGAZINE_THREADS_APP_ID) {
+    process.env.THREADS_APP_ID = process.env.LIFEMAGAZINE_THREADS_APP_ID;
+  }
+  if (!process.env.THREADS_APP_SECRET && process.env.LIFEMAGAZINE_THREADS_APP_SECRET) {
+    process.env.THREADS_APP_SECRET = process.env.LIFEMAGAZINE_THREADS_APP_SECRET;
+  }
+
   const token = process.env.THREADS_ACCESS_TOKEN || "";
   if (!token || token.includes("replace_")) {
     console.log("Lifemagazine publish skipped: THREADS_ACCESS_TOKEN is missing.");

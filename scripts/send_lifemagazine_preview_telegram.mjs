@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { pathToFileURL } from "node:url";
 
 const root = process.cwd();
@@ -33,14 +34,16 @@ function commentsPreview(draft) {
 
 export function prepareLifemagazinePreviewDraft(draft, now = new Date().toISOString()) {
   if (draft.account !== "lifemagazine_") throw new Error(`Not a lifemagazine_ draft: ${draft.account}`);
+  const approvalToken = draft.telegram_approval_token || crypto.createHash("sha256").update(String(draft.id)).digest("hex").slice(0, 16);
   if (draft.status === "ready_to_review" || draft.status === "draft") {
     return {
       ...draft,
       status: "pending_approval",
       approval_requested_at: now,
+      telegram_approval_token: approvalToken,
     };
   }
-  return draft;
+  return { ...draft, telegram_approval_token: approvalToken };
 }
 
 export function buildLifemagazineTelegramMessage(draft, options = {}) {
@@ -95,8 +98,8 @@ export async function sendLifemagazinePreview(draftPath, options = {}) {
   body.set("disable_web_page_preview", "true");
   body.set("reply_markup", JSON.stringify({
     inline_keyboard: [[
-      { text: "승인", callback_data: `lifemagazine:approve:${draft.id}` },
-      { text: "보류", callback_data: `lifemagazine:hold:${draft.id}` },
+      { text: "승인", callback_data: `life:approve:${draft.telegram_approval_token}` },
+      { text: "보류", callback_data: `life:hold:${draft.telegram_approval_token}` },
     ]],
   }));
   await telegram("sendMessage", body);
