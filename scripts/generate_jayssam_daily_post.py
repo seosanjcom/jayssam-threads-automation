@@ -553,10 +553,10 @@ TOPICS = [
     {
         "slug": "careernet-holland-interest",
         "keyword": "직업흥미검사",
-        "title": "아이가 뭘 좋아하는지 모르겠다면, 커리어넷 직업흥미검사(H)부터 보세요",
+        "title": "우리 아이가 어떤 직업에 흥미 있는지 알고 계시나요?",
         "source_name": "커리어넷 직업흥미검사(H)",
         "source_urls": ["https://www.career.go.kr/inspct/web/psycho/holland"],
-        "hook": "아이에게 ‘꿈이 뭐야?’라고 묻기 전에\n먼저 해볼 만한 무료 검사가 있습니다.",
+        "hook": "우리 아이가 어떤 직업에 흥미 있는지 알고 계시나요?\n비싼 진로검사 전에 무료로 해볼 수 있는 공식검사가 있습니다.",
         "body": [
             "커리어넷 직업흥미검사(H)는 아이의 흥미 유형과 관련 직업을 확인하는 무료 공식 검사입니다.",
             "결과에서 바로 직업명을 고르기보다 아이가 어떤 활동군에 더 끌리는지 보는 데 쓰면 좋습니다.",
@@ -591,10 +591,10 @@ TOPICS = [
     {
         "slug": "careernet-vocation-aptitude",
         "keyword": "직업적성검사",
-        "title": "아이의 적성이 궁금하다면, 커리어넷 직업적성검사를 먼저 확인하세요",
+        "title": "우리 아이가 뭘 잘하는지 막막할 때, 먼저 볼 무료 검사가 있습니다",
         "source_name": "커리어넷 직업적성검사",
         "source_urls": ["https://www.career.go.kr/inspct/web/psycho/vocation"],
-        "hook": "아이가 뭘 잘하는지 막연하다면\n무료 공식 적성검사부터 확인해볼 수 있습니다.",
+        "hook": "우리 아이가 뭘 잘하는지 막막하신가요?\n비싼 적성검사 전에 국가 진로정보망에서 무료로 확인해볼 수 있습니다.",
         "body": [
             "커리어넷 직업적성검사는 직업과 관련된 다양한 능력을 어느 정도 갖추고 있는지 알아보는 검사입니다.",
             "결과는 ‘이 직업을 해야 한다’가 아니라 아이가 어떤 능력 영역에서 강점 신호를 보이는지 보는 참고자료입니다.",
@@ -629,10 +629,10 @@ TOPICS = [
     {
         "slug": "ebsi-career-exploration",
         "keyword": "EBSi진로탐색",
-        "title": "고등학생이라면 EBSi 진로탐색검사를 한 번 확인해보세요",
+        "title": "고등학생 진로가 애매할 때, EBSi 무료 진로탐색검사를 써보세요",
         "source_name": "EBSi 진로탐색검사",
         "source_urls": ["https://www.ebsi.co.kr/ebs/xip/career/careerHome.ebs"],
-        "hook": "고등학생 진로가 애매할 때\nEBSi에서 무료로 해볼 수 있는 검사가 있습니다.",
+        "hook": "고등학생 자녀 진로가 애매하신가요?\nEBSi에 무료로 해볼 수 있는 진로탐색검사가 있습니다.",
         "body": [
             "EBSi 진로탐색검사는 직업적 흥미와 능력, 적성에 맞는 학과와 직업을 확인하는 검사입니다.",
             "총 192문항으로 구성되어 있고, 고등학생이 학과와 직업 방향을 함께 볼 때 참고하기 좋습니다.",
@@ -1375,7 +1375,6 @@ def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_ty
     resource = topic.get("resource", {})
     parts = [
         topic["hook"],
-        f"오늘 볼 검사는 {resource.get('site', '공식 검사')}입니다.",
         f"바로가기: {resource.get('url_label', '')}",
         expert["must_know"],
         f"정확히는: {resource.get('free', '')}",
