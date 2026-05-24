@@ -46,5 +46,10 @@
     "No account-mixing: publish only when Threads profile username is offnote.kr.",
     "Cardnews required before publish.",
     "Auto-publish unless held."
+  ],
+  "published_reply_ids": [
+    "18091004312594960",
+    "18395085865159094",
+    "18103915586051736"
   ]
 }
