@@ -125,7 +125,7 @@ jobs:
           esac
 
       - name: Setup card image runtime
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
+        if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'preview' || steps.route.outputs.mode == 'auto_publish')
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-noto-cjk
@@ -193,6 +193,27 @@ jobs:
       - name: Check Telegram approval and publish
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'approval_check'
         run: node scripts/telegram_check_offnote_approvals.mjs
+
+      - name: Ensure due Offnote draft assets
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'auto_publish'
+        run: |
+          node scripts/generate_offnote_daily_post.mjs "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+          if [[ "$(cat outputs/afterwork-profit/preview-created.txt)" == "true" ]]; then
+            node scripts/validate_offnote_draft.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+            python scripts/generate_offnote_cardnews.py "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -f outputs/afterwork-profit outputs/cards/offnote
+            git commit -m "Add Offnote auto-publish assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
+            git pull --rebase
+            git push
+            node scripts/use_github_raw_media.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+            node scripts/verify_media_urls.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+            git add -f outputs/afterwork-profit
+            git commit -m "Prepare Offnote auto-publish draft $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
+            git pull --rebase
+            git push
+          fi
 
       - name: Auto-publish due Offnote draft
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'auto_publish'

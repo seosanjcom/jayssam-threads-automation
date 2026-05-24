@@ -80,7 +80,7 @@ const pending = findJsonFiles(automationRoot)
   })
   .filter(Boolean)
   .filter((item) => item.data.account === "offnote.kr")
-  .filter((item) => item.data.status === "pending_approval")
+  .filter((item) => ["pending_approval", "approved"].includes(item.data.status))
   .filter((item) => !slot || String(item.data.id || "").includes(`-${slot}-`) || item.data.recommended_publish_time)
   .sort((a, b) => b.mtime - a.mtime)[0];
 
