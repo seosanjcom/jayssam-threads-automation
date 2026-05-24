@@ -259,6 +259,165 @@ TOPICS = [
 ]
 
 
+TOPICS = [
+    {
+        "slug": "careernet-free-tests",
+        "keyword": "무료진로검사",
+        "title": "아이 진로가 막막할 때, 커리어넷 무료 진로심리검사부터 확인해보세요",
+        "source_name": "커리어넷 진로심리검사 / 한국직업능력연구원 진로정보망",
+        "source_urls": ["https://www.career.go.kr/"],
+        "hook": "아이 진로가 막막할 때\n먼저 볼 만한 무료 공식 검사가 있습니다.",
+        "body": [
+            "커리어넷은 초등학생, 중학생, 고등학생 대상별 진로심리검사를 제공합니다.",
+            "초등은 아로주니어, 중·고등은 직업흥미·직업적성·진로성숙도 같은 검사를 활용할 수 있습니다.",
+            "검사 결과를 직업명으로 바로 결론 내기보다 흥미, 적성, 가치관이 어디서 반복되는지 보는 용도로 쓰면 좋습니다.",
+        ],
+        "slides": [
+            ("01", "무료 진로검사", "커리어넷 진로심리검사는 먼저 확인할 만한 공식 자료입니다."),
+            ("02", "사이트", "career.go.kr 에서 진로심리검사를 찾으세요."),
+            ("03", "초등", "아로주니어, 아로주니어 플러스를 확인하세요."),
+            ("04", "중·고등", "직업흥미, 직업적성, 진로성숙도 검사를 보세요."),
+            ("05", "활용법", "직업명보다 반복되는 흥미와 가치관을 읽으세요."),
+            ("06", "저장팁", "검색어: 커리어넷 진로심리검사"),
+        ],
+        "resource": {
+            "site": "커리어넷",
+            "url_label": "career.go.kr",
+            "free": "초·중·고 대상별 진로심리검사",
+            "menu": "진로심리검사 > 학년/대상 선택",
+            "use": "흥미, 적성, 가치관 결과를 비교해 진로 대화의 출발점으로 쓰기",
+            "check": "검사 1개로 결론 내리지 말고 2개 이상 결과의 공통점을 보기",
+            "caution": "추천 직업명은 정답이 아니라 탐색 후보로만 보기",
+            "search": "커리어넷 진로심리검사",
+        },
+        "expert": {
+            "news_frame": "진로 고민을 감으로만 붙잡기보다, 무료 공식 검사를 먼저 활용하면 아이의 흥미와 적성을 구조적으로 볼 수 있습니다.",
+            "must_know": "커리어넷은 초등학생부터 고등학생까지 대상별 진로심리검사를 제공하는 공식 진로정보망입니다.",
+            "avoid": "검사 결과에 나온 직업명을 그대로 목표로 정하면 오히려 진로를 좁게 볼 수 있습니다.",
+            "check": "좋은 활용법은 검사 결과의 직업명보다 흥미, 적성, 가치관이 반복되는 방향을 읽는 것입니다.",
+            "use_for": "오늘 저장할 팁: 검색창에 ‘커리어넷 진로심리검사’를 입력하고 아이 학년에 맞는 검사를 확인하세요.",
+        },
+    },
+    {
+        "slug": "schoolinfo-parent-check",
+        "keyword": "학교알리미",
+        "title": "학교 선택 전, 학교알리미에서 꼭 봐야 할 공시 항목이 있습니다",
+        "source_name": "학교알리미 초·중등학교 정보공시 서비스",
+        "source_urls": ["https://www.schoolinfo.go.kr/"],
+        "hook": "학교 분위기를 소문으로만 판단하기 전에\n공식 공시자료부터 확인할 수 있습니다.",
+        "body": [
+            "학교알리미는 초·중등학교 정보공시 서비스입니다.",
+            "학생·교원현황, 학교폭력 발생현황, 교육여건, 급식, 학업성취 등 주요 정보를 확인할 수 있습니다.",
+            "특정 항목 하나보다 최근 몇 년 흐름과 주변 학교와의 비교를 함께 보는 것이 더 유용합니다.",
+        ],
+        "slides": [
+            ("01", "학교알리미", "학교 정보를 소문이 아니라 공시자료로 확인하세요."),
+            ("02", "사이트", "schoolinfo.go.kr 에서 학교명을 검색하세요."),
+            ("03", "기본", "학생수, 학급당 학생수, 교원 현황을 봅니다."),
+            ("04", "환경", "교육여건, 급식, 시설, 위생 정보를 확인합니다."),
+            ("05", "주의", "학교폭력·학업성취는 단년도가 아니라 흐름으로 봅니다."),
+            ("06", "저장팁", "검색어: 학교알리미 학교명"),
+        ],
+        "resource": {
+            "site": "학교알리미",
+            "url_label": "schoolinfo.go.kr",
+            "free": "학교별 공식 공시자료 조회",
+            "menu": "학교명 검색 > 공시정보 항목별 확인",
+            "use": "학생수, 교원현황, 교육여건, 학교폭력, 학업성취 흐름 확인",
+            "check": "단일 숫자보다 최근 공시 흐름과 주변 학교 비교를 함께 보기",
+            "caution": "소문 확인용이 아니라 객관 자료를 먼저 잡는 용도로 쓰기",
+            "search": "학교알리미 + 학교명",
+        },
+        "expert": {
+            "news_frame": "학교 선택이나 전학 고민이 있을 때는 커뮤니티 후기보다 먼저 공식 공시자료를 확인하는 편이 안전합니다.",
+            "must_know": "학교알리미에서는 학생·교원현황, 시설, 학교폭력 발생현황, 교육여건, 급식, 학업성취 같은 주요 학교 정보를 볼 수 있습니다.",
+            "avoid": "학교를 한 가지 수치나 소문만으로 판단하면 실제 교육환경을 놓칠 수 있습니다.",
+            "check": "좋은 활용법은 같은 항목을 최근 몇 년 흐름과 주변 학교 비교로 보는 것입니다.",
+            "use_for": "오늘 저장할 팁: ‘학교알리미 + 학교명’으로 검색해 공시자료부터 확인하세요.",
+        },
+    },
+    {
+        "slug": "ebsi-free-tests",
+        "keyword": "무료학습검사",
+        "title": "EBSi에는 학습유형검사와 진로탐색검사가 무료로 열려 있습니다",
+        "source_name": "EBSi 학습유형검사 / EBSi 진로탐색검사",
+        "source_urls": [
+            "https://www.ebsi.co.kr/ebs/xip/learnStyle/learnStyleHome.ebs",
+            "https://www.ebsi.co.kr/ebs/xip/career/careerHome.ebs",
+        ],
+        "hook": "고등 자녀 공부 방향이 애매할 때\nEBSi 무료 검사를 한 번 활용해볼 수 있습니다.",
+        "body": [
+            "EBSi에는 학습유형검사와 진로탐색검사가 있습니다.",
+            "학습유형검사는 학습 특성과 추천 학습전략을, 진로탐색검사는 흥미·능력·적성에 맞는 학과와 직업 정보를 확인하는 데 도움을 줍니다.",
+            "검사 결과는 공부법을 단정하는 자료가 아니라 아이가 어떤 방식에서 흔들리는지 대화하는 자료로 쓰는 것이 좋습니다.",
+        ],
+        "slides": [
+            ("01", "EBSi 무료검사", "학습유형검사와 진로탐색검사를 확인하세요."),
+            ("02", "학습유형검사", "학습 특성과 추천 학습전략을 볼 수 있습니다."),
+            ("03", "진로탐색검사", "흥미, 능력, 적성 관련 학과·직업 정보를 봅니다."),
+            ("04", "문항수", "학습유형 120문항, 진로탐색 192문항 구성입니다."),
+            ("05", "활용법", "결과명보다 학습전략과 약한 지점을 보세요."),
+            ("06", "저장팁", "검색어: EBSi 학습유형검사"),
+        ],
+        "resource": {
+            "site": "EBSi",
+            "url_label": "ebsi.co.kr",
+            "free": "학습유형검사, 진로탐색검사",
+            "menu": "EBSi > 학습유형/진로탐색검사",
+            "use": "학습전략, 흥미, 적성, 추천 학과·직업을 참고자료로 확인",
+            "check": "결과 유형명보다 추천 학습전략과 반복되는 약점을 보기",
+            "caution": "검사 결과를 성적 예측이나 진로 확정 자료로 쓰지 않기",
+            "search": "EBSi 학습유형검사",
+        },
+        "expert": {
+            "news_frame": "공부법이나 진로 방향이 애매할 때 유료 검사부터 찾기보다 EBSi 무료 검사를 먼저 활용할 수 있습니다.",
+            "must_know": "EBSi 학습유형검사는 120문항, 진로탐색검사는 192문항으로 구성되어 학습 특성과 진로 정보를 확인할 수 있습니다.",
+            "avoid": "검사 유형명을 아이 성향의 딱지처럼 붙이면 오히려 도움이 되지 않습니다.",
+            "check": "좋은 활용법은 결과 유형보다 추천 학습전략과 반복되는 어려움을 보는 것입니다.",
+            "use_for": "오늘 저장할 팁: ‘EBSi 학습유형검사’ 또는 ‘EBSi 진로탐색검사’를 검색해보세요.",
+        },
+    },
+    {
+        "slug": "ncic-curriculum-check",
+        "keyword": "교육과정확인",
+        "title": "교육과정이 궁금할 때는 블로그 요약보다 NCIC 원문을 먼저 보세요",
+        "source_name": "NCIC 국가교육과정정보센터 / 2022 개정 교육과정 자료",
+        "source_urls": ["https://ncic.re.kr/"],
+        "hook": "2022 개정 교육과정이 헷갈릴 때\n가장 먼저 볼 공식 사이트가 있습니다.",
+        "body": [
+            "NCIC 국가교육과정정보센터에서는 교육과정 원문과 해설서, 2022 개정 교육과정 자료를 확인할 수 있습니다.",
+            "학년별로 무엇을 배우는지 궁금할 때 블로그 요약만 보지 말고, 교과별 교육과정 문서의 성취기준을 함께 확인하면 좋습니다.",
+            "특히 정보, 진로, AI 관련 이야기는 과목명보다 성취기준에 어떤 행동이 들어갔는지를 보면 훨씬 정확합니다.",
+        ],
+        "slides": [
+            ("01", "NCIC", "교육과정 원문을 확인할 수 있는 공식 사이트입니다."),
+            ("02", "사이트", "ncic.re.kr 에서 교육과정 자료실을 봅니다."),
+            ("03", "볼 것", "2022 개정 교육과정 원문과 해설서를 확인하세요."),
+            ("04", "핵심", "과목명보다 성취기준의 행동 표현을 보세요."),
+            ("05", "활용법", "정보·진로·AI 이슈를 원문 기준으로 확인합니다."),
+            ("06", "저장팁", "검색어: NCIC 2022 개정 교육과정"),
+        ],
+        "resource": {
+            "site": "NCIC 국가교육과정정보센터",
+            "url_label": "ncic.re.kr",
+            "free": "교육과정 원문, 해설서, 2022 개정 교육과정 자료",
+            "menu": "교육과정 자료실 > 교육과정 원문 및 해설서",
+            "use": "교과별 성취기준을 확인해 실제로 무엇을 배우는지 보기",
+            "check": "과목명보다 성취기준 속 행동 표현을 확인하기",
+            "caution": "블로그 요약만 보고 교육과정 변화를 단정하지 않기",
+            "search": "NCIC 2022 개정 교육과정",
+        },
+        "expert": {
+            "news_frame": "교육과정 변화는 요약글만 보면 과장되거나 단순화되기 쉽습니다. 원문을 확인할 수 있는 공식 사이트를 알아두는 것이 좋습니다.",
+            "must_know": "NCIC 국가교육과정정보센터에서는 교육과정 원문 및 해설서, 2022 개정 교육과정 자료를 확인할 수 있습니다.",
+            "avoid": "과목명이 바뀌었다는 말만 보고 실제 학습 내용을 판단하면 오해가 생길 수 있습니다.",
+            "check": "좋은 활용법은 교과별 성취기준에 어떤 행동 표현이 들어갔는지 보는 것입니다.",
+            "use_for": "오늘 저장할 팁: ‘NCIC 2022 개정 교육과정’을 검색해 원문 자료실을 확인하세요.",
+        },
+    },
+]
+
+
 def kst_today() -> str:
     return datetime.now(KST).date().isoformat()
 
@@ -692,7 +851,7 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
     latest_signal = fetch_latest_signal()
     content_type = content_type_for_slot(slot)
     text_parts = build_threads_text_parts(topic, latest_signal, content_type)
-    text_parts.append(f"출처는 {topic['source_name']}을 기준으로 확인했습니다.")
+    text_parts.append(f"출처 기준: {topic['source_name']}")
     threads_text = "\n\n".join(text_parts)
 
     draft = {
@@ -888,6 +1047,90 @@ def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_ty
             expert["check"],
             expert["use_for"],
         ]
+    return [part for part in parts if part]
+
+
+def slide_payload(topic: dict, index: int, label: str, heading: str, body: str) -> dict:
+    expert = topic["expert"]
+    resource = topic.get("resource", {})
+    if index == 1:
+        return {
+            "kind": "cover",
+            "eyebrow": topic["keyword"],
+            "title": heading,
+            "subtitle": body,
+            "footer": "저장해두고 바로 써먹는 교육정보입니다.",
+        }
+    if index == 2:
+        return {
+            "kind": "compare",
+            "title": "어디서 보나요?",
+            "rows": [
+                ("사이트", resource.get("site", "")),
+                ("주소", resource.get("url_label", "")),
+            ],
+        }
+    if index == 3:
+        return {
+            "kind": "checklist",
+            "title": "무료로 되는 것",
+            "rows": [
+                ("제공", resource.get("free", expert["must_know"])),
+                ("메뉴", resource.get("menu", "")),
+            ],
+        }
+    if index == 4:
+        return {
+            "kind": "warning",
+            "title": "이렇게 쓰세요",
+            "rows": [
+                ("활용", resource.get("use", expert["check"])),
+                ("확인", resource.get("check", expert["must_know"])),
+            ],
+        }
+    if index == 5:
+        return {
+            "kind": "lens",
+            "title": "주의할 점",
+            "rows": [
+                ("주의", resource.get("caution", expert["avoid"])),
+                ("검색", resource.get("search", topic["keyword"])),
+            ],
+        }
+    return {
+        "kind": "summary",
+        "title": "저장용 한 줄",
+        "rows": [
+            ("어디", resource.get("site", "")),
+            ("무엇", resource.get("free", "")),
+            ("검색", resource.get("search", "")),
+        ],
+    }
+
+
+def footer_line(index: int) -> str:
+    lines = {
+        2: "사이트 이름과 검색어까지 저장해두세요.",
+        3: "무료로 확인 가능한 항목만 골랐습니다.",
+        4: "검사와 자료는 결론이 아니라 대화의 출발점입니다.",
+        5: "추천 결과를 정답처럼 쓰지 않는 것이 핵심입니다.",
+        6: "오늘은 이 검색어 하나만 저장해도 충분합니다.",
+    }
+    return lines.get(index, "바로 써먹을 수 있는 교육정보입니다.")
+
+
+def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_type: str) -> list[str]:
+    expert = topic["expert"]
+    resource = topic.get("resource", {})
+    parts = [
+        topic["hook"],
+        f"오늘 저장할 곳은 {resource.get('site', '공식 사이트')}입니다.",
+        f"주소/검색어: {resource.get('url_label', '')} / {resource.get('search', topic['keyword'])}",
+        expert["must_know"],
+        f"어디서 보냐면: {resource.get('menu', '')}",
+        f"이렇게 쓰세요: {resource.get('use', expert['check'])}",
+        f"주의할 점: {resource.get('caution', expert['avoid'])}",
+    ]
     return [part for part in parts if part]
 
 
