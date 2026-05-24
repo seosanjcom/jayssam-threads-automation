@@ -176,6 +176,23 @@ test("official confirmed beauty drafts use a direct celebrity-loved-item hook", 
   assert.doesNotMatch(draft.threads_text, /영상에서 언급된 제품명 중심/);
 });
 
+test("official confirmed drafts keep product names separate from the hook topic", () => {
+  const draft = generateLifemagazineDraft({
+    topic: "환연4 민경님 컨실러",
+    product_name: "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지",
+    celebrity_or_content: "민와와 유튜브",
+    product_relationship: "official_confirmed",
+    product_links: [{ label: "더샘 커버퍼펙션 트리플 팟 컨실러 3호", url: "https://shop.example.com/concealer" }],
+    notes: "피부화장에 가장 공을 들이는 민경님이 2통째 사용 중인 찐 애정템. 다크서클 커버 고민.",
+    tone_style: "story_buy",
+    source_urls: [],
+  });
+
+  assert.equal(draft.product_name, "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지");
+  assert.doesNotMatch(draft.threads_text, /예전에|실패|검색창|싼티|비슷한 무드/);
+  assert.match(draft.thread_comments.join("\n"), /더샘 커버퍼펙션/);
+});
+
 test("validator rejects same-product wording for similar mood drafts", () => {
   const draft = generateLifemagazineDraft({
     topic: "이어링",
@@ -262,8 +279,41 @@ test("studio home renders operator dashboard and simplified creator workflow", (
   assert.match(html, /작성 중|초안|승인 기다림/);
   assert.match(html, /type="file"/);
   assert.match(html, /name="photos"/);
+  assert.match(html, /name="product_name"/);
   assert.match(html, /enctype="multipart\/form-data"/);
   assert.doesNotMatch(html, /ready_to_review|pending_approval|publish_failed/);
+});
+
+test("studio home lets unpublished lifemagazine drafts be edited", () => {
+  const draft = generateLifemagazineDraft({
+    topic: "수정 가능한 초안",
+    product_name: "더샘 컨실러",
+    source_urls: ["https://example.com/source"],
+  });
+  draft.status = "ready_to_review";
+  const published = generateLifemagazineDraft({
+    topic: "발행된 초안",
+    source_urls: ["https://example.com/source"],
+  });
+  published.status = "published";
+  const html = renderStudioHome({
+    accounts: sampleAccounts,
+    draftsByAccount: {
+      lifemagazine: [
+        { file: path.join(process.cwd(), "outputs", "lifemagazine", "automation", "2026-05-24", "editable.json"), data: draft, mtime: 2 },
+        { file: path.join(process.cwd(), "outputs", "lifemagazine", "automation", "2026-05-24", "published.json"), data: published, mtime: 1 },
+      ],
+      jayssam: [],
+      offnote: [],
+    },
+    today: "2026-05-24",
+    tomorrow: "2026-05-25",
+  });
+
+  assert.match(html, /action="\/api\/lifemagazine\/drafts\/edit"/);
+  assert.match(html, /name="product_name"/);
+  assert.match(html, /더샘 컨실러/);
+  assert.doesNotMatch(html, /published\.json[\s\S]*action="\/api\/lifemagazine\/drafts\/edit"/);
 });
 
 test("multipart parser reads lifemagazine fields and uploaded image files", () => {

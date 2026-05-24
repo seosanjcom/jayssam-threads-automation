@@ -280,6 +280,10 @@ function draftText(data) {
   return data.threads_text || data.text || data.body || data.caption || "";
 }
 
+function isEditableDraft(data) {
+  return data.account === "lifemagazine_" && !["published", "publishing"].includes(data.status);
+}
+
 function renderEmpty(text) {
   return `<p class="empty">${escapeHtml(text)}</p>`;
 }
@@ -340,24 +344,49 @@ function renderDraftCard(item) {
   const comments = Array.isArray(data.thread_comments) ? data.thread_comments : [];
   const links = Array.isArray(data.product_links) ? data.product_links : [];
   const media = Array.isArray(data.local_media_paths) ? data.local_media_paths : [];
+  const editable = relativePath && isEditableDraft(data);
+  const linkText = links.map((link) => `${link.label || ""}|${link.url || link}`).join("\n");
   return `
     <article class="draft-card">
       <div class="draft-head">
         <div>
-          <h3>${escapeHtml(data.topic || data.id || "제목 없는 초안")}</h3>
-          <p class="muted">${escapeHtml(humanStatus(data.status))} · ${escapeHtml(data.recommended_publish_time || "")}</p>
+          <h3>${escapeHtml(data.topic || data.id || "?? ?? ??")}</h3>
+          <p class="muted">${escapeHtml(humanStatus(data.status))} ? ${escapeHtml(data.recommended_publish_time || "")}</p>
         </div>
         ${data.account === "lifemagazine_" && relativePath ? `
           <form class="inline-action" method="post" action="/api/lifemagazine/telegram-preview">
             <input type="hidden" name="draft_path" value="${escapeHtml(relativePath)}">
-            <button type="submit">텔레그램으로 보내기</button>
+            <button type="submit">?????? ???</button>
           </form>
         ` : ""}
       </div>
-      ${media.length ? `<p class="media-note">사진 ${media.length}장 첨부됨. 텔레그램 미리보기로 같이 보내져.</p>` : ""}
+      ${media.length ? `<p class="media-note">?? ${media.length}? ???. ???? ????? ?? ???.</p>` : ""}
       <pre>${escapeHtml(draftText(data))}</pre>
-      ${comments.length ? `<h4>댓글</h4>${comments.slice(0, 2).map((comment, index) => `<pre><b>${index + 1}</b>\n${escapeHtml(comment)}</pre>`).join("")}` : ""}
-      ${links.length ? `<h4>상품 링크</h4><ul>${links.map((link) => `<li>${escapeHtml(link.label)}: <a href="${escapeHtml(link.url)}">${escapeHtml(link.url)}</a></li>`).join("")}</ul>` : ""}
+      ${editable ? `
+        <details class="edit-draft">
+          <summary>????</summary>
+          <form method="post" action="/api/lifemagazine/drafts/edit">
+            <input type="hidden" name="draft_path" value="${escapeHtml(relativePath)}">
+            <label>?? ??? ???</label>
+            <input name="topic" value="${escapeHtml(data.topic || "")}" required>
+            <label>???</label>
+            <input name="product_name" value="${escapeHtml(data.product_name || "")}" placeholder="?: ?? ????? ??? ? ??? 3? ???? ???">
+            <label>??? ???</label>
+            <input name="celebrity_or_content" value="${escapeHtml(data.celebrity_or_content || "")}">
+            <label>??</label>
+            <textarea name="notes">${escapeHtml(data.notes || "")}</textarea>
+            <label>?? ??</label>
+            <textarea name="product_links">${escapeHtml(linkText)}</textarea>
+            <input type="hidden" name="product_relationship" value="${escapeHtml(data.product_relationship || "similar_mood")}">
+            <input type="hidden" name="tone_style" value="${escapeHtml(data.tone_style || TONE_STYLES[0].key)}">
+            <input type="hidden" name="date" value="${escapeHtml(data.draft_date || todayKst())}">
+            <input type="hidden" name="custom_publish_time" value="${escapeHtml(String(data.recommended_publish_time || "").replace(" KST", ""))}">
+            <button type="submit">?? ??</button>
+          </form>
+        </details>
+      ` : ""}
+      ${comments.length ? `<h4>??</h4>${comments.slice(0, 2).map((comment, index) => `<pre><b>${index + 1}</b>\n${escapeHtml(comment)}</pre>`).join("")}` : ""}
+      ${links.length ? `<h4>?? ??</h4><ul>${links.map((link) => `<li>${escapeHtml(link.label)}: <a href="${escapeHtml(link.url)}">${escapeHtml(link.url)}</a></li>`).join("")}</ul>` : ""}
     </article>
   `;
 }
@@ -396,15 +425,18 @@ function renderLifemagazineComposer() {
         <input id="photos" name="photos" type="file" accept="image/*" multiple>
 
         <label for="topic">2. 뭐가 눈에 들어왔는지</label>
-        <input id="topic" name="topic" required placeholder="예: 유튜브 속 광나는 헤어템">
+        <input id="topic" name="topic" required placeholder="예: 환연4 민경님 컨실러, 다크서클 커버템">
 
-        <label for="celebrity_or_content">3. 어디서 봤는지</label>
+        <label for="product_name">3. 상품명</label>
+        <input id="product_name" name="product_name" placeholder="예: 더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지">
+
+        <label for="celebrity_or_content">4. 어디서 봤는지</label>
         <input id="celebrity_or_content" name="celebrity_or_content" placeholder="예: ㅇㅇ 유튜브, 드라마 3화, 공식 인스타 릴스">
 
-        <label for="notes">4. 왜 줬는지 메모</label>
+        <label for="notes">5. 왜 줬는지 메모</label>
         <textarea id="notes" name="notes" placeholder="몇 분쯤 나왔는지, 직접 언급인지, 왜 눈에 띄었는지, 피해야 할 표현 등"></textarea>
 
-        <label for="product_links">5. 상품 링크</label>
+        <label for="product_links">6. 상품 링크</label>
         <textarea id="product_links" name="product_links" placeholder="영상 속 헤어템|https://상품링크&#10;비슷한 무드 참고템|https://상품링크"></textarea>
 
         <div class="form-row">
@@ -609,6 +641,7 @@ async function handleCreateDraft(req, res) {
     slot: params.get("slot"),
     custom_publish_time: params.get("custom_publish_time"),
     topic: params.get("topic"),
+    product_name: params.get("product_name"),
     celebrity_or_content: params.get("celebrity_or_content"),
     product_relationship: params.get("product_relationship"),
     tone_style: params.get("tone_style"),
@@ -626,6 +659,60 @@ async function handleCreateDraft(req, res) {
   saveLifemagazineDraft(draft, { root });
   res.writeHead(303, { Location: "/" });
   res.end();
+}
+
+function resolveDraftPath(relativePath) {
+  const fullPath = path.resolve(root, relativePath || "");
+  const automationRoot = path.resolve(root, "outputs", "lifemagazine", "automation");
+  if (!fullPath.startsWith(`${automationRoot}${path.sep}`)) {
+    throw new Error("Invalid draft path.");
+  }
+  return fullPath;
+}
+
+async function handleEditDraft(req, res) {
+  const body = await readRequestBody(req);
+  const params = new URLSearchParams(body.toString("utf8"));
+  try {
+    const draftPath = resolveDraftPath(params.get("draft_path"));
+    const current = readJson(draftPath);
+    if (!current || current.account !== "lifemagazine_") throw new Error("Draft not found.");
+    if (!isEditableDraft(current)) throw new Error("Published drafts cannot be edited.");
+
+    const draft = generateLifemagazineDraft({
+      id: current.id,
+      date: params.get("date") || current.draft_date,
+      slot: current.slot || "manual",
+      custom_publish_time: params.get("custom_publish_time"),
+      topic: params.get("topic"),
+      product_name: params.get("product_name"),
+      celebrity_or_content: params.get("celebrity_or_content"),
+      product_relationship: params.get("product_relationship") || current.product_relationship,
+      tone_style: params.get("tone_style") || current.tone_style,
+      source_urls: current.source_urls || [],
+      product_links: parseProductLinks(params.get("product_links")),
+      local_media_paths: current.local_media_paths || [],
+      media_urls: current.media_urls || [],
+      notes: params.get("notes"),
+      status: current.status,
+      recommended_publish_time: params.get("custom_publish_time") ? "" : current.recommended_publish_time,
+    }, { now: current.created_at || new Date().toISOString() });
+    draft.created_at = current.created_at || draft.created_at;
+    draft.updated_at = new Date().toISOString();
+
+    const validation = validateLifemagazineDraft(draft);
+    if (!validation.ok) {
+      res.writeHead(422, { "Content-Type": "application/json; charset=utf-8" });
+      res.end(JSON.stringify(validation, null, 2));
+      return;
+    }
+    writeJson(draftPath, draft);
+    res.writeHead(303, { Location: "/" });
+    res.end();
+  } catch (error) {
+    res.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+    res.end(JSON.stringify({ ok: false, error: error instanceof Error ? error.message : String(error) }, null, 2));
+  }
 }
 
 async function handleSendTelegramPreview(req, res) {
@@ -662,6 +749,10 @@ export function createStudioServer() {
     const requestUrl = new URL(req.url, `http://localhost:${port}`);
     if (req.method === "POST" && requestUrl.pathname === "/api/lifemagazine/drafts") {
       await handleCreateDraft(req, res);
+      return;
+    }
+    if (req.method === "POST" && requestUrl.pathname === "/api/lifemagazine/drafts/edit") {
+      await handleEditDraft(req, res);
       return;
     }
     if (req.method === "POST" && requestUrl.pathname === "/api/lifemagazine/telegram-preview") {
