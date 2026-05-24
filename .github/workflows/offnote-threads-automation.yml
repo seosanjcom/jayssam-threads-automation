@@ -248,4 +248,4 @@ jobs:
       - name: Notify failure
         if: failure()
         run: |
-          node -e "const f=new FormData();f.set('chat_id',process.env.OFFNOTE_TELEGRAM_CHAT_ID);f.set('text','[오프노트 자동화 실패] mode=${{ steps.route.outputs.mode }} slot=${{ steps.route.outputs.slot }} run=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}');fetch('https://api.telegram.org/bot'+process.env.OFFNOTE_TELEGRAM_BOT_TOKEN+'/sendMessage',{method:'POST',body:f})"
+          node -e "const f=new FormData();f.set('chat_id',process.env.OFFNOTE_TELEGRAM_CHAT_ID);f.set('text','[오프노트 자동화 확인 필요]\nmode=${{ steps.route.outputs.mode }} slot=${{ steps.route.outputs.slot }}\nrun=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}');f.set('disable_web_page_preview','true');fetch('https://api.telegram.org/bot'+process.env.OFFNOTE_TELEGRAM_BOT_TOKEN+'/sendMessage',{method:'POST',body:f})"
