@@ -1369,6 +1369,24 @@ def footer_line(index: int) -> str:
     return lines.get(index, "바로 써먹을 수 있는 교육정보입니다.")
 
 
+def hashtags_for_topic(topic: dict) -> str:
+    slug = topic.get("slug", "")
+    keyword = topic.get("keyword", "")
+    if slug == "careernet-holland-interest":
+        tags = ["#진로교육", "#자녀교육", "#직업흥미검사", "#커리어넷"]
+    elif slug == "careernet-vocation-aptitude":
+        tags = ["#진로교육", "#자녀교육", "#직업적성검사", "#커리어넷"]
+    elif slug == "ebsi-career-exploration":
+        tags = ["#고등학생진로", "#진로교육", "#자녀교육", "#EBSi"]
+    elif "AI" in keyword or "ai" in slug.lower():
+        tags = ["#AI교육", "#미래교육", "#자녀교육", "#디지털교육"]
+    elif "코딩" in keyword or "coding" in slug.lower() or "info" in slug.lower():
+        tags = ["#코딩교육", "#정보교육", "#자녀교육", "#미래교육"]
+    else:
+        tags = ["#자녀교육", "#미래교육", "#진로교육"]
+    return " ".join(tags)
+
+
 def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_type: str) -> list[str]:
     expert = topic["expert"]
     resource = topic.get("resource", {})
@@ -1383,6 +1401,7 @@ def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_ty
         f"정확히는: {resource.get('free', '')}",
         f"이렇게 쓰세요: {resource.get('use', expert['check'])}",
         f"주의할 점: {resource.get('caution', expert['avoid'])}",
+        hashtags_for_topic(topic),
     ]
     return [part for part in parts if part]
 
