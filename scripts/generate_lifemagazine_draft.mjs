@@ -205,6 +205,12 @@ function buildComments(input, productLinks) {
   const comments = [];
   const sourceUrls = Array.isArray(input.source_urls) ? input.source_urls.filter(Boolean) : [];
   const relationship = input.product_relationship || "trend_only";
+  const productName = String(input.product_name || "").trim();
+  const notes = String(input.notes || "").trim();
+  const exactUseLine = notes
+    .split(/[.!?\n]/)
+    .map((line) => line.trim())
+    .find((line) => /쓴대|사용|2\s*통|찐|애정템|호\b|코렉트업|베이지/.test(line));
 
   if (sourceUrls.length || input.official_confirmation_source) {
     comments.push([
@@ -225,9 +231,11 @@ function buildComments(input, productLinks) {
     comments.push([
       "제품 정보는 여기.",
       relationLine,
+      relationship === "official_confirmed" && exactUseLine ? exactUseLine : "",
+      relationship === "official_confirmed" && productName ? `확인한 상품명: ${productName}` : "",
       ...productLinks.map((item, index) => `${index + 1}. ${item.label || "추천 링크"}: ${item.url || item}`),
       "",
-      "제휴 링크라 구매하면 수수료가 생길 수 있어.",
+      "공정위 고지: 이 댓글에는 제휴 링크가 포함되어 있고, 구매 시 수수료를 받을 수 있어.",
     ].join("\n"));
   } else {
     comments.push("제품 링크 없이 포인트만 정리한 초안이야. 링크 넣을 거면 상품 링크를 추가해줘.");
