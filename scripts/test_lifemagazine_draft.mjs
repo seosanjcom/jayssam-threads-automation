@@ -11,7 +11,7 @@ import {
   saveLifemagazineDraft,
 } from "./generate_lifemagazine_draft.mjs";
 import { validateLifemagazineDraft } from "./validate_lifemagazine_draft.mjs";
-import { renderStudioHome } from "./threads_studio_server.mjs";
+import { parseMultipartFormData, renderStudioHome, saveUploadedMediaFiles } from "./threads_studio_server.mjs";
 import { buildLifemagazineTelegramMessage, prepareLifemagazinePreviewDraft } from "./send_lifemagazine_preview_telegram.mjs";
 import { latestApprovedLifemagazineDraft } from "./publish_lifemagazine_latest_approved.mjs";
 import { applyLifemagazineApprovalAction } from "./telegram_check_lifemagazine_approvals.mjs";
@@ -172,6 +172,43 @@ test("studio home renders three account workspaces and tone preset examples", ()
   assert.match(html, /data-tone/);
   assert.match(html, /텔레그램 미리보기/);
   assert.match(html, /\/api\/lifemagazine\/telegram-preview/);
+  assert.match(html, /type="file"/);
+  assert.match(html, /name="photos"/);
+  assert.match(html, /enctype="multipart\/form-data"/);
+});
+
+test("multipart parser reads lifemagazine fields and uploaded image files", () => {
+  const boundary = "----lifemagazine-test";
+  const body = Buffer.concat([
+    Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="topic"\r\n\r\n유튜브 헤어템\r\n`),
+    Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="photos"; filename="hair.png"\r\nContent-Type: image/png\r\n\r\n`),
+    Buffer.from([0x89, 0x50, 0x4e, 0x47]),
+    Buffer.from(`\r\n--${boundary}--\r\n`),
+  ]);
+
+  const parsed = parseMultipartFormData(body, `multipart/form-data; boundary=${boundary}`);
+
+  assert.equal(parsed.fields.topic, "유튜브 헤어템");
+  assert.equal(parsed.files.length, 1);
+  assert.equal(parsed.files[0].fieldName, "photos");
+  assert.equal(parsed.files[0].filename, "hair.png");
+  assert.deepEqual([...parsed.files[0].data], [0x89, 0x50, 0x4e, 0x47]);
+});
+
+test("uploaded media files are saved under lifemagazine media output", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-media-"));
+  const saved = saveUploadedMediaFiles([
+    {
+      fieldName: "photos",
+      filename: "hair shot.png",
+      contentType: "image/png",
+      data: Buffer.from([1, 2, 3]),
+    },
+  ], { root: tmp, date: "2026-05-24", now: "2026-05-24T11:20:00.000Z" });
+
+  assert.equal(saved.length, 1);
+  assert.match(saved[0], /^outputs[\\/]+lifemagazine[\\/]+media[\\/]+2026-05-24[\\/]+20260524T112000000Z-1-hair-shot\.png$/);
+  assert.equal(fs.existsSync(path.join(tmp, saved[0])), true);
 });
 
 test("telegram preview marks draft pending and renders readable Korean message", () => {

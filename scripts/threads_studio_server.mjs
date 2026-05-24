@@ -73,6 +73,90 @@ function parseProductLinks(value) {
   });
 }
 
+function parseContentDisposition(value = "") {
+  const out = {};
+  for (const part of value.split(";")) {
+    const [rawKey, ...rawValue] = part.trim().split("=");
+    if (!rawKey || rawValue.length === 0) continue;
+    out[rawKey] = rawValue.join("=").replace(/^"|"$/g, "");
+  }
+  return out;
+}
+
+export function parseMultipartFormData(body, contentType = "") {
+  const boundaryMatch = /boundary=(?:"([^"]+)"|([^;]+))/i.exec(contentType);
+  const boundaryText = boundaryMatch?.[1] || boundaryMatch?.[2];
+  if (!boundaryText) return { fields: {}, files: [] };
+
+  const boundary = Buffer.from(`--${boundaryText}`);
+  const fields = {};
+  const files = [];
+  let cursor = body.indexOf(boundary);
+
+  while (cursor !== -1) {
+    cursor += boundary.length;
+    if (body.subarray(cursor, cursor + 2).toString() === "--") break;
+    if (body.subarray(cursor, cursor + 2).toString() === "\r\n") cursor += 2;
+
+    const headerEnd = body.indexOf(Buffer.from("\r\n\r\n"), cursor);
+    if (headerEnd === -1) break;
+    const headers = Object.fromEntries(body.subarray(cursor, headerEnd).toString("utf8").split(/\r\n/).map((line) => {
+      const [key, ...rest] = line.split(":");
+      return [key.toLowerCase(), rest.join(":").trim()];
+    }));
+    const disposition = parseContentDisposition(headers["content-disposition"]);
+    const dataStart = headerEnd + 4;
+    const nextBoundary = body.indexOf(Buffer.from(`\r\n--${boundaryText}`), dataStart);
+    if (nextBoundary === -1) break;
+    const data = body.subarray(dataStart, nextBoundary);
+
+    if (disposition.filename) {
+      files.push({
+        fieldName: disposition.name || "",
+        filename: disposition.filename,
+        contentType: headers["content-type"] || "application/octet-stream",
+        data,
+      });
+    } else if (disposition.name) {
+      fields[disposition.name] = data.toString("utf8");
+    }
+
+    cursor = body.indexOf(boundary, nextBoundary + 2);
+  }
+
+  return { fields, files };
+}
+
+function safeFilename(filename) {
+  const parsed = path.parse(String(filename || "image"));
+  const base = parsed.name
+    .normalize("NFC")
+    .replace(/[^\p{Letter}\p{Number}._-]+/gu, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60) || "image";
+  const ext = (parsed.ext || ".png").toLowerCase().replace(/[^.a-z0-9]/g, "") || ".png";
+  return `${base}${ext}`;
+}
+
+export function saveUploadedMediaFiles(files, options = {}) {
+  const workspaceRoot = options.root || root;
+  const date = options.date || todayKst();
+  const stamp = new Date(options.now || Date.now()).toISOString().replace(/[-:.]/g, "").replace("Z", "Z");
+  const mediaDir = path.join(workspaceRoot, "outputs", "lifemagazine", "media", date);
+  fs.mkdirSync(mediaDir, { recursive: true });
+
+  return files
+    .filter((file) => file.fieldName === "photos" && file.data?.length)
+    .slice(0, 10)
+    .map((file, index) => {
+      const filename = `${stamp}-${index + 1}-${safeFilename(file.filename)}`;
+      const fullPath = path.join(mediaDir, filename);
+      fs.writeFileSync(fullPath, file.data);
+      return path.relative(workspaceRoot, fullPath);
+    });
+}
+
 function loadAccounts() {
   return readJson(accountsPath, { accounts: [] }).accounts || [];
 }
@@ -179,7 +263,7 @@ function renderLifemagazineForm(accounts) {
         <p class="eyebrow">lifemagazine_ composer</p>
         <h2>사진/메모/링크 넣고 초안 만들기</h2>
       </div>
-      <form method="post" action="/api/lifemagazine/drafts">
+      <form method="post" action="/api/lifemagazine/drafts" enctype="multipart/form-data">
         <label for="account">계정</label>
         <select id="account" name="account" disabled>
           ${accounts.map((account) => `<option ${account.accountKey === "lifemagazine" ? "selected" : ""}>${escapeHtml(account.displayName)} @${escapeHtml(account.threadsUsername)}</option>`).join("")}
@@ -205,6 +289,10 @@ function renderLifemagazineForm(accounts) {
 
         <label for="celebrity_or_content">어디서 봤는지</label>
         <input id="celebrity_or_content" name="celebrity_or_content" placeholder="예: ㅇㅇ 유튜브, 드라마 3화, 공식 인스타 릴스">
+
+        <label for="photos">사진</label>
+        <input id="photos" name="photos" type="file" accept="image/*" multiple>
+        <p class="hint">스크린샷이나 상품 사진을 넣으면 초안에 저장되고 텔레그램 미리보기에도 같이 보내.</p>
 
         ${renderTonePicker()}
 
@@ -330,12 +418,19 @@ export function renderStudioHome({ accounts = [], drafts = [], draftsByAccount =
 async function readRequestBody(req) {
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
-  return Buffer.concat(chunks).toString("utf8");
+  return Buffer.concat(chunks);
 }
 
 async function handleCreateDraft(req, res) {
   const body = await readRequestBody(req);
-  const params = new URLSearchParams(body);
+  const contentType = req.headers["content-type"] || "";
+  const multipart = contentType.includes("multipart/form-data")
+    ? parseMultipartFormData(body, contentType)
+    : null;
+  const params = multipart ? new URLSearchParams(multipart.fields) : new URLSearchParams(body.toString("utf8"));
+  const localMediaPaths = multipart
+    ? saveUploadedMediaFiles(multipart.files, { root, date: params.get("date") || todayKst() })
+    : [];
   const draft = generateLifemagazineDraft({
     date: params.get("date"),
     slot: params.get("slot"),
@@ -345,6 +440,7 @@ async function handleCreateDraft(req, res) {
     tone_style: params.get("tone_style"),
     source_urls: parseLines(params.get("source_urls")),
     product_links: parseProductLinks(params.get("product_links")),
+    local_media_paths: localMediaPaths,
     notes: params.get("notes"),
   });
   const validation = validateLifemagazineDraft(draft);
@@ -360,7 +456,7 @@ async function handleCreateDraft(req, res) {
 
 async function handleSendTelegramPreview(req, res) {
   const body = await readRequestBody(req);
-  const params = new URLSearchParams(body);
+  const params = new URLSearchParams(body.toString("utf8"));
   const draftPath = params.get("draft_path");
   if (!draftPath) {
     res.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
