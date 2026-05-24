@@ -15,11 +15,14 @@ if (!localPaths.length) {
 
 const urls = [];
 for (const localPath of localPaths) {
-  const bytes = fs.readFileSync(localPath);
-  const blob = new Blob([bytes], { type: "image/png" });
+  const resolvedPath = path.isAbsolute(localPath) ? localPath : path.join(process.cwd(), localPath);
+  const ext = path.extname(resolvedPath).toLowerCase();
+  const contentType = ext === ".jpg" || ext === ".jpeg" ? "image/jpeg" : ext === ".webp" ? "image/webp" : "image/png";
+  const bytes = fs.readFileSync(resolvedPath);
+  const blob = new Blob([bytes], { type: contentType });
   const form = new FormData();
   form.set("reqtype", "fileupload");
-  form.set("fileToUpload", blob, path.basename(localPath));
+  form.set("fileToUpload", blob, path.basename(resolvedPath));
   const res = await fetch("https://catbox.moe/user/api.php", {
     method: "POST",
     body: form,
@@ -34,6 +37,7 @@ for (const localPath of localPaths) {
 draft.media_urls = urls;
 fs.writeFileSync(draftPath, `${JSON.stringify(draft, null, 2)}\n`, "utf8");
 
-const outDir = path.dirname(localPaths[0]);
+const firstPath = path.isAbsolute(localPaths[0]) ? localPaths[0] : path.join(process.cwd(), localPaths[0]);
+const outDir = path.dirname(firstPath);
 fs.writeFileSync(path.join(outDir, "catbox-urls.txt"), `${urls.join("\n")}\n`, "utf8");
 console.log(JSON.stringify({ draft: draftPath, media_urls: urls }, null, 2));

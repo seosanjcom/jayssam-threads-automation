@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -531,4 +532,72 @@ test("applyLifemagazineApprovalAction updates only pending lifemagazine drafts",
   assert.equal(approved.publish_on_approve, false);
   assert.equal(held.status, "held");
   assert.throws(() => applyLifemagazineApprovalAction({ ...draft, account: "offnote.kr" }, "approve"));
+});
+
+function runPublishDraftFixture(draft, env = {}) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-publish-guard-"));
+  const draftPath = path.join(tmp, "draft.json");
+  fs.writeFileSync(draftPath, `${JSON.stringify(draft, null, 2)}\n`, "utf8");
+  return spawnSync(process.execPath, ["scripts/threads_publish.mjs", draftPath], {
+    cwd: process.cwd(),
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      THREADS_ACCESS_TOKEN: "test-token",
+      THREADS_AUTO_PUBLISH: "true",
+      THREADS_SAFETY_MODE: "false",
+      THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "false",
+      THREADS_PUBLISH_WAIT_MS: "0",
+      THREADS_REPLY_WAIT_MS: "0",
+      ...env,
+    },
+  });
+}
+
+test("lifemagazine publish refuses local photos without public media_urls before any API publish", () => {
+  const result = runPublishDraftFixture({
+    id: "LIFE-media-guard",
+    account: "lifemagazine_",
+    status: "approved",
+    topic: "photo guard",
+    threads_text: "\uC0AC\uC9C4 \uC788\uB294 \uAE00\uC740 \uC774\uBBF8\uC9C0\uAC00 \uBE60\uC9C0\uBA74 \uC548 \uB3FC.",
+    local_media_paths: ["outputs/lifemagazine/media/2026-05-24/sample.png"],
+    media_urls: [],
+  });
+
+  assert.notEqual(result.status, 0);
+  assert.match(`${result.stdout}\n${result.stderr}`, /media_urls|public image URL|photo/i);
+});
+
+test("lifemagazine publish refuses comment-link drafts until reply permission is confirmed", () => {
+  const result = runPublishDraftFixture({
+    id: "LIFE-reply-guard",
+    account: "lifemagazine_",
+    status: "approved",
+    topic: "reply guard",
+    threads_text: "\uC815\uBCF4\uB294 \uB313\uAE00\uC5D0 \uB0A8\uACA8\uB458\uAC8C.",
+    media_urls: ["https://example.com/photo.png"],
+    thread_comments: ["\uCD94\uCC9C \uB9C1\uD06C: https://example.com/item"],
+  }, {
+    THREADS_REQUIRE_REPLIES: "true",
+    THREADS_REPLY_PERMISSION_CONFIRMED: "",
+  });
+
+  assert.notEqual(result.status, 0);
+  assert.match(`${result.stdout}\n${result.stderr}`, /reply permission|comments cannot be guaranteed|THREADS_REPLY_PERMISSION_CONFIRMED/i);
+});
+
+test("lifemagazine publish refuses mojibake-looking Korean text", () => {
+  const result = runPublishDraftFixture({
+    id: "LIFE-mojibake-guard",
+    account: "lifemagazine_",
+    status: "approved",
+    topic: "?????",
+    threads_text: "[?? ?? ??]\n???? ???? ?????\n??????.",
+    media_urls: ["https://example.com/photo.png"],
+    thread_comments: [],
+  });
+
+  assert.notEqual(result.status, 0);
+  assert.match(`${result.stdout}\n${result.stderr}`, /mojibake|broken Korean|\?\?\?/i);
 });

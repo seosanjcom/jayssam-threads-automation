@@ -43,6 +43,14 @@ function isDraftDue(data, now = new Date()) {
   return scheduled <= new Date(now).getTime();
 }
 
+function writePublishFailure(file, message) {
+  const data = JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
+  data.status = "publish_failed";
+  data.publish_failed_at = new Date().toISOString();
+  data.publish_failure_reason = String(message || "Unknown publish failure").slice(0, 1000);
+  fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+}
+
 export function latestApprovedLifemagazineDraft(options = {}) {
   const root = options.root || process.cwd();
   const now = options.now || new Date();
@@ -93,6 +101,37 @@ if (isDirectRun) {
     process.exit(0);
   }
 
+  const localMediaPaths = Array.isArray(latest.data.local_media_paths) ? latest.data.local_media_paths.filter(Boolean) : [];
+  const mediaUrls = Array.isArray(latest.data.media_urls) ? latest.data.media_urls.filter(Boolean) : [];
+  if (localMediaPaths.length > 0 && mediaUrls.length === 0) {
+    console.log("Lifemagazine photo draft has local images. Uploading to public media_urls before publishing...");
+    const upload = spawnSync("node", ["scripts/upload_cardnews_to_catbox.mjs", latest.file], {
+      cwd: process.cwd(),
+      shell: true,
+      encoding: "utf8",
+      env: process.env,
+    });
+    if (upload.stdout) process.stdout.write(upload.stdout);
+    if (upload.stderr) process.stderr.write(upload.stderr);
+    if ((upload.status ?? 1) !== 0) {
+      writePublishFailure(latest.file, `Image upload failed before publishing: ${upload.stderr || upload.stdout || "unknown error"}`);
+      process.exit(upload.status ?? 1);
+    }
+
+    const verify = spawnSync("node", ["scripts/verify_media_urls.mjs", latest.file], {
+      cwd: process.cwd(),
+      shell: true,
+      encoding: "utf8",
+      env: process.env,
+    });
+    if (verify.stdout) process.stdout.write(verify.stdout);
+    if (verify.stderr) process.stderr.write(verify.stderr);
+    if ((verify.status ?? 1) !== 0) {
+      writePublishFailure(latest.file, `Image URL verification failed before publishing: ${verify.stderr || verify.stdout || "unknown error"}`);
+      process.exit(verify.status ?? 1);
+    }
+  }
+
   console.log(`Publishing latest approved lifemagazine_ post: ${latest.file}`);
   const result = spawnSync("node", ["scripts/threads_publish.mjs", latest.file], {
     cwd: process.cwd(),
@@ -102,10 +141,15 @@ if (isDirectRun) {
       ...process.env,
       THREADS_EXPECTED_USERNAME: process.env.THREADS_EXPECTED_USERNAME || "lifemagazine_",
       THREADS_PUBLISH_LOG: process.env.THREADS_PUBLISH_LOG || "outputs/lifemagazine/meta-publish-log.json",
+      THREADS_REQUIRE_MEDIA: localMediaPaths.length > 0 ? "true" : (process.env.THREADS_REQUIRE_MEDIA || "false"),
+      THREADS_REQUIRE_REPLIES: "true",
     },
   });
 
   if (result.stdout) process.stdout.write(result.stdout);
   if (result.stderr) process.stderr.write(result.stderr);
+  if ((result.status ?? 1) !== 0) {
+    writePublishFailure(latest.file, result.stderr || result.stdout || "Threads publish failed.");
+  }
   process.exit(result.status ?? 1);
 }

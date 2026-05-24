@@ -114,6 +114,9 @@ function collectReplyTexts(draft) {
 
 function assertPublishableDraft(draft) {
   const threadsText = String(draft.threads_text || "");
+  const replyTexts = collectReplyTexts(draft);
+  const localMediaPaths = Array.isArray(draft.local_media_paths) ? draft.local_media_paths.filter(Boolean) : [];
+  const mediaUrls = Array.isArray(draft.media_urls) ? draft.media_urls.filter(Boolean) : [];
   const collectedText = JSON.stringify({
     topic: draft.topic,
     threads_text: draft.threads_text,
@@ -127,6 +130,7 @@ function assertPublishableDraft(draft) {
   const suspiciousFragments = ["\u5A9B", "\u0080", "\u75AB", "\u6930", "\u7B4C", "\u91CE", "\u56A5", "\u63F6", "\u923A"].filter((item) =>
     collectedText.includes(item),
   );
+  const isLifemagazine = draft.account === "lifemagazine_";
 
   if (draft.account === "offnote.kr") {
     if (threadsText.length < 180) {
@@ -140,6 +144,30 @@ function assertPublishableDraft(draft) {
     }
     if (han > hangul * 0.25 || questionMarks > 5 || replacement > 0 || suspiciousFragments.length > 0) {
       throw new Error("Safety stop: possible mojibake detected in offnote.kr draft.");
+    }
+  }
+
+  if (isLifemagazine) {
+    const bodyHangul = (threadsText.match(/[\uAC00-\uD7A3]/g) || []).length;
+    const bodyQuestionMarks = (threadsText.match(/\?/g) || []).length;
+    if (threadsText.length > 500) {
+      throw new Error(`Safety stop: lifemagazine_ threads_text exceeds Threads API limit (${threadsText.length}/500).`);
+    }
+    if (bodyQuestionMarks >= 3 && bodyHangul < 15) {
+      throw new Error("Safety stop: possible mojibake or broken Korean detected in lifemagazine_ draft.");
+    }
+    if (replacement > 0 || suspiciousFragments.length > 0) {
+      throw new Error("Safety stop: possible mojibake detected in lifemagazine_ draft.");
+    }
+    if (localMediaPaths.length > 0 && mediaUrls.length === 0) {
+      throw new Error("Safety stop: lifemagazine_ draft has local photos but no public media_urls. Upload and verify a public image URL before publishing.");
+    }
+    if (
+      replyTexts.length > 0 &&
+      String(process.env.THREADS_REQUIRE_REPLIES || "false").toLowerCase() === "true" &&
+      String(process.env.THREADS_REPLY_PERMISSION_CONFIRMED || "false").toLowerCase() !== "true"
+    ) {
+      throw new Error("Safety stop: lifemagazine_ comments cannot be guaranteed yet. Set THREADS_REPLY_PERMISSION_CONFIRMED=true only after Meta reply permission is confirmed.");
     }
   }
 }
@@ -193,6 +221,14 @@ assertPublishableDraft(draft);
 
 if (requiresCardnews && mediaUrls.length === 0) {
   throw new Error("Refusing to publish without required media_urls.");
+}
+
+if (
+  process.env.THREADS_REQUIRE_REPLIES === "true" &&
+  collectReplyTexts(draft).length > 0 &&
+  !publishReplies
+) {
+  throw new Error("Refusing to publish because THREADS_REQUIRE_REPLIES=true but THREADS_PUBLISH_REPLIES=false.");
 }
 
 if (safetyMode) {
