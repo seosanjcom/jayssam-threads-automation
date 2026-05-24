@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import random
 import subprocess
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -1101,7 +1102,7 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
 
     latest_signal = fetch_latest_signal()
     content_type = content_type_for_slot(slot)
-    text_parts = build_threads_text_parts(topic, latest_signal, content_type)
+    text_parts = build_threads_text_parts(topic, latest_signal, content_type, date_text, slot)
     threads_text = "\n\n".join(text_parts)
 
     draft = {
@@ -1369,25 +1370,37 @@ def footer_line(index: int) -> str:
     return lines.get(index, "바로 써먹을 수 있는 교육정보입니다.")
 
 
-def hashtags_for_topic(topic: dict) -> str:
+def hashtags_for_topic(topic: dict, date_text: str = "", slot: str = "") -> str:
     slug = topic.get("slug", "")
     keyword = topic.get("keyword", "")
+    broad_tags = [
+        "#육아",
+        "#교육",
+        "#교육정보",
+        "#자녀교육",
+        "#초등맘",
+        "#중등맘",
+        "#고등맘",
+        "#부모공감",
+    ]
     if slug == "careernet-holland-interest":
-        tags = ["#진로교육", "#자녀교육", "#직업흥미검사", "#커리어넷"]
+        core_tags = ["#진로교육", "#진로검사", "#커리어넷"]
     elif slug == "careernet-vocation-aptitude":
-        tags = ["#진로교육", "#자녀교육", "#직업적성검사", "#커리어넷"]
+        core_tags = ["#진로교육", "#진로검사", "#커리어넷"]
     elif slug == "ebsi-career-exploration":
-        tags = ["#고등학생진로", "#진로교육", "#자녀교육", "#EBSi"]
+        core_tags = ["#고등학생진로", "#진로교육", "#EBSi"]
     elif "AI" in keyword or "ai" in slug.lower():
-        tags = ["#AI교육", "#미래교육", "#자녀교육", "#디지털교육"]
+        core_tags = ["#AI교육", "#미래교육", "#디지털교육"]
     elif "코딩" in keyword or "coding" in slug.lower() or "info" in slug.lower():
-        tags = ["#코딩교육", "#정보교육", "#자녀교육", "#미래교육"]
+        core_tags = ["#코딩교육", "#정보교육", "#미래교육"]
     else:
-        tags = ["#자녀교육", "#미래교육", "#진로교육"]
-    return " ".join(tags)
+        core_tags = ["#미래교육", "#진로교육"]
+    rng = random.Random(f"{date_text}:{slot}:{slug}:{keyword}")
+    tags = rng.sample(broad_tags, 2) + rng.sample(core_tags, min(2, len(core_tags)))
+    return " ".join(dict.fromkeys(tags))
 
 
-def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_type: str) -> list[str]:
+def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_type: str, date_text: str = "", slot: str = "") -> list[str]:
     expert = topic["expert"]
     resource = topic.get("resource", {})
     field_note = ""
@@ -1401,7 +1414,7 @@ def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_ty
         f"정확히는: {resource.get('free', '')}",
         f"이렇게 쓰세요: {resource.get('use', expert['check'])}",
         f"주의할 점: {resource.get('caution', expert['avoid'])}",
-        hashtags_for_topic(topic),
+        hashtags_for_topic(topic, date_text, slot),
     ]
     return [part for part in parts if part]
 
