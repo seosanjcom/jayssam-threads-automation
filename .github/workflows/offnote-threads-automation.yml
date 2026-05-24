@@ -229,10 +229,17 @@ jobs:
           if [[ -f outputs/afterwork-profit/latest-draft-path.txt ]]; then
             git add -f "$(cat outputs/afterwork-profit/latest-draft-path.txt)" outputs/afterwork-profit/latest-draft-path.txt || true
           fi
-          git add -f outputs/afterwork-profit/meta-publish-log.json outputs/afterwork-profit/telegram-approval-state.json outputs/afterwork-profit/automation/offnote-telegram-approval-checker-last-error.json || true
-          git commit -m "Record Offnote approval check $(TZ=Asia/Seoul date +%F-%H%M)" || true
-          git pull --rebase
-          git push
+          git add -f outputs/afterwork-profit/preview-created.txt outputs/afterwork-profit/meta-publish-log.json outputs/afterwork-profit/telegram-approval-state.json || true
+          if [[ -f outputs/afterwork-profit/automation/offnote-telegram-approval-checker-last-error.json ]]; then
+            git add -f outputs/afterwork-profit/automation/offnote-telegram-approval-checker-last-error.json
+          fi
+          if git diff --cached --quiet; then
+            git status --short
+          else
+            git commit -m "Record Offnote approval check $(TZ=Asia/Seoul date +%F-%H%M)"
+            git pull --rebase
+            git push
+          fi
 
       - name: Health watchdog
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'health'
