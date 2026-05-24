@@ -15,6 +15,16 @@ const root = process.cwd();
 const port = Number(process.env.THREADS_STUDIO_PORT || "8788");
 const accountsPath = path.join(root, "config", "threads-accounts.json");
 
+const STATUS_LABELS = {
+  draft: "초안",
+  ready_to_review: "초안",
+  pending_approval: "승인 기다림",
+  approved: "발행 대기",
+  published: "발행 완료",
+  publish_failed: "발행 실패",
+  held: "보류",
+};
+
 function loadEnv() {
   if (!fs.existsSync(".env")) return;
   for (const line of fs.readFileSync(".env", "utf8").split(/\r?\n/)) {
@@ -24,10 +34,14 @@ function loadEnv() {
   }
 }
 
-function todayKst() {
+function kstDate(offsetDays = 0) {
   const now = new Date();
-  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000 + offsetDays * 24 * 60 * 60 * 1000);
   return kst.toISOString().slice(0, 10);
+}
+
+function todayKst() {
+  return kstDate(0);
 }
 
 function readJson(filePath, fallback = null) {
@@ -36,6 +50,11 @@ function readJson(filePath, fallback = null) {
   } catch {
     return fallback;
   }
+}
+
+function writeJson(filePath, value) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
 function findJsonFiles(dir) {
@@ -172,36 +191,144 @@ function loadDrafts(accountKey = "lifemagazine") {
     })
     .filter(Boolean)
     .sort((a, b) => b.mtime - a.mtime)
-    .slice(0, 20);
+    .slice(0, 60);
 }
 
 function loadDraftsByAccount(accounts) {
   return Object.fromEntries(accounts.map((account) => [account.accountKey, loadDrafts(account.accountKey)]));
 }
 
+function draftDate(data) {
+  return data.draft_date || data.publish_date || String(data.recommended_publish_date || data.created_at || "").slice(0, 10);
+}
+
+function draftTime(data) {
+  return data.recommended_publish_time || data.publish_time || "";
+}
+
+function humanStatus(status) {
+  return STATUS_LABELS[status] || status || "상태 없음";
+}
+
+export function describeDraftProblem(data) {
+  if (data.status === "publish_failed") {
+    return data.publish_error || data.error || "발행 실패 원인이 기록되지 않았어.";
+  }
+  if (data.account === "lifemagazine_" && Array.isArray(data.local_media_paths) && data.local_media_paths.length > 0) {
+    const mediaUrls = Array.isArray(data.media_urls) ? data.media_urls.filter(Boolean) : [];
+    if (mediaUrls.length === 0) return "사진은 미리보기용으로 저장됐고, Threads 사진 발행용 공개 URL은 아직 없어.";
+  }
+  if (data.status === "pending_approval") return "텔레그램에서 승인 버튼을 눌러야 발행 대기로 넘어가.";
+  return "";
+}
+
+function normalizeDraft(item, account) {
+  const data = item.data || item;
+  const file = item.file || "";
+  return {
+    accountKey: account.accountKey,
+    accountName: account.displayName,
+    username: account.threadsUsername,
+    file,
+    data,
+    id: data.id || path.basename(file, ".json"),
+    title: data.topic || data.title || data.id || "제목 없는 초안",
+    status: data.status || "draft",
+    statusLabel: humanStatus(data.status),
+    date: draftDate(data),
+    time: draftTime(data),
+    problem: describeDraftProblem(data),
+    mtime: item.mtime || 0,
+  };
+}
+
+export function buildOperationsDashboard(accounts, draftsByAccount, options = {}) {
+  const today = options.today || todayKst();
+  const tomorrow = options.tomorrow || kstDate(1);
+  const allDrafts = accounts.flatMap((account) => (draftsByAccount[account.accountKey] || []).map((item) => normalizeDraft(item, account)));
+
+  const accountSummaries = accounts.map((account) => {
+    const drafts = allDrafts.filter((item) => item.accountKey === account.accountKey);
+    return {
+      account,
+      todayPublished: drafts.filter((item) => item.date === today && item.status === "published").length,
+      todayScheduled: drafts.filter((item) => item.date === today && item.status === "approved").length,
+      approvalWaiting: drafts.filter((item) => item.status === "pending_approval").length,
+      tomorrowScheduled: drafts.filter((item) => item.date === tomorrow && item.status === "approved").length,
+      failed: drafts.filter((item) => item.status === "publish_failed").length,
+      recent: drafts.sort((a, b) => b.mtime - a.mtime).slice(0, 5),
+    };
+  });
+
+  const tasks = allDrafts
+    .filter((item) => item.status === "pending_approval" || item.status === "approved")
+    .sort((a, b) => (a.date || "").localeCompare(b.date || "") || (a.time || "").localeCompare(b.time || ""))
+    .slice(0, 8);
+  const issues = allDrafts
+    .filter((item) => item.status === "publish_failed" || item.problem)
+    .sort((a, b) => b.mtime - a.mtime)
+    .slice(0, 8);
+  const tomorrowDrafts = allDrafts
+    .filter((item) => item.date === tomorrow && ["approved", "pending_approval", "ready_to_review", "draft"].includes(item.status))
+    .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
+    .slice(0, 8);
+
+  return { today, tomorrow, accountSummaries, tasks, issues, tomorrowDrafts };
+}
+
 function draftText(data) {
   return data.threads_text || data.text || data.body || data.caption || "";
 }
 
-function renderAccountPanel(account, drafts = []) {
-  const latest = drafts.slice(0, 3);
+function renderEmpty(text) {
+  return `<p class="empty">${escapeHtml(text)}</p>`;
+}
+
+function renderTaskItem(item) {
+  const action =
+    item.status === "pending_approval" ? "텔레그램 승인 필요" :
+    item.status === "approved" ? "발행 시간 대기" :
+    item.statusLabel;
   return `
-    <section class="account-panel" id="account-${escapeHtml(account.accountKey)}">
-      <div class="account-head">
+    <article class="task-item">
+      <div>
+        <strong>${escapeHtml(item.accountName)}</strong>
+        <span>${escapeHtml(item.title)}</span>
+      </div>
+      <p>${escapeHtml(item.date || "날짜 없음")} ${escapeHtml(item.time || "")} · ${escapeHtml(action)}</p>
+    </article>
+  `;
+}
+
+function renderIssueItem(item) {
+  return `
+    <article class="issue-item">
+      <div>
+        <strong>${escapeHtml(item.accountName)} · ${escapeHtml(item.statusLabel)}</strong>
+        <span>${escapeHtml(item.title)}</span>
+      </div>
+      <p>${escapeHtml(item.problem || "확인이 필요해.")}</p>
+    </article>
+  `;
+}
+
+function renderAccountSummary(summary) {
+  const { account } = summary;
+  return `
+    <section class="account-card">
+      <div class="account-title">
         <div>
           <p class="eyebrow">${escapeHtml(account.project)}</p>
-          <h2>${escapeHtml(account.displayName)}</h2>
-          <p class="handle">@${escapeHtml(account.threadsUsername)}</p>
+          <h3>${escapeHtml(account.displayName)}</h3>
+          <p class="muted">@${escapeHtml(account.threadsUsername)}</p>
         </div>
-        <span class="count">${drafts.length}</span>
+        <span class="${summary.failed ? "badge danger" : "badge ok"}">${summary.failed ? "문제 있음" : "정상"}</span>
       </div>
-      <dl class="rules">
-        <div><dt>기본 슬롯</dt><dd>${escapeHtml((account.defaultSlots || []).join(", "))}</dd></div>
-        <div><dt>출력 폴더</dt><dd>${escapeHtml(account.automationRoot)}</dd></div>
-        <div><dt>게시 제한</dt><dd>일 ${escapeHtml(account.dailyPostLimit)}회 / ${escapeHtml(account.minIntervalHours)}시간 간격</dd></div>
-      </dl>
-      <div class="draft-list">
-        ${latest.length ? latest.map(renderDraftCard).join("") : '<p class="hint">아직 표시할 초안이 없어.</p>'}
+      <div class="metric-grid">
+        <div><b>${summary.todayPublished}</b><span>오늘 발행 완료</span></div>
+        <div><b>${summary.todayScheduled}</b><span>오늘 발행 대기</span></div>
+        <div><b>${summary.approvalWaiting}</b><span>승인 기다림</span></div>
+        <div><b>${summary.tomorrowScheduled}</b><span>내일 예정</span></div>
       </div>
     </section>
   `;
@@ -209,27 +336,27 @@ function renderAccountPanel(account, drafts = []) {
 
 function renderDraftCard(item) {
   const data = item.data || item;
+  const relativePath = item.file ? path.relative(root, item.file) : "";
   const comments = Array.isArray(data.thread_comments) ? data.thread_comments : [];
   const links = Array.isArray(data.product_links) ? data.product_links : [];
-  const relativePath = item.file ? path.relative(root, item.file) : "";
+  const media = Array.isArray(data.local_media_paths) ? data.local_media_paths : [];
   return `
-    <article class="draft">
-      <div class="meta">
-        <span>${escapeHtml(data.account || data.account_name || data.project || "draft")}</span>
-        <span>${escapeHtml(data.status || "unknown")}</span>
-        ${data.recommended_publish_time ? `<span>${escapeHtml(data.recommended_publish_time)}</span>` : ""}
-        ${data.tone_label ? `<span>${escapeHtml(data.tone_label)}</span>` : ""}
+    <article class="draft-card">
+      <div class="draft-head">
+        <div>
+          <h3>${escapeHtml(data.topic || data.id || "제목 없는 초안")}</h3>
+          <p class="muted">${escapeHtml(humanStatus(data.status))} · ${escapeHtml(data.recommended_publish_time || "")}</p>
+        </div>
+        ${data.account === "lifemagazine_" && relativePath ? `
+          <form class="inline-action" method="post" action="/api/lifemagazine/telegram-preview">
+            <input type="hidden" name="draft_path" value="${escapeHtml(relativePath)}">
+            <button type="submit">텔레그램으로 보내기</button>
+          </form>
+        ` : ""}
       </div>
-      <h3>${escapeHtml(data.topic || data.id || "제목 없음")}</h3>
-      ${relativePath ? `<p class="path">${escapeHtml(relativePath)}</p>` : ""}
-      ${data.account === "lifemagazine_" && relativePath ? `
-        <form class="inline-action" method="post" action="/api/lifemagazine/telegram-preview">
-          <input type="hidden" name="draft_path" value="${escapeHtml(relativePath)}">
-          <button type="submit">텔레그램 미리보기</button>
-        </form>
-      ` : ""}
+      ${media.length ? `<p class="media-note">사진 ${media.length}장 첨부됨. 텔레그램 미리보기로 같이 보내져.</p>` : ""}
       <pre>${escapeHtml(draftText(data))}</pre>
-      ${comments.length ? `<h4>댓글 초안</h4>${comments.slice(0, 2).map((comment, index) => `<pre><b>${index + 1}</b>\n${escapeHtml(comment)}</pre>`).join("")}` : ""}
+      ${comments.length ? `<h4>댓글</h4>${comments.slice(0, 2).map((comment, index) => `<pre><b>${index + 1}</b>\n${escapeHtml(comment)}</pre>`).join("")}` : ""}
       ${links.length ? `<h4>상품 링크</h4><ul>${links.map((link) => `<li>${escapeHtml(link.label)}: <a href="${escapeHtml(link.url)}">${escapeHtml(link.url)}</a></li>`).join("")}</ul>` : ""}
     </article>
   `;
@@ -256,26 +383,42 @@ function renderTonePicker() {
   `;
 }
 
-function renderLifemagazineForm(accounts) {
+function renderLifemagazineComposer() {
   return `
-    <section class="composer">
+    <section class="composer" id="lifemagazine-compose">
       <div class="section-title">
-        <p class="eyebrow">lifemagazine_ composer</p>
-        <h2>사진/메모/링크 넣고 초안 만들기</h2>
+        <p class="eyebrow">lifemagazine_</p>
+        <h2>라이프매거진 새 글 만들기</h2>
+        <p class="muted">사진, 메모, 상품 링크를 넣으면 본문과 댓글 초안을 만들어. 확인은 텔레그램에서 하면 돼.</p>
       </div>
       <form method="post" action="/api/lifemagazine/drafts" enctype="multipart/form-data">
-        <label for="account">계정</label>
-        <select id="account" name="account" disabled>
-          ${accounts.map((account) => `<option ${account.accountKey === "lifemagazine" ? "selected" : ""}>${escapeHtml(account.displayName)} @${escapeHtml(account.threadsUsername)}</option>`).join("")}
-        </select>
+        <label for="photos">1. 사진</label>
+        <input id="photos" name="photos" type="file" accept="image/*" multiple>
+
+        <label for="topic">2. 뭐가 눈에 들어왔는지</label>
+        <input id="topic" name="topic" required placeholder="예: 유튜브 속 광나는 헤어템">
+
+        <label for="celebrity_or_content">3. 어디서 봤는지</label>
+        <input id="celebrity_or_content" name="celebrity_or_content" placeholder="예: ㅇㅇ 유튜브, 드라마 3화, 공식 인스타 릴스">
+
+        <label for="notes">4. 왜 줬는지 메모</label>
+        <textarea id="notes" name="notes" placeholder="몇 분쯤 나왔는지, 직접 언급인지, 왜 눈에 띄었는지, 피해야 할 표현 등"></textarea>
+
+        <label for="product_links">5. 상품 링크</label>
+        <textarea id="product_links" name="product_links" placeholder="영상 속 헤어템|https://상품링크&#10;비슷한 무드 참고템|https://상품링크"></textarea>
 
         <div class="form-row">
           <div>
-            <label for="date">날짜</label>
-            <input id="date" name="date" type="date" value="${todayKst()}">
+            <label for="product_relationship">제품 관계</label>
+            <select id="product_relationship" name="product_relationship">
+              <option value="official_confirmed">직접 언급/공식 확인</option>
+              <option value="strong_guess">거의 맞아 보임</option>
+              <option value="similar_mood" selected>비슷한 무드 참고템</option>
+              <option value="trend_only">트렌드만</option>
+            </select>
           </div>
           <div>
-            <label for="slot">게시 슬롯</label>
+            <label for="slot">발행 희망 시간</label>
             <select id="slot" name="slot">
               <option value="afternoon">15:00 KST</option>
               <option value="evening" selected>18:00 KST</option>
@@ -284,116 +427,139 @@ function renderLifemagazineForm(accounts) {
           </div>
         </div>
 
-        <label for="topic">뭐가 눈에 들어왔는지</label>
-        <input id="topic" name="topic" required placeholder="예: 유튜브 속 광나는 헤어템">
-
-        <label for="celebrity_or_content">어디서 봤는지</label>
-        <input id="celebrity_or_content" name="celebrity_or_content" placeholder="예: ㅇㅇ 유튜브, 드라마 3화, 공식 인스타 릴스">
-
-        <label for="photos">사진</label>
-        <input id="photos" name="photos" type="file" accept="image/*" multiple>
-        <p class="hint">스크린샷이나 상품 사진을 넣으면 초안에 저장되고 텔레그램 미리보기에도 같이 보내.</p>
-
-        ${renderTonePicker()}
-
-        <label for="product_relationship">제품 관계</label>
-        <select id="product_relationship" name="product_relationship">
-          <option value="official_confirmed">직접 언급/공식 확인된 제품</option>
-          <option value="strong_guess">거의 맞아 보이지만 공식 확인은 아님</option>
-          <option value="similar_mood" selected>비슷한 무드 참고템</option>
-          <option value="trend_only">제품 링크 없이 트렌드만</option>
-        </select>
-
         <label for="source_urls">출처 URL</label>
         <textarea id="source_urls" name="source_urls" placeholder="한 줄에 하나씩. 유튜브/인스타/공식몰/브랜드 공지 등"></textarea>
 
-        <label for="product_links">상품 링크</label>
-        <textarea id="product_links" name="product_links" placeholder="라벨|URL 형식, 한 줄에 하나씩"></textarea>
-
-        <label for="notes">내 메모</label>
-        <textarea id="notes" name="notes" placeholder="왜 줬는지, 어디가 예뻤는지, 직접 언급인지, 피해야 할 표현 등"></textarea>
-
-        <button type="submit">초안 생성</button>
+        <input name="date" type="hidden" value="${todayKst()}">
+        ${renderTonePicker()}
+        <button type="submit">초안 만들기</button>
       </form>
     </section>
   `;
 }
 
-export function renderStudioHome({ accounts = [], drafts = [], draftsByAccount = null } = {}) {
-  const groupedDrafts = draftsByAccount || {
-    lifemagazine: drafts,
-    jayssam: [],
-    offnote: [],
-  };
+function renderOperationsDashboard(dashboard) {
+  return `
+    <section class="hero-panel">
+      <div>
+        <p class="eyebrow">today</p>
+        <h1>오늘 운영 현황</h1>
+        <p class="muted">${escapeHtml(dashboard.today)} 기준. 승인할 것, 발행 대기, 실패 원인을 먼저 보여줘.</p>
+      </div>
+      <a class="primary-link" href="#lifemagazine-compose">라이프매거진 글 만들기</a>
+    </section>
+
+    <div class="account-grid">
+      ${dashboard.accountSummaries.map(renderAccountSummary).join("")}
+    </div>
+
+    <div class="ops-grid">
+      <section>
+        <div class="section-title">
+          <h2>오늘 할 일</h2>
+          <p class="muted">승인하거나 발행 시간을 기다리는 항목이야.</p>
+        </div>
+        ${dashboard.tasks.length ? dashboard.tasks.map(renderTaskItem).join("") : renderEmpty("지금 당장 처리할 항목은 없어.")}
+      </section>
+      <section>
+        <div class="section-title">
+          <h2>문제 있는 항목</h2>
+          <p class="muted">실패 이유나 발행 전 확인이 필요한 것만 모아둬.</p>
+        </div>
+        ${dashboard.issues.length ? dashboard.issues.map(renderIssueItem).join("") : renderEmpty("현재 기록된 실패나 경고가 없어.")}
+      </section>
+      <section>
+        <div class="section-title">
+          <h2>내일 예정</h2>
+          <p class="muted">${escapeHtml(dashboard.tomorrow)}에 올라갈 후보야.</p>
+        </div>
+        ${dashboard.tomorrowDrafts.length ? dashboard.tomorrowDrafts.map(renderTaskItem).join("") : renderEmpty("내일 예정된 초안은 아직 없어.")}
+      </section>
+    </div>
+  `;
+}
+
+export function renderStudioHome({ accounts = [], drafts = [], draftsByAccount = null, today = null, tomorrow = null } = {}) {
+  const groupedDrafts = draftsByAccount || { lifemagazine: drafts, jayssam: [], offnote: [] };
+  const dashboard = buildOperationsDashboard(accounts, groupedDrafts, {
+    today: today || todayKst(),
+    tomorrow: tomorrow || kstDate(1),
+  });
+  const recentLifeDrafts = (groupedDrafts.lifemagazine || drafts || []).slice(0, 5);
+
   return `<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Threads Studio</title>
+  <title>스레드 자동화 화면</title>
   <style>
-    :root { color-scheme: light; --bg:#f4f5f7; --ink:#15171a; --muted:#68707a; --line:#dfe3e8; --panel:#fff; --brand:#214f46; --accent:#b83b5e; --soft:#f8fafb; }
-    * { box-sizing: border-box; }
-    body { margin:0; background:var(--bg); color:var(--ink); font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    header { position:sticky; top:0; z-index:2; background:rgba(255,255,255,.94); border-bottom:1px solid var(--line); padding:14px 18px; backdrop-filter: blur(10px); }
-    h1, h2, h3, p { margin-top:0; }
-    h1 { margin-bottom:3px; font-size:22px; }
-    h2 { font-size:18px; margin-bottom:8px; }
-    h3 { font-size:15px; margin-bottom:6px; }
-    main { max-width:1320px; margin:0 auto; padding:18px; }
-    .dashboard { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px; margin-bottom:18px; }
-    .workspace { display:grid; grid-template-columns:minmax(340px, 460px) 1fr; gap:18px; align-items:start; }
-    section, .draft { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; }
-    .account-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
-    .eyebrow { color:var(--accent); font-size:11px; font-weight:800; text-transform:uppercase; margin-bottom:4px; }
-    .handle, .hint, .path, .meta, .tone-card span, .rules { color:var(--muted); font-size:12px; }
-    .count { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:#eef5f2; color:var(--brand); font-weight:900; }
-    .rules { display:grid; gap:5px; margin:12px 0; }
-    .rules div { display:grid; grid-template-columns:72px 1fr; gap:8px; }
-    .rules dt { font-weight:800; color:#3d454d; }
-    .rules dd { margin:0; overflow-wrap:anywhere; }
-    label, legend { display:block; margin:12px 0 6px; font-weight:800; font-size:13px; }
-    input, select, textarea, button { width:100%; font:inherit; border:1px solid var(--line); border-radius:6px; padding:10px; background:#fff; color:var(--ink); }
-    textarea { min-height:76px; resize:vertical; }
-    form > button { margin-top:14px; background:var(--brand); color:#fff; border-color:var(--brand); font-weight:900; cursor:pointer; }
-    .inline-action { margin:8px 0 10px; }
-    .inline-action button { width:auto; margin:0; padding:8px 10px; background:#fff; color:var(--brand); border-color:#a8c7bd; font-size:12px; font-weight:900; }
-    .inline-action input { display:none; }
+    :root { color-scheme: light; --bg:#f4f5f7; --ink:#15171a; --muted:#68707a; --line:#dfe3e8; --panel:#fff; --brand:#214f46; --accent:#b83b5e; --danger:#b42318; --warn:#a15c07; --soft:#f8fafb; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header { position:sticky; top:0; z-index:2; background:rgba(255,255,255,.95); border-bottom:1px solid var(--line); padding:14px 18px; backdrop-filter:blur(10px); }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { margin-bottom:6px; font-size:28px; }
+    h2 { margin-bottom:8px; font-size:19px; }
+    h3 { margin-bottom:4px; font-size:16px; }
+    main { max-width:1360px; margin:0 auto; padding:18px; }
+    section,.account-card,.draft-card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; }
+    .muted,.empty,.task-item p,.issue-item p,.media-note { color:var(--muted); font-size:13px; }
+    .eyebrow { color:var(--accent); font-size:11px; font-weight:900; letter-spacing:.04em; text-transform:uppercase; margin-bottom:4px; }
+    .hero-panel { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:14px; }
+    .primary-link, form > button { display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--brand); border-radius:6px; padding:10px 12px; background:var(--brand); color:#fff; font-weight:900; text-decoration:none; cursor:pointer; }
+    .account-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:14px; }
+    .account-title { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+    .badge { border-radius:999px; padding:5px 8px; font-size:12px; font-weight:900; white-space:nowrap; }
+    .badge.ok { background:#edf7f2; color:#176345; }
+    .badge.danger { background:#fff1f0; color:var(--danger); }
+    .metric-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:12px; }
+    .metric-grid div { background:var(--soft); border:1px solid var(--line); border-radius:6px; padding:10px; }
+    .metric-grid b { display:block; font-size:24px; }
+    .metric-grid span { color:var(--muted); font-size:12px; }
+    .ops-grid { display:grid; grid-template-columns:1.1fr 1.1fr .9fr; gap:12px; margin-bottom:16px; align-items:start; }
+    .task-item,.issue-item { border-top:1px solid var(--line); padding:11px 0; }
+    .task-item:first-of-type,.issue-item:first-of-type { border-top:0; }
+    .task-item div,.issue-item div { display:flex; justify-content:space-between; gap:12px; }
+    .task-item span,.issue-item span { text-align:right; color:#3d454d; }
+    .workspace { display:grid; grid-template-columns:minmax(360px,480px) 1fr; gap:14px; align-items:start; }
+    label,legend { display:block; margin:12px 0 6px; font-weight:900; font-size:13px; }
+    input,select,textarea,button { width:100%; font:inherit; border:1px solid var(--line); border-radius:6px; padding:10px; background:#fff; color:var(--ink); }
+    textarea { min-height:82px; resize:vertical; }
     .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     fieldset { border:0; margin:0; padding:0; }
-    .tone-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px; }
-    .tone-card { text-align:left; min-height:78px; border-color:var(--line); background:#fff; cursor:pointer; }
+    .tone-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    .tone-card { min-height:78px; text-align:left; cursor:pointer; }
     .tone-card strong { display:block; margin-bottom:5px; font-size:13px; }
+    .tone-card span { color:var(--muted); font-size:12px; }
     .tone-card.selected { border-color:var(--accent); box-shadow:0 0 0 2px rgba(184,59,94,.12); }
-    .tone-example pre, pre { white-space:pre-wrap; word-break:keep-all; overflow-wrap:anywhere; background:var(--soft); border:1px solid var(--line); border-radius:6px; padding:12px; line-height:1.6; }
-    .tone-example { margin-top:10px; }
-    .tone-example p { color:var(--muted); font-size:12px; margin-bottom:6px; }
-    .meta { display:flex; gap:6px; flex-wrap:wrap; }
-    .meta span { border:1px solid var(--line); border-radius:999px; padding:3px 7px; background:#fafafa; }
-    .draft { margin-bottom:12px; }
-    .draft h4 { margin:10px 0 6px; font-size:13px; }
-    .draft ul { padding-left:18px; }
-    @media (max-width: 1100px) { .dashboard, .workspace { grid-template-columns:1fr; } }
-    @media (max-width: 640px) { main { padding:12px; } .form-row, .tone-grid { grid-template-columns:1fr; } }
+    pre { white-space:pre-wrap; word-break:keep-all; overflow-wrap:anywhere; background:var(--soft); border:1px solid var(--line); border-radius:6px; padding:12px; line-height:1.6; }
+    .draft-card { margin-bottom:12px; }
+    .draft-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .inline-action { min-width:150px; }
+    .inline-action input { display:none; }
+    .inline-action button { width:auto; background:#fff; color:var(--brand); border-color:#a8c7bd; font-size:12px; font-weight:900; cursor:pointer; }
+    .media-note { background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; padding:8px; }
+    @media (max-width:1100px) { .account-grid,.ops-grid,.workspace { grid-template-columns:1fr; } .hero-panel { align-items:flex-start; flex-direction:column; } }
+    @media (max-width:640px) { main { padding:12px; } .form-row,.tone-grid { grid-template-columns:1fr; } .task-item div,.issue-item div,.draft-head { flex-direction:column; } .task-item span,.issue-item span { text-align:left; } }
   </style>
 </head>
 <body>
   <header>
-    <h1>Threads Multi-Account Studio</h1>
-    <p class="hint">제이쌤, 오프노트, 라이프매거진을 한 화면에서 보고 계정별 초안과 규칙은 분리해서 관리해.</p>
+    <strong>스레드 자동화 화면</strong>
+    <p class="muted">오늘 뭐가 끝났고, 뭐가 승인 대기인지, 어디가 실패했는지 먼저 보여줘.</p>
   </header>
   <main>
-    <div class="dashboard">
-      ${accounts.map((account) => renderAccountPanel(account, groupedDrafts[account.accountKey] || [])).join("")}
-    </div>
+    ${renderOperationsDashboard(dashboard)}
     <div class="workspace">
-      ${renderLifemagazineForm(accounts)}
+      ${renderLifemagazineComposer()}
       <section>
         <div class="section-title">
-          <p class="eyebrow">latest lifemagazine drafts</p>
-          <h2>방금 만든 초안 확인</h2>
+          <p class="eyebrow">recent</p>
+          <h2>라이프매거진 최근 초안</h2>
+          <p class="muted">최근 5개만 보여줘. 발행된 글이 아니라 작업 기록이야.</p>
         </div>
-        ${(groupedDrafts.lifemagazine || drafts || []).length ? (groupedDrafts.lifemagazine || drafts).map(renderDraftCard).join("") : '<p class="hint">아직 생성된 초안이 없어.</p>'}
+        ${recentLifeDrafts.length ? recentLifeDrafts.map(renderDraftCard).join("") : renderEmpty("아직 만든 초안이 없어.")}
       </section>
     </div>
   </main>
@@ -424,13 +590,9 @@ async function readRequestBody(req) {
 async function handleCreateDraft(req, res) {
   const body = await readRequestBody(req);
   const contentType = req.headers["content-type"] || "";
-  const multipart = contentType.includes("multipart/form-data")
-    ? parseMultipartFormData(body, contentType)
-    : null;
+  const multipart = contentType.includes("multipart/form-data") ? parseMultipartFormData(body, contentType) : null;
   const params = multipart ? new URLSearchParams(multipart.fields) : new URLSearchParams(body.toString("utf8"));
-  const localMediaPaths = multipart
-    ? saveUploadedMediaFiles(multipart.files, { root, date: params.get("date") || todayKst() })
-    : [];
+  const localMediaPaths = multipart ? saveUploadedMediaFiles(multipart.files, { root, date: params.get("date") || todayKst() }) : [];
   const draft = generateLifemagazineDraft({
     date: params.get("date"),
     slot: params.get("slot"),
@@ -513,6 +675,6 @@ const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process
 if (isDirectRun) {
   loadEnv();
   createStudioServer().listen(port, "0.0.0.0", () => {
-    console.log(`Threads Studio: http://localhost:${port}`);
+    console.log(`Threads automation dashboard: http://localhost:${port}`);
   });
 }

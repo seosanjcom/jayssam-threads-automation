@@ -11,10 +11,22 @@ import {
   saveLifemagazineDraft,
 } from "./generate_lifemagazine_draft.mjs";
 import { validateLifemagazineDraft } from "./validate_lifemagazine_draft.mjs";
-import { parseMultipartFormData, renderStudioHome, saveUploadedMediaFiles } from "./threads_studio_server.mjs";
+import {
+  buildOperationsDashboard,
+  describeDraftProblem,
+  parseMultipartFormData,
+  renderStudioHome,
+  saveUploadedMediaFiles,
+} from "./threads_studio_server.mjs";
 import { buildLifemagazineTelegramMessage, prepareLifemagazinePreviewDraft } from "./send_lifemagazine_preview_telegram.mjs";
 import { latestApprovedLifemagazineDraft } from "./publish_lifemagazine_latest_approved.mjs";
 import { applyLifemagazineApprovalAction } from "./telegram_check_lifemagazine_approvals.mjs";
+
+const sampleAccounts = [
+  { accountKey: "jayssam", threadsUsername: "jayssam_edu", displayName: "제이쌤", project: "jayssam", automationRoot: "outputs/automation", defaultSlots: ["15:00 KST", "21:00 KST"], dailyPostLimit: 2, minIntervalHours: 6 },
+  { accountKey: "offnote", threadsUsername: "offnote.kr", displayName: "오프노트", project: "afterwork-profit", automationRoot: "outputs/afterwork-profit/automation", defaultSlots: ["18:00 KST", "21:00 KST"], dailyPostLimit: 1, minIntervalHours: 8 },
+  { accountKey: "lifemagazine", threadsUsername: "lifemagazine_", displayName: "라이프매거진", project: "lifemagazine", automationRoot: "outputs/lifemagazine/automation", defaultSlots: ["15:00 KST", "18:00 KST", "21:00 KST"], dailyPostLimit: 1, minIntervalHours: 8 },
+];
 
 test("official confirmed product draft uses source-backed Korean wording and disclosure", () => {
   const draft = generateLifemagazineDraft({
@@ -143,38 +155,80 @@ test("validator rejects same-product wording for similar mood drafts", () => {
   assert.ok(result.errors.some((error) => error.includes("same-product")));
 });
 
-test("studio home renders three account workspaces and tone preset examples", () => {
+test("operations dashboard summarizes today, tomorrow, approvals, and failures", () => {
+  const published = generateLifemagazineDraft({ date: "2026-05-24", topic: "발행 완료", source_urls: ["https://example.com/a"] });
+  published.status = "published";
+  const approved = generateLifemagazineDraft({ date: "2026-05-24", topic: "발행 대기", source_urls: ["https://example.com/b"] });
+  approved.status = "approved";
+  const pending = generateLifemagazineDraft({ date: "2026-05-24", topic: "승인 대기", source_urls: ["https://example.com/c"] });
+  pending.status = "pending_approval";
+  const failed = generateLifemagazineDraft({ date: "2026-05-24", topic: "실패", source_urls: ["https://example.com/d"] });
+  failed.status = "publish_failed";
+  failed.publish_error = "Threads 토큰 계정이 다릅니다.";
+  const tomorrow = generateLifemagazineDraft({ date: "2026-05-25", topic: "내일 글", source_urls: ["https://example.com/e"] });
+  tomorrow.status = "approved";
+
+  const dashboard = buildOperationsDashboard(sampleAccounts, {
+    jayssam: [],
+    offnote: [],
+    lifemagazine: [
+      { data: published, mtime: 1 },
+      { data: approved, mtime: 2 },
+      { data: pending, mtime: 3 },
+      { data: failed, mtime: 4 },
+      { data: tomorrow, mtime: 5 },
+    ],
+  }, { today: "2026-05-24", tomorrow: "2026-05-25" });
+
+  const life = dashboard.accountSummaries.find((item) => item.account.accountKey === "lifemagazine");
+  assert.equal(life.todayPublished, 1);
+  assert.equal(life.todayScheduled, 1);
+  assert.equal(life.approvalWaiting, 1);
+  assert.equal(life.tomorrowScheduled, 1);
+  assert.equal(life.failed, 1);
+  assert.ok(dashboard.issues.some((item) => item.problem.includes("Threads 토큰")));
+});
+
+test("lifemagazine local photos produce a visible warning until public media_urls exist", () => {
+  const draft = generateLifemagazineDraft({
+    date: "2026-05-24",
+    topic: "사진 있는 초안",
+    source_urls: ["https://example.com/source"],
+    local_media_paths: ["outputs/lifemagazine/media/2026-05-24/sample.png"],
+  });
+
+  assert.match(describeDraftProblem(draft), /공개 URL/);
+});
+
+test("studio home renders operator dashboard and simplified creator workflow", () => {
   const lifemagazineDraft = generateLifemagazineDraft({
     date: "2026-05-24",
     topic: "유튜브 속 광나는 헤어템",
     source_urls: ["https://example.com/video"],
   });
+  lifemagazineDraft.status = "pending_approval";
+
   const html = renderStudioHome({
-    accounts: [
-      { accountKey: "jayssam", threadsUsername: "jayssam_edu", displayName: "제이쌤", project: "jayssam", automationRoot: "outputs/automation", defaultSlots: ["15:00 KST", "21:00 KST"], dailyPostLimit: 2, minIntervalHours: 6 },
-      { accountKey: "offnote", threadsUsername: "offnote.kr", displayName: "오프노트", project: "afterwork-profit", automationRoot: "outputs/afterwork-profit/automation", defaultSlots: ["18:00 KST", "21:00 KST"], dailyPostLimit: 1, minIntervalHours: 8 },
-      { accountKey: "lifemagazine", threadsUsername: "lifemagazine_", displayName: "라이프매거진", project: "lifemagazine", automationRoot: "outputs/lifemagazine/automation", defaultSlots: ["15:00 KST", "18:00 KST", "21:00 KST"], dailyPostLimit: 1, minIntervalHours: 8 },
-    ],
+    accounts: sampleAccounts,
     draftsByAccount: {
       jayssam: [],
       offnote: [],
-      lifemagazine: [{ file: path.join(process.cwd(), "outputs", "lifemagazine", "automation", "2026-05-24", `${lifemagazineDraft.id}.json`), data: lifemagazineDraft }],
+      lifemagazine: [{ file: path.join(process.cwd(), "outputs", "lifemagazine", "automation", "2026-05-24", `${lifemagazineDraft.id}.json`), data: lifemagazineDraft, mtime: 1 }],
     },
+    today: "2026-05-24",
+    tomorrow: "2026-05-25",
   });
 
-  assert.match(html, /제이쌤/);
-  assert.match(html, /오프노트/);
-  assert.match(html, /라이프매거진/);
-  assert.match(html, /발견 오바형/);
-  assert.match(html, /친구 제보형/);
-  assert.match(html, /후기 납득형/);
-  assert.match(html, /tone_style/);
-  assert.match(html, /data-tone/);
-  assert.match(html, /텔레그램 미리보기/);
-  assert.match(html, /\/api\/lifemagazine\/telegram-preview/);
+  assert.match(html, /오늘 운영 현황/);
+  assert.match(html, /오늘 할 일/);
+  assert.match(html, /문제 있는 항목/);
+  assert.match(html, /내일 예정/);
+  assert.match(html, /라이프매거진 새 글 만들기/);
+  assert.match(html, /작성 중|초안|승인 기다림/);
   assert.match(html, /type="file"/);
   assert.match(html, /name="photos"/);
   assert.match(html, /enctype="multipart\/form-data"/);
+  assert.doesNotMatch(html, /ready_to_review|pending_approval|publish_failed/);
 });
 
 test("multipart parser reads lifemagazine fields and uploaded image files", () => {
