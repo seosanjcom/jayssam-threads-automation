@@ -53,5 +53,11 @@
     "outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_03.png",
     "outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_04.png"
   ],
-  "cardnews_quality_rule": "Cardnews must add separate criteria, checklist, comparison, or examples. Do not split the post summary into images."
+  "cardnews_quality_rule": "Cardnews must add separate criteria, checklist, comparison, or examples. Do not split the post summary into images.",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_04.png"
+  ]
 }
