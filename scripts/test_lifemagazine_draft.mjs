@@ -242,7 +242,7 @@ test("official confirmed drafts keep memo hooks even while hiding product names"
 
   assert.match(draft.threads_text, /피부화장에 가장 공을 들이는 민경님이 2통째 사용 중인 찐 애정템/);
   assert.match(draft.threads_text, /다크서클 커버 고민이면 이건 안 찾아볼 수가 없더라/);
-  assert.match(draft.threads_text, /민와와 유튜브 보고 나도 바로 궁금해짐/);
+  assert.match(draft.threads_text, /민와와 유튜브 보고 나도 바로 궁금해져서 찾아봄 ㅎㅎ/);
   assert.doesNotMatch(draft.threads_text, /더샘|커버퍼펙션|코렉트업 베이지/);
 });
 
@@ -263,6 +263,33 @@ test("official confirmed comments include exact item info and FTC-style affiliat
   assert.match(comments, /더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지/);
   assert.match(comments, /제휴 링크|수수료|공정위|경제적 대가/);
   assert.match(comments, /https:\/\/link\.coupang\.com\/a\/example/);
+});
+
+test("official confirmed beauty draft follows the user's lifemagazine sample tone", () => {
+  const draft = generateLifemagazineDraft({
+    topic: "환연4 민경님 컨실러",
+    product_name: "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지",
+    celebrity_or_content: "민와와 유튜브",
+    product_relationship: "official_confirmed",
+    product_links: [{ label: "구매링크", url: "https://link.coupang.com/a/example" }],
+    notes: "피부화장에 가장 공을 들이는 민경님이 2통째 사용 중인 찐 애정템. 다크서클 커버 고민. 민경님은 3호 코렉트업 베이지 쓴대.",
+    tone_style: "story_buy",
+    source_urls: [],
+  });
+
+  assert.equal(draft.threads_text, [
+    "[제휴 링크 포함]",
+    "피부화장에 가장 공을 들이는 민경님이 2통째 사용 중인 찐 애정템",
+    "다크서클 커버 고민이면 이건 안 찾아볼 수가 없더라",
+    "민와와 유튜브 보고 나도 바로 궁금해져서 찾아봄 ㅎㅎ",
+    "정보는 댓글에 남겨둘게!!",
+  ].join("\n"));
+  assert.equal(draft.thread_comments[0], [
+    "민경님은 3호 코렉트업 베이지 쓴대",
+    "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지",
+    "구매링크: https://link.coupang.com/a/example",
+    "이 댓글에는 제휴 링크가 포함되어 있고, 구매 시 수수료를 받을 수 있어.",
+  ].join("\n"));
 });
 
 test("validator rejects same-product wording for similar mood drafts", () => {

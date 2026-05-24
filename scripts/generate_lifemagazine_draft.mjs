@@ -103,6 +103,17 @@ function sourceLabel(input) {
   return String(input.celebrity_or_content || "이 콘텐츠").trim();
 }
 
+function cleanOfficialNoteLine(line, productName = "") {
+  let value = String(line || "").trim();
+  if (productName) value = value.replace(productName, "").trim();
+  return value.replace(/\s+/g, " ").replace(/[.。]+$/g, "").trim();
+}
+
+function firstMatchingLine(lines, pattern, productName = "") {
+  const line = lines.find((item) => pattern.test(item));
+  return cleanOfficialNoteLine(line, productName);
+}
+
 function relationshipNote(input) {
   const relationship = input.product_relationship || "trend_only";
   if (relationship === "official_confirmed") {
@@ -126,16 +137,16 @@ function toneOpening(input) {
 
   if (input.product_relationship === "official_confirmed") {
     const noteLines = notes.split(/[.!?\n]/).map((line) => line.trim()).filter(Boolean);
-    const lovedItemLine = /2\s*통|찐|애정템|사용\s*중|내돈내산/.test(notes)
-      ? noteLines.find((line) => /2\s*통|찐|애정템|사용\s*중|내돈내산/.test(line))
-      : "";
-    const concernLine = /다크서클|커버|피부화장|잡티|홍조|컨실러|쿠션|파데/.test(notes)
-      ? noteLines.find((line) => line !== lovedItemLine && /다크서클|커버|피부화장|잡티|홍조|컨실러|쿠션|파데/.test(line))
-      : "";
+    const lovedItemLine = firstMatchingLine(noteLines, /2\s*통|찐\s*애정템|내돈내산|사용\s*중|재구매|n통|N통/i, productName);
+    const concernLine = firstMatchingLine(
+      noteLines.filter((line) => cleanOfficialNoteLine(line, productName) !== lovedItemLine),
+      /다크서클|커버|피부화장|잡티|톤|컨실러|쿠션|파데|탈모|비듬|머릿결|건조|각질|향|광/i,
+      productName,
+    );
     return [
-      lovedItemLine || `${source}에서 이 장면 보고 멈춤`,
+      lovedItemLine || `${source}에서 나온 장면 보고 멈춤`,
       concernLine && concernLine !== lovedItemLine ? `${concernLine}이면 이건 안 찾아볼 수가 없더라` : "이거 궁금했던 사람은 한번 볼 만해",
-      `${source} 보고 나도 바로 궁금해짐`,
+      `${source} 보고 나도 바로 궁금해져서 찾아봄 ㅎㅎ`,
     ].filter(Boolean);
   }
 
@@ -196,7 +207,7 @@ function buildThreadsText(input, productLinks) {
     disclosureFor(productLinks).trimEnd(),
     ...toneOpening(input),
     relationshipNote(input),
-    "정보는 댓글에 남겨둘게.",
+    input.product_relationship === "official_confirmed" ? "정보는 댓글에 남겨둘게!!" : "정보는 댓글에 남겨둘게.",
   ].filter(Boolean);
   return lines.join("\n");
 }
@@ -207,12 +218,16 @@ function buildComments(input, productLinks) {
   const relationship = input.product_relationship || "trend_only";
   const productName = String(input.product_name || "").trim();
   const notes = String(input.notes || "").trim();
-  const exactUseLine = notes
+  const noteLines = notes
     .split(/[.!?\n]/)
     .map((line) => line.trim())
-    .find((line) => /쓴대|사용|2\s*통|찐|애정템|호\b|코렉트업|베이지/.test(line));
+    .filter(Boolean);
+  const exactUseLine =
+    noteLines.find((line) => /쓴대|썼대|사용한대|발랐대/i.test(line)) ||
+    noteLines.find((line) => /호\b|코렉트업|베이지/i.test(line)) ||
+    noteLines.find((line) => /사용|2\s*통|찐\s*애정템/i.test(line));
 
-  if (sourceUrls.length || input.official_confirmation_source) {
+  if ((sourceUrls.length || input.official_confirmation_source) && relationship !== "official_confirmed") {
     comments.push([
       "내가 본 출처/확인 메모",
       input.official_confirmation_source || "",
@@ -221,6 +236,15 @@ function buildComments(input, productLinks) {
   }
 
   if (productLinks.length) {
+    if (relationship === "official_confirmed") {
+      comments.push([
+        exactUseLine || "",
+        productName || "",
+        ...productLinks.map((item) => `${item.label || "구매링크"}: ${item.url || item}`),
+        "이 댓글에는 제휴 링크가 포함되어 있고, 구매 시 수수료를 받을 수 있어.",
+      ].filter(Boolean).join("\n"));
+      return comments;
+    }
     const relationLine =
       relationship === "official_confirmed"
         ? "사용자 메모/출처 기준으로 제품 정보를 정리했어."
