@@ -42,9 +42,10 @@ export function validateLifemagazineDraft(draft) {
   if (draft.product_relationship === "official_confirmed") {
     const hasSource =
       (Array.isArray(draft.source_urls) && draft.source_urls.length > 0) ||
-      Boolean(String(draft.official_confirmation_source || "").trim());
+      Boolean(String(draft.official_confirmation_source || "").trim()) ||
+      Boolean(String(draft.notes || "").trim());
     if (!hasSource) {
-      errors.push("official_confirmed drafts require source_urls or official_confirmation_source.");
+      errors.push("official_confirmed drafts require notes, source_urls, or official_confirmation_source.");
     }
   }
 

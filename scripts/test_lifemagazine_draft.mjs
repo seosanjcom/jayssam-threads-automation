@@ -141,6 +141,22 @@ test("validator rejects official confirmed drafts without a source", () => {
   assert.ok(result.errors.some((error) => error.includes("official_confirmed")));
 });
 
+test("official confirmed drafts can use the user's memo as confirmation context", () => {
+  const draft = generateLifemagazineDraft({
+    topic: "민경님 컨실러",
+    celebrity_or_content: "민와와 유튜브",
+    product_relationship: "official_confirmed",
+    product_links: [{ label: "더샘 커버퍼펙션 트리플 팟 컨실러 3호", url: "https://shop.example.com/concealer" }],
+    notes: "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지",
+    source_urls: [],
+  });
+
+  const result = validateLifemagazineDraft(draft);
+
+  assert.equal(result.ok, true);
+  assert.doesNotMatch(draft.threads_text, /메모 기준/);
+});
+
 test("validator rejects same-product wording for similar mood drafts", () => {
   const draft = generateLifemagazineDraft({
     topic: "이어링",

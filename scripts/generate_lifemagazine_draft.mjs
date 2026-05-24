@@ -106,7 +106,7 @@ function sourceLabel(input) {
 function relationshipNote(input) {
   const relationship = input.product_relationship || "trend_only";
   if (relationship === "official_confirmed") {
-    return "제품명은 사용자가 남긴 출처/메모 기준으로 정리했어.";
+    return "영상에서 언급된 제품명 중심으로 정리했어.";
   }
   if (relationship === "strong_guess") {
     return "공식 확인은 아니라서 같은 제품처럼 말하진 않고, 화면 속 무드 기준으로만 볼게.";
@@ -175,13 +175,11 @@ function toneOpening(input) {
 }
 
 function buildThreadsText(input, productLinks) {
-  const notes = String(input.notes || "").trim();
   const lines = [
     disclosureFor(productLinks).trimEnd(),
     ...toneOpening(input),
     relationshipNote(input),
     "정보는 댓글에 남겨둘게.",
-    notes ? `\n메모 기준: ${notes}` : "",
   ].filter(Boolean);
   return lines.join("\n");
 }
@@ -265,6 +263,7 @@ export function generateLifemagazineDraft(input = {}, options = {}) {
     affiliate_disclosure_text: productLinks.length ? "제휴 링크 포함." : "",
     non_endorsement_disclaimer: "이 게시물은 언급된 인물의 구매 권유나 보증을 의미하지 않아.",
     official_confirmation_source: input.official_confirmation_source || "",
+    notes: input.notes || "",
   };
 }
 
