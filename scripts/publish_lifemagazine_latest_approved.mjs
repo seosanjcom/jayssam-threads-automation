@@ -36,8 +36,16 @@ function findJsonFiles(dir) {
   return out;
 }
 
+function isDraftDue(data, now = new Date()) {
+  if (!data.scheduled_publish_at) return true;
+  const scheduled = Date.parse(data.scheduled_publish_at);
+  if (Number.isNaN(scheduled)) return true;
+  return scheduled <= new Date(now).getTime();
+}
+
 export function latestApprovedLifemagazineDraft(options = {}) {
   const root = options.root || process.cwd();
+  const now = options.now || new Date();
   const logPath = options.publishLogPath || path.join(root, publishLogPath);
   const publishedIds = options.publishedIds || new Set(readJsonIfExists(logPath, []).map((log) => log.draft_id));
   const dir = path.join(root, automationRoot);
@@ -54,6 +62,7 @@ export function latestApprovedLifemagazineDraft(options = {}) {
     .filter((item) => item.data.account === account)
     .filter((item) => item.data.status === "approved")
     .filter((item) => !publishedIds.has(item.data.id))
+    .filter((item) => isDraftDue(item.data, now))
     .sort((a, b) => b.mtime - a.mtime)[0] || null;
 }
 
@@ -80,7 +89,7 @@ if (isDirectRun) {
 
   const latest = latestApprovedLifemagazineDraft();
   if (!latest) {
-    console.log("No approved lifemagazine_ Threads post found.");
+    console.log("No due approved lifemagazine_ Threads post found.");
     process.exit(0);
   }
 

@@ -73,6 +73,28 @@ export function buildDraftId(date, slot, topic) {
   return `LIFE-${compactDate(date)}-${slot || "manual"}-${slugify(topic)}`;
 }
 
+function slotPublishTime(slot) {
+  if (slot === "night") return "21:00";
+  if (slot === "afternoon") return "15:00";
+  return "18:00";
+}
+
+function normalizeClockTime(value) {
+  const match = String(value || "").trim().match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return "";
+  const hour = Number(match[1]);
+  const minute = Number(match[2]);
+  if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return "";
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
+function kstDateTimeToIso(date, clockTime) {
+  const [year, month, day] = String(date || "").split("-").map(Number);
+  const [hour, minute] = String(clockTime || "").split(":").map(Number);
+  if (!year || !month || !day || Number.isNaN(hour) || Number.isNaN(minute)) return "";
+  return new Date(Date.UTC(year, month - 1, day, hour - 9, minute, 0, 0)).toISOString();
+}
+
 function disclosureFor(productLinks) {
   return productLinks.length ? "[제휴 링크 포함]\n\n" : "";
 }
@@ -206,6 +228,9 @@ export function generateLifemagazineDraft(input = {}, options = {}) {
   const productLinks = Array.isArray(input.product_links) ? input.product_links.filter(Boolean) : [];
   const id = input.id || buildDraftId(date, slot, topic);
   const toneStyle = toneStyleByKey(input.tone_style).key;
+  const customPublishTime = normalizeClockTime(input.custom_publish_time);
+  const clockTime = customPublishTime || normalizeClockTime(input.recommended_publish_time) || slotPublishTime(slot);
+  const publishTimeSource = customPublishTime ? "custom" : "recommended";
 
   return {
     id,
@@ -216,7 +241,9 @@ export function generateLifemagazineDraft(input = {}, options = {}) {
     status: input.status || "ready_to_review",
     draft_date: date,
     created_at: options.now || new Date().toISOString(),
-    recommended_publish_time: input.recommended_publish_time || (slot === "night" ? "21:00 KST" : slot === "afternoon" ? "15:00 KST" : "18:00 KST"),
+    recommended_publish_time: `${clockTime} KST`,
+    scheduled_publish_at: kstDateTimeToIso(date, clockTime),
+    publish_time_source: publishTimeSource,
     tone_style: toneStyle,
     tone_label: toneStyleByKey(toneStyle).label,
     threads_text: buildThreadsText({ ...input, tone_style: toneStyle }, productLinks),

@@ -418,19 +418,30 @@ function renderLifemagazineComposer() {
             </select>
           </div>
           <div>
-            <label for="slot">발행 희망 시간</label>
+            <label for="slot">추천 시간</label>
             <select id="slot" name="slot">
-              <option value="afternoon">15:00 KST</option>
-              <option value="evening" selected>18:00 KST</option>
-              <option value="night">21:00 KST</option>
+              <option value="afternoon">15:00 KST · 알고리즘 친화</option>
+              <option value="evening" selected>18:00 KST · 참여 가장 좋음</option>
+              <option value="night">21:00 KST · 댓글 가장 좋음</option>
             </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="date">발행 날짜</label>
+            <input id="date" name="date" type="date" value="${todayKst()}">
+          </div>
+          <div>
+            <label for="custom_publish_time">내가 정하는 발행 시간</label>
+            <input id="custom_publish_time" name="custom_publish_time" type="time">
+            <p class="muted">비워두면 위 추천 시간을 써. 이미 21시가 지났으면 여기서 원하는 시간으로 바꾸면 돼.</p>
           </div>
         </div>
 
         <label for="source_urls">출처 URL</label>
         <textarea id="source_urls" name="source_urls" placeholder="한 줄에 하나씩. 유튜브/인스타/공식몰/브랜드 공지 등"></textarea>
 
-        <input name="date" type="hidden" value="${todayKst()}">
         ${renderTonePicker()}
         <button type="submit">초안 만들기</button>
       </form>
@@ -596,6 +607,7 @@ async function handleCreateDraft(req, res) {
   const draft = generateLifemagazineDraft({
     date: params.get("date"),
     slot: params.get("slot"),
+    custom_publish_time: params.get("custom_publish_time"),
     topic: params.get("topic"),
     celebrity_or_content: params.get("celebrity_or_content"),
     product_relationship: params.get("product_relationship"),

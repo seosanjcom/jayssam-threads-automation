@@ -26,18 +26,18 @@ $PublishAction = New-ScheduledTaskAction `
     -Execute "powershell.exe" `
     -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$PublishScript`"" `
     -WorkingDirectory $Root
-$PublishTriggers = @()
-$PublishTriggers += New-ScheduledTaskTrigger -Daily -At "18:00"
-$PublishTriggers += New-ScheduledTaskTrigger -Daily -At "21:00"
+$PublishTrigger = New-ScheduledTaskTrigger -Once -At (Get-Date).Date.AddMinutes(2) `
+    -RepetitionInterval (New-TimeSpan -Minutes 10) `
+    -RepetitionDuration (New-TimeSpan -Days 3650)
 
 Register-ScheduledTask `
     -TaskName "Lifemagazine Threads Publish" `
     -Action $PublishAction `
-    -Trigger $PublishTriggers `
+    -Trigger $PublishTrigger `
     -Settings $Settings `
-    -Description "Publish latest approved lifemagazine_ Threads draft at 18:00 and 21:00 KST" `
+    -Description "Publish due approved lifemagazine_ Threads drafts every 10 minutes" `
     -Force | Out-Null
 
 Write-Output "Registered Lifemagazine Threads local tasks:"
 Write-Output "- Lifemagazine Threads Approval Check: every 10 minutes"
-Write-Output "- Lifemagazine Threads Publish: daily 18:00, 21:00"
+Write-Output "- Lifemagazine Threads Publish: every 10 minutes, only when an approved draft is due"

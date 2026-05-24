@@ -265,6 +265,30 @@ test("uploaded media files are saved under lifemagazine media output", () => {
   assert.equal(fs.existsSync(path.join(tmp, saved[0])), true);
 });
 
+test("custom publish time is stored as the actual scheduled publish time", () => {
+  const draft = generateLifemagazineDraft({
+    date: "2026-05-24",
+    slot: "night",
+    custom_publish_time: "22:30",
+    topic: "custom time",
+    source_urls: ["https://example.com/source"],
+  }, { now: "2026-05-24T10:00:00.000Z" });
+
+  assert.equal(draft.recommended_publish_time, "22:30 KST");
+  assert.equal(draft.publish_time_source, "custom");
+  assert.equal(draft.scheduled_publish_at, "2026-05-24T13:30:00.000Z");
+});
+
+test("studio composer presents recommended slots and a custom time field", () => {
+  const html = renderStudioHome({ accounts: sampleAccounts, drafts: [], today: "2026-05-24", tomorrow: "2026-05-25" });
+
+  assert.match(html, /name="custom_publish_time"/);
+  assert.match(html, /type="time"/);
+  assert.match(html, /15:00 KST/);
+  assert.match(html, /21:00 KST/);
+  assert.match(html, /name="date" type="date"/);
+});
+
 test("telegram preview marks draft pending and renders readable Korean message", () => {
   const draft = generateLifemagazineDraft({
     date: "2026-05-24",
@@ -302,6 +326,35 @@ test("latestApprovedLifemagazineDraft selects newest unpublished approved draft"
 
   assert.equal(latest.file, newerPath);
   assert.equal(latest.data.id, newer.id);
+});
+
+test("latestApprovedLifemagazineDraft waits until the scheduled publish time", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-due-"));
+  const due = generateLifemagazineDraft({
+    date: "2026-05-24",
+    custom_publish_time: "18:00",
+    topic: "due",
+    source_urls: ["https://example.com/due"],
+  });
+  due.status = "approved";
+  const future = generateLifemagazineDraft({
+    date: "2026-05-24",
+    custom_publish_time: "22:30",
+    topic: "future",
+    source_urls: ["https://example.com/future"],
+  });
+  future.status = "approved";
+  const duePath = saveLifemagazineDraft(due, { root: tmp });
+  saveLifemagazineDraft(future, { root: tmp });
+
+  const latest = latestApprovedLifemagazineDraft({
+    root: tmp,
+    publishedIds: new Set(),
+    now: "2026-05-24T12:05:00.000Z",
+  });
+
+  assert.equal(latest.file, duePath);
+  assert.equal(latest.data.id, due.id);
 });
 
 test("applyLifemagazineApprovalAction updates only pending lifemagazine drafts", () => {
