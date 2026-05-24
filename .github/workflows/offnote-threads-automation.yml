@@ -203,13 +203,15 @@ jobs:
             python scripts/generate_offnote_cardnews.py "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -f outputs/afterwork-profit outputs/cards/offnote
+            DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+            CARD_DIR="outputs/cards/offnote/$(node -e "const fs=require('fs'); const p=process.argv[1]; const j=JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,'')); process.stdout.write(j.id)" "$DRAFT_PATH")"
+            git add -f "$DRAFT_PATH" outputs/afterwork-profit/latest-draft-path.txt outputs/afterwork-profit/preview-created.txt "$CARD_DIR"
             git commit -m "Add Offnote auto-publish assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
             git pull --rebase
             git push
-            node scripts/use_github_raw_media.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
-            node scripts/verify_media_urls.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
-            git add -f outputs/afterwork-profit
+            node scripts/use_github_raw_media.mjs "$DRAFT_PATH"
+            node scripts/verify_media_urls.mjs "$DRAFT_PATH"
+            git add -f "$DRAFT_PATH" outputs/afterwork-profit/latest-draft-path.txt
             git commit -m "Prepare Offnote auto-publish draft $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
             git pull --rebase
             git push
@@ -224,7 +226,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f outputs/afterwork-profit
+          if [[ -f outputs/afterwork-profit/latest-draft-path.txt ]]; then
+            git add -f "$(cat outputs/afterwork-profit/latest-draft-path.txt)" outputs/afterwork-profit/latest-draft-path.txt || true
+          fi
+          git add -f outputs/afterwork-profit/meta-publish-log.json outputs/afterwork-profit/telegram-approval-state.json outputs/afterwork-profit/automation/offnote-telegram-approval-checker-last-error.json || true
           git commit -m "Record Offnote approval check $(TZ=Asia/Seoul date +%F-%H%M)" || true
           git pull --rebase
           git push
