@@ -350,43 +350,43 @@ function renderDraftCard(item) {
     <article class="draft-card">
       <div class="draft-head">
         <div>
-          <h3>${escapeHtml(data.topic || data.id || "?? ?? ??")}</h3>
-          <p class="muted">${escapeHtml(humanStatus(data.status))} ? ${escapeHtml(data.recommended_publish_time || "")}</p>
+          <h3>${escapeHtml(data.topic || data.id || "제목 없는 초안")}</h3>
+          <p class="muted">${escapeHtml(humanStatus(data.status))} · ${escapeHtml(data.recommended_publish_time || "")}</p>
         </div>
         ${data.account === "lifemagazine_" && relativePath ? `
           <form class="inline-action" method="post" action="/api/lifemagazine/telegram-preview">
             <input type="hidden" name="draft_path" value="${escapeHtml(relativePath)}">
-            <button type="submit">?????? ???</button>
+            <button type="submit">텔레그램으로 보내기</button>
           </form>
         ` : ""}
       </div>
-      ${media.length ? `<p class="media-note">?? ${media.length}? ???. ???? ????? ?? ???.</p>` : ""}
+      ${media.length ? `<p class="media-note">사진 ${media.length}장 첨부됨. 텔레그램 미리보기로 같이 보내져.</p>` : ""}
       <pre>${escapeHtml(draftText(data))}</pre>
       ${editable ? `
         <details class="edit-draft">
-          <summary>????</summary>
+          <summary>수정하기</summary>
           <form method="post" action="/api/lifemagazine/drafts/edit">
             <input type="hidden" name="draft_path" value="${escapeHtml(relativePath)}">
-            <label>?? ??? ???</label>
+            <label>눈에 들어온 포인트</label>
             <input name="topic" value="${escapeHtml(data.topic || "")}" required>
-            <label>???</label>
-            <input name="product_name" value="${escapeHtml(data.product_name || "")}" placeholder="?: ?? ????? ??? ? ??? 3? ???? ???">
-            <label>??? ???</label>
+            <label>상품명</label>
+            <input name="product_name" value="${escapeHtml(data.product_name || "")}" placeholder="예: 더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지">
+            <label>어디서 봤는지</label>
             <input name="celebrity_or_content" value="${escapeHtml(data.celebrity_or_content || "")}">
-            <label>??</label>
+            <label>메모</label>
             <textarea name="notes">${escapeHtml(data.notes || "")}</textarea>
-            <label>?? ??</label>
+            <label>상품 링크</label>
             <textarea name="product_links">${escapeHtml(linkText)}</textarea>
             <input type="hidden" name="product_relationship" value="${escapeHtml(data.product_relationship || "similar_mood")}">
             <input type="hidden" name="tone_style" value="${escapeHtml(data.tone_style || TONE_STYLES[0].key)}">
             <input type="hidden" name="date" value="${escapeHtml(data.draft_date || todayKst())}">
             <input type="hidden" name="custom_publish_time" value="${escapeHtml(String(data.recommended_publish_time || "").replace(" KST", ""))}">
-            <button type="submit">?? ??</button>
+            <button type="submit">수정 저장</button>
           </form>
         </details>
       ` : ""}
-      ${comments.length ? `<h4>??</h4>${comments.slice(0, 2).map((comment, index) => `<pre><b>${index + 1}</b>\n${escapeHtml(comment)}</pre>`).join("")}` : ""}
-      ${links.length ? `<h4>?? ??</h4><ul>${links.map((link) => `<li>${escapeHtml(link.label)}: <a href="${escapeHtml(link.url)}">${escapeHtml(link.url)}</a></li>`).join("")}</ul>` : ""}
+      ${comments.length ? `<h4>댓글</h4>${comments.slice(0, 2).map((comment, index) => `<pre><b>${index + 1}</b>\n${escapeHtml(comment)}</pre>`).join("")}` : ""}
+      ${links.length ? `<h4>상품 링크</h4><ul>${links.map((link) => `<li>${escapeHtml(link.label)}: <a href="${escapeHtml(link.url)}">${escapeHtml(link.url)}</a></li>`).join("")}</ul>` : ""}
     </article>
   `;
 }
@@ -656,7 +656,12 @@ async function handleCreateDraft(req, res) {
     res.end(JSON.stringify(validation, null, 2));
     return;
   }
-  saveLifemagazineDraft(draft, { root });
+  const savedPath = saveLifemagazineDraft(draft, { root });
+  const token = process.env.LIFEMAGAZINE_TELEGRAM_BOT_TOKEN || "";
+  const chatId = process.env.LIFEMAGAZINE_TELEGRAM_CHAT_ID || "";
+  if (token && chatId && !token.includes("replace_") && !chatId.includes("replace_")) {
+    await sendLifemagazinePreview(savedPath, { root });
+  }
   res.writeHead(303, { Location: "/" });
   res.end();
 }

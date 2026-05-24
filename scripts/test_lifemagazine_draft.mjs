@@ -281,6 +281,7 @@ test("studio home renders operator dashboard and simplified creator workflow", (
   assert.match(html, /name="photos"/);
   assert.match(html, /name="product_name"/);
   assert.match(html, /enctype="multipart\/form-data"/);
+  assert.doesNotMatch(html, /\?{3,}/);
   assert.doesNotMatch(html, /ready_to_review|pending_approval|publish_failed/);
 });
 
@@ -313,6 +314,8 @@ test("studio home lets unpublished lifemagazine drafts be edited", () => {
   assert.match(html, /action="\/api\/lifemagazine\/drafts\/edit"/);
   assert.match(html, /name="product_name"/);
   assert.match(html, /더샘 컨실러/);
+  assert.match(html, /수정하기/);
+  assert.doesNotMatch(html, /\?{3,}/);
   assert.doesNotMatch(html, /published\.json[\s\S]*action="\/api\/lifemagazine\/drafts\/edit"/);
 });
 
