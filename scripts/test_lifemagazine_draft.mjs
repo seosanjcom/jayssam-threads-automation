@@ -189,7 +189,41 @@ test("official confirmed drafts keep product names separate from the hook topic"
   });
 
   assert.equal(draft.product_name, "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지");
+  assert.doesNotMatch(draft.threads_text, /더샘|커버퍼펙션|코렉트업 베이지/);
   assert.doesNotMatch(draft.threads_text, /예전에|실패|검색창|싼티|비슷한 무드/);
+  assert.match(draft.thread_comments.join("\n"), /더샘 커버퍼펙션/);
+});
+
+test("official confirmed drafts do not put a product-name topic in the body", () => {
+  const draft = generateLifemagazineDraft({
+    topic: "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지",
+    celebrity_or_content: "민와와 유튜브",
+    product_relationship: "official_confirmed",
+    product_links: [{ label: "추천 링크", url: "https://shop.example.com/concealer" }],
+    notes: "피부화장에 가장 공을 들이는 민경님이 2통째 사용 중인 찐 애정템. 다크서클 커버 고민.",
+    tone_style: "story_buy",
+    source_urls: [],
+  });
+
+  assert.match(draft.threads_text, /민경님|다크서클|민와와/);
+  assert.doesNotMatch(draft.threads_text, /더샘|커버퍼펙션|코렉트업 베이지/);
+  assert.doesNotMatch(draft.threads_text, /예전에|실패|검색창|싼티|비슷한 무드/);
+});
+
+test("official confirmed drafts hide product names from body even with thin notes", () => {
+  const draft = generateLifemagazineDraft({
+    topic: "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지",
+    product_name: "더샘 커버퍼펙션 트리플 팟 컨실러 3호 코렉트업 베이지",
+    celebrity_or_content: "민와와 유튜브",
+    product_relationship: "official_confirmed",
+    product_links: [{ label: "더샘 커버퍼펙션", url: "https://shop.example.com/concealer" }],
+    notes: "영상에서 직접 언급",
+    tone_style: "discovery_over",
+    source_urls: [],
+  });
+
+  assert.match(draft.threads_text, /민와와 유튜브/);
+  assert.doesNotMatch(draft.threads_text, /더샘|커버퍼펙션|코렉트업 베이지/);
   assert.match(draft.thread_comments.join("\n"), /더샘 커버퍼펙션/);
 });
 

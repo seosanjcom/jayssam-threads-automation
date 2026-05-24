@@ -122,7 +122,6 @@ function toneOpening(input) {
   const source = sourceLabel(input);
   const topic = String(input.topic || "이 아이템").trim();
   const productName = String(input.product_name || "").trim();
-  const focusItem = productName || topic;
   const notes = String(input.notes || "").trim();
 
   if (input.product_relationship === "official_confirmed") {
@@ -134,8 +133,8 @@ function toneOpening(input) {
       ? noteLines.find((line) => line !== lovedItemLine && /다크서클|커버|피부화장|잡티|홍조|컨실러|쿠션|파데/.test(line))
       : "";
     return [
-      lovedItemLine || `${source}에서 ${focusItem} 얘기 나온 거 보고 멈춤`,
-      concernLine && concernLine !== lovedItemLine ? `${concernLine}이면 이건 안 찾아볼 수가 없더라` : `${focusItem} 궁금했던 사람은 이거 한번 볼 만해`,
+      lovedItemLine || `${source}에서 이 장면 보고 멈춤`,
+      concernLine && concernLine !== lovedItemLine ? `${concernLine}이면 이건 안 찾아볼 수가 없더라` : "이거 궁금했던 사람은 한번 볼 만해",
       `${source} 보고 나도 바로 궁금해짐`,
     ].filter(Boolean);
   }
