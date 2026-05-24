@@ -1,0 +1,109 @@
+name: Lifemagazine Threads Automation
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+    - cron: "0 9,12 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: "preview"
+        type: choice
+        options:
+          - preview
+          - approval_check
+          - publish
+          - health
+      draft_path:
+        description: "Draft JSON path for preview mode"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lifemagazine-threads-automation
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      THREADS_ACCESS_TOKEN: ${{ secrets.LIFEMAGAZINE_THREADS_ACCESS_TOKEN }}
+      THREADS_USER_ID: "me"
+      THREADS_APP_ID: ${{ secrets.LIFEMAGAZINE_THREADS_APP_ID }}
+      THREADS_APP_SECRET: ${{ secrets.LIFEMAGAZINE_THREADS_APP_SECRET }}
+      THREADS_ACCOUNT_HANDLE: "@lifemagazine_"
+      THREADS_AUTO_PUBLISH: "true"
+      THREADS_SAFETY_MODE: "true"
+      THREADS_DAILY_POST_LIMIT: "1"
+      THREADS_MIN_INTERVAL_HOURS: "8"
+      THREADS_PUBLISH_WAIT_MS: "30000"
+      THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true"
+      THREADS_EXPECTED_USERNAME: "lifemagazine_"
+      THREADS_PUBLISH_LOG: "outputs/lifemagazine/meta-publish-log.json"
+      THREADS_REQUIRE_MEDIA: "false"
+      THREADS_CAROUSEL_ENABLED: "false"
+      LIFEMAGAZINE_TELEGRAM_BOT_TOKEN: ${{ secrets.LIFEMAGAZINE_TELEGRAM_BOT_TOKEN }}
+      LIFEMAGAZINE_TELEGRAM_CHAT_ID: ${{ secrets.LIFEMAGAZINE_TELEGRAM_CHAT_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Validate scripts
+        run: |
+          node --check scripts/generate_lifemagazine_draft.mjs
+          node --check scripts/validate_lifemagazine_draft.mjs
+          node --check scripts/threads_studio_server.mjs
+          node --check scripts/send_lifemagazine_preview_telegram.mjs
+          node --check scripts/telegram_check_lifemagazine_approvals.mjs
+          node --check scripts/publish_lifemagazine_latest_approved.mjs
+          node --check scripts/threads_publish.mjs
+          node --test scripts/test_lifemagazine_draft.mjs
+
+      - name: Send Telegram preview
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
+        run: |
+          if [[ -z "${{ inputs.draft_path }}" ]]; then
+            echo "draft_path is required for preview mode"
+            exit 1
+          fi
+          node scripts/validate_lifemagazine_draft.mjs "${{ inputs.draft_path }}"
+          node scripts/send_lifemagazine_preview_telegram.mjs "${{ inputs.draft_path }}"
+
+      - name: Check Telegram approval
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'approval_check') || (github.event_name == 'schedule' && github.event.schedule == '*/10 * * * *')
+        run: node scripts/telegram_check_lifemagazine_approvals.mjs
+
+      - name: Publish latest approved
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '0 9,12 * * *')
+        run: node scripts/publish_lifemagazine_latest_approved.mjs
+
+      - name: Health
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'health'
+        run: |
+          node --test scripts/test_lifemagazine_draft.mjs
+          echo "lifemagazine health ok"
+
+      - name: Commit lifemagazine results
+        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish')) || github.event_name == 'schedule'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f outputs/lifemagazine
+          git commit -m "Record Lifemagazine automation result $(TZ=Asia/Seoul date +%F-%H%M)" || true
+          git pull --rebase
+          git push

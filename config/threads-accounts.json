@@ -1,0 +1,58 @@
+{
+  "accounts": [
+    {
+      "accountKey": "jayssam",
+      "threadsUsername": "jayssam_edu",
+      "displayName": "제이쌤",
+      "project": "jayssam",
+      "outputRoot": "outputs",
+      "automationRoot": "outputs/automation",
+      "publishLogPath": "outputs/meta-publish-log.json",
+      "expectedUsername": "jayssam_edu",
+      "requiresMedia": true,
+      "carouselEnabled": true,
+      "dailyPostLimit": 2,
+      "minIntervalHours": 6,
+      "defaultSlots": ["15:00 KST", "21:00 KST"],
+      "telegramEnvPrefix": "TELEGRAM",
+      "workflowName": "jayssam-threads-automation.yml",
+      "editorialRulesPath": "docs/jayssam-automation-roadmap.md"
+    },
+    {
+      "accountKey": "offnote",
+      "threadsUsername": "offnote.kr",
+      "displayName": "오프노트",
+      "project": "afterwork-profit",
+      "outputRoot": "outputs/afterwork-profit",
+      "automationRoot": "outputs/afterwork-profit/automation",
+      "publishLogPath": "outputs/afterwork-profit/meta-publish-log.json",
+      "expectedUsername": "offnote.kr",
+      "requiresMedia": true,
+      "carouselEnabled": false,
+      "dailyPostLimit": 1,
+      "minIntervalHours": 8,
+      "defaultSlots": ["18:00 KST", "21:00 KST"],
+      "telegramEnvPrefix": "OFFNOTE_TELEGRAM",
+      "workflowName": "offnote-threads-automation.yml",
+      "editorialRulesPath": "docs/offnote-threads-automation-schedule.md"
+    },
+    {
+      "accountKey": "lifemagazine",
+      "threadsUsername": "lifemagazine_",
+      "displayName": "라이프매거진",
+      "project": "lifemagazine",
+      "outputRoot": "outputs/lifemagazine",
+      "automationRoot": "outputs/lifemagazine/automation",
+      "publishLogPath": "outputs/lifemagazine/meta-publish-log.json",
+      "expectedUsername": "lifemagazine_",
+      "requiresMedia": false,
+      "carouselEnabled": false,
+      "dailyPostLimit": 1,
+      "minIntervalHours": 8,
+      "defaultSlots": ["15:00 KST", "18:00 KST", "21:00 KST"],
+      "telegramEnvPrefix": "LIFEMAGAZINE_TELEGRAM",
+      "workflowName": "lifemagazine-threads-automation.yml",
+      "editorialRulesPath": "docs/threads-studio-prd.md"
+    }
+  ]
+}
