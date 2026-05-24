@@ -1102,7 +1102,6 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
     latest_signal = fetch_latest_signal()
     content_type = content_type_for_slot(slot)
     text_parts = build_threads_text_parts(topic, latest_signal, content_type)
-    text_parts.append(f"출처 기준: {topic['source_name']}")
     threads_text = "\n\n".join(text_parts)
 
     draft = {
