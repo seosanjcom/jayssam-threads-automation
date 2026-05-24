@@ -61,6 +61,7 @@ async function sendMessage(text) {
   const body = new FormData();
   body.set("chat_id", process.env.OFFNOTE_TELEGRAM_CHAT_ID);
   body.set("text", text);
+  body.set("disable_web_page_preview", "true");
   await telegram("sendMessage", body);
 }
 
@@ -70,7 +71,7 @@ const root = process.cwd();
 const date = process.argv[2] || todayKst();
 const slot = process.argv[3] || "evening";
 const automationRoot = path.join(root, "outputs", "afterwork-profit", "automation", date);
-const pending = findJsonFiles(automationRoot)
+const drafts = findJsonFiles(automationRoot)
   .map((file) => {
     try {
       return { file, data: readJson(file), mtime: fs.statSync(file).mtimeMs };
@@ -79,23 +80,14 @@ const pending = findJsonFiles(automationRoot)
     }
   })
   .filter(Boolean)
-  .filter((item) => item.data.account === "offnote.kr")
+  .filter((item) => item.data.account === "offnote.kr");
+
+const pending = drafts
   .filter((item) => ["pending_approval", "approved"].includes(item.data.status))
   .filter((item) => !slot || String(item.data.id || "").includes(`-${slot}-`) || item.data.recommended_publish_time)
   .sort((a, b) => b.mtime - a.mtime)[0];
 
-const alreadyPublished = findJsonFiles(automationRoot)
-  .map((file) => {
-    try {
-      return { file, data: readJson(file), mtime: fs.statSync(file).mtimeMs };
-    } catch {
-      return null;
-    }
-  })
-  .filter(Boolean)
-  .filter((item) => item.data.account === "offnote.kr")
-  .find((item) => item.data.status === "published");
-
+const alreadyPublished = drafts.find((item) => item.data.status === "published");
 if (alreadyPublished) {
   console.log(`Offnote already published for ${date}: ${alreadyPublished.data.id}. Auto-publish skipped.`);
   process.exit(0);
@@ -107,10 +99,6 @@ if (!pending) {
 }
 
 const draft = pending.data;
-if (!Array.isArray(draft.media_urls) || draft.media_urls.length === 0) {
-  throw new Error(`Refusing auto-publish without media_urls: ${draft.id}`);
-}
-
 draft.status = "approved";
 draft.approved_at = new Date().toISOString();
 draft.approval_source = `auto_publish_due:${slot}`;
@@ -126,7 +114,7 @@ const result = spawnSync("node", ["scripts/threads_publish.mjs", pending.file], 
     THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true",
     THREADS_EXPECTED_USERNAME: "offnote.kr",
     THREADS_CAROUSEL_ENABLED: "false",
-    THREADS_REQUIRE_MEDIA: "true",
+    THREADS_REQUIRE_MEDIA: "false",
     THREADS_PUBLISH_REPLIES: "true",
   },
 });

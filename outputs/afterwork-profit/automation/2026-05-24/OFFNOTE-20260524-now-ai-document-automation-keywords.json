@@ -1,0 +1,50 @@
+{
+  "id": "OFFNOTE-20260524-now-ai-document-automation-keywords",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "topic": "AI 문서 자동화 검색어 선점",
+  "status": "approved",
+  "created_at": "2026-05-24T11:51:56.207Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "18:00 KST",
+  "experiment_hypothesis": "AI 부업은 넓게 말하면 약하다. 직장인이 매주 반복하는 문서 작업 하나를 줄이는 키워드가 전자책, 템플릿, 강의까지 연결된다.",
+  "threads_text": "이번 주엔 이 키워드 미리 선점하세요.\n\n`회의록 자동 정리`\n`PDF 요약 자동화`\n`엑셀 보고서 자동화`\n\nAI 부업을 말할 때 \"챗GPT로 돈 벌기\"로 쓰면 너무 흔합니다. 지금은 직장인이 퇴근 전에 진짜 귀찮아하는 문서 하나를 줄여주는 쪽이 낫습니다. 회의록, PDF, 엑셀 보고서는 검색 의도가 선명해서 블로그와 쇼츠 둘 다 만들기 좋습니다.",
+  "thread_comments": [
+    "1. 검색어는 이렇게 묶으세요.\n\n메인: 회의록 자동 정리\n서브: 녹취록 요약 / PDF 요약 자동화\n구매형: AI 회의록 앱 / 업무 자동화 템플릿\n비교형: 클로바노트 챗GPT 정리 / 노션 AI 회의록\n\n이건 블로그, 템플릿, 전자책까지 이어지기 쉽습니다.",
+    "2. 쇼츠 제목은 이렇게 갑니다.\n\n회의록 정리 30분 줄이는 방법\nPDF 20장 3분 만에 요약하는 순서\n엑셀 보고서 매주 반복하면 이렇게 자동화하세요\n\nAI 자체보다 시간이 줄어드는 장면을 보여주는 게 더 강합니다.",
+    "3. 본문에는 순서를 넣어야 합니다.\n\n녹취 파일 받기\n텍스트로 변환\n핵심 결정사항만 뽑기\n담당자와 기한으로 나누기\n노션이나 구글문서에 붙이기\n\n이 정도까지 보여줘야 저장됩니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "이번 주 선점어",
+      "title": "AI 부업은 회의록 자동 정리부터 잡으세요",
+      "body": "넓은 AI 주제보다 반복 업무 하나를 줄이는 검색어가 더 잘 먹힙니다. 회의록, PDF, 엑셀 보고서 쪽을 보세요.",
+      "footer": "@offnote.kr"
+    },
+    {
+      "kicker": "검색어 묶음",
+      "title": "메인은 회의록 자동 정리",
+      "body": "녹취록 요약, PDF 요약 자동화, AI 회의록 앱, 업무 자동화 템플릿까지 이어집니다.",
+      "footer": "블로그 + 템플릿"
+    },
+    {
+      "kicker": "쇼츠 제목",
+      "title": "AI보다 줄어드는 시간을 앞에 둡니다",
+      "body": "회의록 정리 30분 줄이는 방법 / PDF 20장 3분 요약 / 엑셀 보고서 자동화처럼 구체적으로 가세요.",
+      "footer": "효과가 먼저"
+    },
+    {
+      "kicker": "본문 순서",
+      "title": "녹취, 변환, 요약, 담당자, 문서화",
+      "body": "순서를 보여줘야 저장됩니다. 도구 이름만 나열하면 검색하면 나오는 글이 됩니다.",
+      "footer": "실행 순서까지"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews required before publish.",
+    "Auto-publish unless held."
+  ]
+}

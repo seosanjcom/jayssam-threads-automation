@@ -184,12 +184,12 @@ const base = "https://graph.threads.net/v1.0";
 const account = draft.account || userId;
 const allMediaUrls = Array.isArray(draft.media_urls) ? draft.media_urls.filter(Boolean) : [];
 const mediaUrls = carouselEnabled ? allMediaUrls : allMediaUrls.slice(0, 1);
-const requiresCardnews = draft.account === "offnote.kr" || process.env.THREADS_REQUIRE_MEDIA === "true";
+const requiresCardnews = process.env.THREADS_REQUIRE_MEDIA === "true";
 
 assertPublishableDraft(draft);
 
 if (requiresCardnews && mediaUrls.length === 0) {
-  throw new Error("Refusing to publish offnote.kr without cardnews media_urls.");
+  throw new Error("Refusing to publish without required media_urls.");
 }
 
 if (safetyMode) {

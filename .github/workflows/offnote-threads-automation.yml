@@ -12,6 +12,7 @@ on:
           - preview
           - approval_check
           - auto_publish
+          - manual_publish
           - health
       slot:
         description: "Posting slot"
@@ -61,7 +62,7 @@ jobs:
       THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true"
       THREADS_EXPECTED_USERNAME: "offnote.kr"
       THREADS_PUBLISH_LOG: "outputs/afterwork-profit/meta-publish-log.json"
-      THREADS_REQUIRE_MEDIA: "true"
+      THREADS_REQUIRE_MEDIA: "false"
       THREADS_CAROUSEL_ENABLED: "false"
       OFFNOTE_TELEGRAM_BOT_TOKEN: ${{ secrets.OFFNOTE_TELEGRAM_BOT_TOKEN }}
       OFFNOTE_TELEGRAM_CHAT_ID: ${{ secrets.OFFNOTE_TELEGRAM_CHAT_ID }}
@@ -125,7 +126,7 @@ jobs:
           esac
 
       - name: Setup card image runtime
-        if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'preview' || steps.route.outputs.mode == 'auto_publish')
+        if: steps.route.outputs.run == 'true' && false
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-noto-cjk
@@ -158,20 +159,20 @@ jobs:
             exit 0
           fi
           node scripts/validate_offnote_draft.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
-          python scripts/generate_offnote_cardnews.py "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+          echo "Cardnews skipped by default. Generate manually only for high-density posts."
 
       - name: Commit generated card assets before preview
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f outputs/afterwork-profit outputs/cards/offnote
+          git add -f outputs/afterwork-profit
           git commit -m "Add Offnote preview assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git pull --rebase
           git push
 
       - name: Attach GitHub raw media URLs
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
+        if: steps.route.outputs.run == 'true' && false
         run: |
           node scripts/use_github_raw_media.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
           node scripts/verify_media_urls.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
@@ -200,17 +201,14 @@ jobs:
           node scripts/generate_offnote_daily_post.mjs "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           if [[ "$(cat outputs/afterwork-profit/preview-created.txt)" == "true" ]]; then
             node scripts/validate_offnote_draft.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
-            python scripts/generate_offnote_cardnews.py "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+            echo "Cardnews skipped by default. Publishing text and reply comments only."
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt)"
-            CARD_DIR="outputs/cards/offnote/$(node -e "const fs=require('fs'); const p=process.argv[1]; const j=JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,'')); process.stdout.write(j.id)" "$DRAFT_PATH")"
-            git add -f "$DRAFT_PATH" outputs/afterwork-profit/latest-draft-path.txt outputs/afterwork-profit/preview-created.txt "$CARD_DIR"
+            git add -f "$DRAFT_PATH" outputs/afterwork-profit/latest-draft-path.txt outputs/afterwork-profit/preview-created.txt
             git commit -m "Add Offnote auto-publish assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
             git pull --rebase
             git push
-            node scripts/use_github_raw_media.mjs "$DRAFT_PATH"
-            node scripts/verify_media_urls.mjs "$DRAFT_PATH"
             git add -f "$DRAFT_PATH" outputs/afterwork-profit/latest-draft-path.txt
             git commit -m "Prepare Offnote auto-publish draft $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
             git pull --rebase
@@ -221,8 +219,15 @@ jobs:
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'auto_publish'
         run: node scripts/publish_offnote_due.mjs "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
 
+      - name: Manual publish latest Offnote draft
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'manual_publish'
+        run: |
+          DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+          node scripts/validate_offnote_draft.mjs "$DRAFT_PATH"
+          THREADS_REQUIRE_MEDIA=false THREADS_DAILY_POST_LIMIT=3 THREADS_MIN_INTERVAL_HOURS=0 node scripts/threads_publish.mjs "$DRAFT_PATH"
+
       - name: Commit approval check results
-        if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'approval_check' || steps.route.outputs.mode == 'auto_publish')
+        if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'approval_check' || steps.route.outputs.mode == 'auto_publish' || steps.route.outputs.mode == 'manual_publish')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
