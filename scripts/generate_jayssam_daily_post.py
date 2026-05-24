@@ -1373,9 +1373,13 @@ def footer_line(index: int) -> str:
 def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_type: str) -> list[str]:
     expert = topic["expert"]
     resource = topic.get("resource", {})
+    field_note = ""
+    if topic.get("slug") in {"careernet-holland-interest", "careernet-vocation-aptitude", "ebsi-career-exploration"}:
+        field_note = "꿈길 인증 진로체험 현장에서 보면, 검사 결과는 정답이 아니라 아이와 대화를 시작하는 자료에 가깝습니다."
     parts = [
         topic["hook"],
         f"바로가기: {resource.get('url_label', '')}",
+        field_note,
         expert["must_know"],
         f"정확히는: {resource.get('free', '')}",
         f"이렇게 쓰세요: {resource.get('use', expert['check'])}",
