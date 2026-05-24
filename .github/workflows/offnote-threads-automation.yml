@@ -222,7 +222,7 @@ jobs:
       - name: Manual publish latest Offnote draft
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'manual_publish'
         run: |
-          DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+          DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt | tr '\\' '/')"
           node scripts/validate_offnote_draft.mjs "$DRAFT_PATH"
           THREADS_REQUIRE_MEDIA=false THREADS_DAILY_POST_LIMIT=3 THREADS_MIN_INTERVAL_HOURS=0 node scripts/threads_publish.mjs "$DRAFT_PATH"
 
