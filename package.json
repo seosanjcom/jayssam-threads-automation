@@ -1,0 +1,54 @@
+{
+  "name": "threads-automation-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "author": "local",
+  "description": "Local desktop app for Threads automation operations.",
+  "type": "module",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "test": "node --test scripts/test_lifemagazine_draft.mjs",
+    "check": "node --check scripts/threads_studio_server.mjs && node --check desktop/main.cjs",
+    "desktop": "electron .",
+    "build:win": "electron-builder --win dir"
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.local.threadsautomation",
+    "productName": "Threads Automation",
+    "asar": false,
+    "files": [
+      "desktop/**/*",
+      "scripts/**/*",
+      "config/**/*",
+      "assets/**/*",
+      "templates/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": ".env",
+        "to": ".env",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "ThreadsAutomation.exe"
+    }
+  }
+}
