@@ -326,6 +326,11 @@ def draw_multiline(
     return y
 
 
+def text_width(draw: ImageDraw.ImageDraw, text: str, fnt: ImageFont.ImageFont) -> int:
+    bbox = draw.textbbox((0, 0), text, font=fnt)
+    return bbox[2] - bbox[0]
+
+
 def draw_card_background(draw: ImageDraw.ImageDraw) -> None:
     draw.rectangle((0, 0, 1080, 1080), fill="#f7f7f4")
     draw.rounded_rectangle((44, 44, 1036, 1036), radius=34, fill="#ffffff")
@@ -337,6 +342,157 @@ def draw_card_background(draw: ImageDraw.ImageDraw) -> None:
     draw.text((218, 78), "jayssam / future education insight", font=font(21), fill="#a0a5ad")
 
 
+def draw_badge(draw: ImageDraw.ImageDraw, x: int, y: int, text: str, fill: str, fg: str = "#ffffff") -> None:
+    fnt = font(24, True)
+    w = text_width(draw, text, fnt) + 38
+    draw.rounded_rectangle((x, y, x + w, y + 42), radius=18, fill=fill)
+    draw.text((x + 19, y + 8), text, font=fnt, fill=fg)
+
+
+def draw_rows(draw: ImageDraw.ImageDraw, rows: list[tuple[str, str]], y: int, accent: str) -> int:
+    for label, text in rows:
+        draw.rounded_rectangle((82, y, 998, y + 96), radius=18, fill="#f5f6f8", outline="#e5e7eb", width=2)
+        draw_badge(draw, 110, y + 26, label, accent)
+        draw_multiline(draw, (250, y + 24), text, font(31, True), "#161616", 700, 10)
+        y += 118
+    return y
+
+
+def slide_payload(topic: dict, index: int, label: str, heading: str, body: str) -> dict:
+    expert = topic["expert"]
+    slug = topic["slug"]
+    if index == 1:
+        return {
+            "kind": "cover",
+            "eyebrow": topic["keyword"],
+            "title": heading,
+            "subtitle": body,
+            "footer": "넘겨보면 상담/수업 기준이 나옵니다.",
+        }
+    if index == 2:
+        return {
+            "kind": "compare",
+            "title": "겉보기와 실제 기준",
+            "rows": [
+                ("겉보기", "결과물이 빠르고 화려한가"),
+                ("실제", expert["must_know"]),
+            ],
+        }
+    if index == 3:
+        return {
+            "kind": "checklist",
+            "title": "현장에서 볼 증거",
+            "rows": checklist_rows(slug),
+        }
+    if index == 4:
+        return {
+            "kind": "warning",
+            "title": "이걸 놓치면 생기는 문제",
+            "rows": [
+                ("주의", expert["avoid"]),
+                ("기준", expert["check"]),
+            ],
+        }
+    if index == 5:
+        return {
+            "kind": "questions",
+            "title": "상담 때 물어볼 질문",
+            "rows": question_rows(slug),
+        }
+    return {
+        "kind": "summary",
+        "title": "저장용 정리",
+        "rows": [
+            ("부모", parent_takeaway(slug)),
+            ("강사", instructor_takeaway(slug)),
+            ("한 줄", body),
+        ],
+    }
+
+
+def checklist_rows(slug: str) -> list[tuple[str, str]]:
+    data = {
+        "ai-class-evidence": [
+            ("1", "질문을 수정한 기록이 있는가"),
+            ("2", "AI 답을 비교한 과정이 있는가"),
+            ("3", "판단 기준을 말로 설명했는가"),
+        ],
+        "digital-literacy-source-check": [
+            ("1", "출처를 확인했는가"),
+            ("2", "작성 시점을 확인했는가"),
+            ("3", "반대 자료를 함께 봤는가"),
+        ],
+        "info-curriculum-thinking": [
+            ("1", "조건을 나누어 설명했는가"),
+            ("2", "오류 수정 근거를 말했는가"),
+            ("3", "다른 해결 방법을 비교했는가"),
+        ],
+        "career-pattern-before-job": [
+            ("1", "반복해서 고르는 경험이 있는가"),
+            ("2", "오래 붙잡는 문제가 있는가"),
+            ("3", "자주 맡는 역할이 있는가"),
+        ],
+    }
+    return data.get(slug, [])
+
+
+def question_rows(slug: str) -> list[tuple[str, str]]:
+    data = {
+        "ai-class-evidence": [
+            ("Q1", "AI 답을 그대로 쓰나요, 검토하고 수정하나요?"),
+            ("Q2", "아이들이 기준을 세워 비교하나요?"),
+            ("Q3", "결과물보다 과정 기록이 남나요?"),
+        ],
+        "digital-literacy-source-check": [
+            ("Q1", "이 자료를 믿은 이유가 뭐야?"),
+            ("Q2", "다른 관점의 자료도 봤어?"),
+            ("Q3", "이 자료가 언제 작성됐는지 확인했어?"),
+        ],
+        "info-curriculum-thinking": [
+            ("Q1", "오늘 어디서 막혔어?"),
+            ("Q2", "어떤 근거로 고쳤어?"),
+            ("Q3", "다른 방법도 생각해봤어?"),
+        ],
+        "career-pattern-before-job": [
+            ("Q1", "요즘 오래 붙잡는 문제는 뭐야?"),
+            ("Q2", "친구들이 자주 부탁하는 일은 뭐야?"),
+            ("Q3", "혼자 찾아보는 주제는 뭐야?"),
+        ],
+    }
+    return data.get(slug, [])
+
+
+def parent_takeaway(slug: str) -> str:
+    data = {
+        "ai-class-evidence": "툴 이름보다 질문-비교-판단 기록을 보세요.",
+        "digital-literacy-source-check": "검색 결과보다 출처와 근거를 확인하세요.",
+        "info-curriculum-thinking": "진도표보다 설명 시간과 디버깅 기록을 보세요.",
+        "career-pattern-before-job": "직업명보다 반복 행동의 패턴을 보세요.",
+    }
+    return data.get(slug, "결과보다 과정의 증거를 보세요.")
+
+
+def instructor_takeaway(slug: str) -> str:
+    data = {
+        "ai-class-evidence": "AI 활동마다 판단 근거를 남기게 설계하세요.",
+        "digital-literacy-source-check": "출처-시점-관점 검토를 평가표에 넣으세요.",
+        "info-curriculum-thinking": "오류 수정 과정을 말하게 하는 시간을 넣으세요.",
+        "career-pattern-before-job": "경험 패턴을 찾는 질문지로 수업을 여세요.",
+    }
+    return data.get(slug, "관찰 가능한 기준을 수업 안에 넣으세요.")
+
+
+def footer_line(index: int) -> str:
+    lines = {
+        2: "비교 기준은 상담 전 저장해두면 좋습니다.",
+        3: "세 항목 중 두 개 이상이 보여야 수업의 질을 판단할 수 있습니다.",
+        4: "주의점은 수업 선택에서 바로 걸러내는 기준입니다.",
+        5: "상담 때 그대로 읽어도 되는 질문입니다.",
+        6: "부모와 강사가 각각 다르게 써먹을 수 있게 정리했습니다.",
+    }
+    return lines.get(index, "현장 기준으로 보면 여기서 차이가 납니다.")
+
+
 def make_card(out: Path, topic: dict, index: int, total: int, label: str, heading: str, body: str) -> None:
     img = Image.new("RGB", (1080, 1080), "#f7f7f4")
     draw = ImageDraw.Draw(img)
@@ -345,20 +501,28 @@ def make_card(out: Path, topic: dict, index: int, total: int, label: str, headin
     gray = "#8d939c"
 
     draw_card_background(draw)
+    payload = slide_payload(topic, index, label, heading, body)
     draw.text((82, 174), f"Chapter {label}.", font=font(32, True), fill=accent)
     draw.text((944, 172), f"{index}/{total}", font=font(28, True), fill=gray)
 
-    heading_font = font(64 if len(heading) < 24 else 56, True)
-    y = draw_multiline(draw, (82, 292), heading, heading_font, black, 884, 14)
+    heading_text = payload["title"]
+    heading_font = font(62 if len(heading_text) < 22 else 52, True)
+    y = draw_multiline(draw, (82, 276), heading_text, heading_font, black, 884, 14)
     y += 26
     draw.rounded_rectangle((82, y, 998, y + 3), radius=2, fill="#e3e5ea")
-    y += 56
-    body_font = font(36 if len(body) < 58 else 32)
-    draw_multiline(draw, (92, y), body, body_font, black, 860, 18)
 
-    if index in {2, 3, 4, 5}:
+    y += 48
+    if payload["kind"] == "cover":
+        draw_badge(draw, 92, y, payload["eyebrow"], accent)
+        y += 74
+        draw_multiline(draw, (92, y), payload["subtitle"], font(38, True), black, 850, 18)
+        draw_multiline(draw, (92, 820), payload["footer"], font(34, True), accent, 850, 14)
+    else:
+        draw_rows(draw, payload["rows"], y, accent)
+
+    if index in {2, 3, 4, 5, 6}:
         draw.rounded_rectangle((86, 858, 994, 930), radius=20, fill="#eeeaff")
-        draw.text((122, 876), "현장 기준으로 보면 여기서 차이가 납니다.", font=font(31, True), fill=accent)
+        draw.text((122, 876), footer_line(index), font=font(29, True), fill=accent)
 
     draw.text((82, 980), "JAYSSAM FUTURE EDUCATION", font=font(24, True), fill="#a0a5ad")
     draw.text((690, 980), f"{topic['keyword']} / source checked", font=font(22), fill="#a0a5ad")
