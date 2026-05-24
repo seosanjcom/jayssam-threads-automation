@@ -1,0 +1,57 @@
+{
+  "id": "OFFNOTE-20260524-evening-shorts-review-system",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "topic": "유튜브 쇼츠 제품 리뷰를 부업으로 볼 때의 구조",
+  "status": "approved",
+  "created_at": "2026-05-24T10:17:50.415Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "18:00 KST",
+  "experiment_hypothesis": "쇼츠 부업 관심층은 막연한 수익보다 촬영-검증-전환 기준을 더 오래 저장한다.",
+  "threads_text": "쇼츠로 부업을 한다고 하면 대부분 조회수부터 봅니다. 그런데 제품 리뷰형 쇼츠는 조회수보다 '사람이 멈춘 이유'와 '다음 행동'을 봐야 합니다. 첫 2초는 문제 장면, 중간은 비교 기준, 마지막은 누가 사면 좋은지로 끝나야 전환이 생깁니다. 그냥 예쁘게 찍은 영상은 콘텐츠고, 비교 기준이 있는 영상은 수익형 자산에 가깝습니다.",
+  "thread_comments": [
+    "1. 제품 리뷰 쇼츠는 장점 나열보다 '누구에게 맞고 누구에게 안 맞는지'가 있어야 합니다. 이 문장이 있어야 댓글 질문이 구체적으로 바뀝니다.",
+    "2. 첫 2초는 제품명이 아니라 문제 장면이 먼저입니다. 예: '퇴근 후 촬영할 때 조명이 누렇게 뜨면'처럼 보는 사람이 자기 상황을 바로 떠올려야 합니다.",
+    "3. 저장되는 리뷰는 스펙 정리가 아니라 선택 기준입니다. 가격, 대체품, 실패 포인트, 사용 조건 중 최소 2개는 들어가야 합니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "SHORTS",
+      "title": "쇼츠 리뷰는 조회수가 아니라 다음 행동으로 봐야 합니다",
+      "body": "잘 찍은 영상과 팔리는 영상은 다릅니다. 팔리는 영상에는 선택 기준과 제외 기준이 같이 들어갑니다.",
+      "footer": "제품 리뷰형 쇼츠 구조"
+    },
+    {
+      "kicker": "구조 1",
+      "title": "첫 2초는 제품명이 아니라 문제 장면",
+      "body": "제품 이름부터 말하면 광고처럼 보입니다. 보는 사람이 겪는 불편을 먼저 보여주면 멈출 이유가 생깁니다.",
+      "footer": "멈춤의 이유"
+    },
+    {
+      "kicker": "구조 2",
+      "title": "중간에는 비교 기준이 있어야 합니다",
+      "body": "좋다/별로다보다 A는 이런 사람, B는 이런 사람에게 맞다는 기준이 댓글 질문을 만듭니다.",
+      "footer": "저장되는 리뷰의 조건"
+    },
+    {
+      "kicker": "구조 3",
+      "title": "마지막은 사야 할 사람과 안 살 사람",
+      "body": "전환은 추천에서 생기는 게 아니라 판단을 대신해줄 때 생깁니다. 제외 기준까지 말해야 신뢰가 남습니다.",
+      "footer": "수익형 콘텐츠의 끝맺음"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews required before publish.",
+    "Use approval-based Telegram publishing."
+  ],
+  "local_media_paths": [
+    "outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_01.png",
+    "outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_02.png",
+    "outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_03.png",
+    "outputs/cards/offnote/OFFNOTE-20260524-evening-shorts-review-system/card_04.png"
+  ],
+  "cardnews_quality_rule": "Cardnews must add separate criteria, checklist, comparison, or examples. Do not split the post summary into images."
+}
