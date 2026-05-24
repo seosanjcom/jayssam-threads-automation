@@ -106,7 +106,7 @@ function sourceLabel(input) {
 function relationshipNote(input) {
   const relationship = input.product_relationship || "trend_only";
   if (relationship === "official_confirmed") {
-    return "영상에서 언급된 제품명 중심으로 정리했어.";
+    return "";
   }
   if (relationship === "strong_guess") {
     return "공식 확인은 아니라서 같은 제품처럼 말하진 않고, 화면 속 무드 기준으로만 볼게.";
@@ -121,6 +121,22 @@ function toneOpening(input) {
   const style = toneStyleByKey(input.tone_style);
   const source = sourceLabel(input);
   const topic = String(input.topic || "이 아이템").trim();
+  const notes = String(input.notes || "").trim();
+
+  if (input.product_relationship === "official_confirmed") {
+    const noteLines = notes.split(/[.!?\n]/).map((line) => line.trim()).filter(Boolean);
+    const lovedItemLine = /2\s*통|찐|애정템|사용\s*중|내돈내산/.test(notes)
+      ? noteLines.find((line) => /2\s*통|찐|애정템|사용\s*중|내돈내산/.test(line))
+      : "";
+    const concernLine = /다크서클|커버|피부화장|잡티|홍조|컨실러|쿠션|파데/.test(notes)
+      ? noteLines.find((line) => line !== lovedItemLine && /다크서클|커버|피부화장|잡티|홍조|컨실러|쿠션|파데/.test(line))
+      : "";
+    return [
+      lovedItemLine || `${source}에서 ${topic} 얘기 나온 거 보고 멈춤`,
+      concernLine && concernLine !== lovedItemLine ? `${concernLine}이면 이건 안 찾아볼 수가 없더라` : `${topic} 궁금했던 사람은 이거 한번 볼 만해`,
+      `${source} 보고 나도 바로 궁금해짐`,
+    ].filter(Boolean);
+  }
 
   if (style.key === "friend_tip") {
     return [

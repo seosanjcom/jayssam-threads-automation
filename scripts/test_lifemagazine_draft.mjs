@@ -48,8 +48,9 @@ test("official confirmed product draft uses source-backed Korean wording and dis
   assert.equal(draft.tone_style, "discovery_over");
   assert.equal(draft.affiliate_disclosure_required, true);
   assert.match(draft.threads_text, /^\[제휴 링크 포함\]/);
-  assert.match(draft.threads_text, /ㅇㅇ 유튜브 보다가/);
-  assert.match(draft.threads_text, /멈춤|확대/);
+  assert.match(draft.threads_text, /ㅇㅇ 유튜브/);
+  assert.match(draft.threads_text, /얘기 나온 거|보고 멈춤|궁금했던 사람/);
+  assert.doesNotMatch(draft.threads_text, /검색창|싼티|비슷한 무드/);
   assert.match(draft.thread_comments.join("\n"), /제휴 링크/);
   assert.equal(validateLifemagazineDraft(draft).ok, true);
 });
@@ -155,6 +156,24 @@ test("official confirmed drafts can use the user's memo as confirmation context"
 
   assert.equal(result.ok, true);
   assert.doesNotMatch(draft.threads_text, /메모 기준/);
+});
+
+test("official confirmed beauty drafts use a direct celebrity-loved-item hook", () => {
+  const draft = generateLifemagazineDraft({
+    topic: "환연4 민경님 컨실러",
+    celebrity_or_content: "민와와 유튜브",
+    product_relationship: "official_confirmed",
+    product_links: [{ label: "더샘 커버퍼펙션 트리플 팟 컨실러 3호", url: "https://shop.example.com/concealer" }],
+    notes: "피부화장에 가장 공을 들이는 민경님이 2통째 사용 중인 찐 애정템. 다크서클 커버 고민.",
+    tone_style: "story_buy",
+    source_urls: [],
+  });
+
+  assert.match(draft.threads_text, /민경님|환연4/);
+  assert.match(draft.threads_text, /2통째|찐 애정템|다크서클/);
+  assert.match(draft.threads_text, /다크서클/);
+  assert.doesNotMatch(draft.threads_text, /예전에|실패|검색창|싼티|비슷한 무드/);
+  assert.doesNotMatch(draft.threads_text, /영상에서 언급된 제품명 중심/);
 });
 
 test("validator rejects same-product wording for similar mood drafts", () => {
