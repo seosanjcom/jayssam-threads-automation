@@ -29,15 +29,15 @@ const replacement = (text.match(/\uFFFD/g) || []).length;
 const questionMarks = (text.match(/\?/g) || []).length;
 const suspiciousFragments = ["Ã", "Â", "ì", "ë", "揶", "媛", "留", "寃"].filter((item) => text.includes(item));
 const shoppingRouteTerms = [
-  /냉감(?:패드|이불|침구)/,
-  /여름 침구/,
-  /장마철 신발/,
-  /운동화 냄새/,
-  /신발 (?:건조기|탈취제|제습제|말리는 법|냄새)/,
-  /상품 링크/,
-  /구매\s*(?:링크|시)/,
+  /제휴\s*링크/,
+  /구매\s*링크/,
+  /상품\s*링크/,
+  /댓글에.*(?:링크|정보)/,
+  /DM.*링크/,
+  /연예인.*(?:제품|착용|사용|추천|템)/,
+  /(?:유튜브|인스타|릴스).*나온.*(?:제품|템)/,
+  /(?:민경|소유|환연|아이돌|배우|셀럽).*님/,
   /추천템/,
-  /제휴 링크/,
 ];
 
 const errors = [];

@@ -72,8 +72,8 @@ try {
   const shoppingGenerated = JSON.parse(shoppingGenerate.stdout);
   const shoppingGeneratedDraft = readJson(path.join(tmp, shoppingGenerated.draft));
   const generatedText = JSON.stringify(shoppingGeneratedDraft);
-  if (/장마철 신발|운동화 냄새|냉감침구|여름 침구/.test(generatedText)) {
-    throw new Error("Offnote generator produced shopping/product-route content that belongs to lifemagazine_.");
+  if (/제휴 링크|구매링크|민경님|소유님/.test(generatedText)) {
+    throw new Error("Offnote generator produced affiliate/celebrity-shopping content that belongs to lifemagazine_.");
   }
 
   const badDraftPath = path.join(
@@ -87,19 +87,19 @@ try {
   writeJson(badDraftPath, {
     id: "OFFNOTE-20260524-evening-shopping-route",
     account: "offnote.kr",
-    topic: "장마철 신발 냄새 검색어 선점",
+    topic: "민경님 유튜브 컨실러 추천템",
     status: "approved",
     threads_text:
-      "이번 주엔 이 키워드 미리 선점하세요.\n\n`장마철 신발 냄새`\n`운동화 냄새 제거`\n`신발 건조기 단점`\n\n비 오기 시작하면 사람들이 빨리 찾는 쪽입니다. 하지만 이건 쇼핑/상품형 소재라 오프노트가 아니라 라이프매거진에 들어가야 합니다.",
+      "[제휴 링크 포함]\n\n민경님이 유튜브에서 언급한 컨실러가 궁금해서 찾아봤습니다. 정보는 댓글에 남겨둘게요. 구매링크도 함께 정리했습니다.",
     thread_comments: [
-      "1. 구매형: 신발 건조기 / 신발 탈취제 / 신발 제습제",
-      "2. 쇼츠 제목은 신발 건조기 사기 전에 보는 3가지",
+      "1. 구매링크: https://example.com/item",
+      "2. 이 댓글에는 제휴 링크가 포함되어 있습니다.",
     ],
     cardnews_slides: [
-      { title: "장마철 신발 냄새", body: "신발 건조기와 탈취제 비교" },
-      { title: "구매형", body: "제품명보다 상황" },
-      { title: "쇼츠", body: "사기 전에 보는 3가지" },
-      { title: "블로그", body: "구매형 키워드" },
+      { title: "민경님 컨실러", body: "유튜브에 나온 제품" },
+      { title: "상품 링크", body: "댓글에 정리" },
+      { title: "제휴 링크", body: "공정위 문구 필요" },
+      { title: "라이프매거진", body: "연예인 쇼핑 소재" },
     ],
   });
   const badValidate = spawnSync("node", ["scripts/validate_offnote_draft.mjs", badDraftPath], {
