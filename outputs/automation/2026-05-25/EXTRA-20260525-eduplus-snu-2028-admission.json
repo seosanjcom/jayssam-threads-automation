@@ -1,0 +1,75 @@
+{
+  "id": "EXTRA-20260525-eduplus-snu-2028-admission",
+  "account": "26746590168375878",
+  "status": "approved",
+  "date": "2026-05-25",
+  "slot": "extra",
+  "topic": "서울대 2028 전형 변화, 수능만 보면 놓칩니다",
+  "topic_tag": "입시정보",
+  "keyword": "입시정보",
+  "source_name": "에듀플러스",
+  "source_url": "https://www.eduplusnews.com/news/articleView.html?idxno=18951",
+  "source_note": "에듀플러스 2026-05-21 기사 핵심 사실을 바탕으로 제이쌤 계정 관점에서 재구성",
+  "score": {
+    "fit": 5,
+    "timeliness": 5,
+    "save_potential": 5,
+    "trust": 5,
+    "comment_potential": 4,
+    "total": 48
+  },
+  "threads_text": "서울대 2028 전형 변화, 그냥 “서울대 뉴스”로 넘기면 안 됩니다.\n\n중고등 자녀가 있다면 이 흐름은 꼭 보셔야 합니다.\n\n지역균형은 추천 인원이 2명→3명, 수능최저는 폐지.\n수시 일반전형 면접은 15분 내외→20분.\n정시 일반전형도 교과 역량 평가 비중이 20%→40%로 커집니다.\n\n결국 “점수만”보다 학교 안에서 무엇을 배우고 설명할 수 있는지가 더 중요해지는 흐름입니다.\n\n기사: https://www.eduplusnews.com/news/articleView.html?idxno=18951\n\n#교육 #입시정보 #자녀교육 #고등맘",
+  "thread_comments": [
+    "제가 이 기사에서 가장 중요하게 본 건 “서울대가 바뀐다”가 아닙니다.\n\n상위권 입시가 아이의 학교생활을 더 구체적으로 묻는 쪽으로 가고 있다는 점입니다. 과목 선택, 수업 태도, 탐구 과정, 협력 경험이 그냥 생활기록부 문장이 아니라 면접 질문의 근거가 될 수 있습니다.",
+    "부모님이 오늘 체크할 건 하나입니다.\n\n“우리 아이가 한 활동을 왜 했는지, 무엇을 배웠는지, 다음 선택에 어떻게 연결되는지 자기 말로 설명할 수 있나?”\n\n활동을 많이 하는 것보다 경험을 해석하는 힘이 더 중요해지는 흐름입니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "입시 변화 / 2028",
+      "title": "서울대 2028,\n수능만 보면\n놓칩니다",
+      "body": "핵심은 점수 하나가 아니라\n면접·교과역량·학교생활 기록까지\n함께 본다는 흐름입니다.",
+      "note": "에듀플러스 2026.05.21 기사 기반",
+      "style": "cover"
+    },
+    {
+      "kicker": "01  수시 지역균형",
+      "title": "추천 인원은 늘고\n수능최저는\n사라집니다",
+      "body": "서울대 지역균형전형은 학교장 추천 가능 인원이 2명에서 3명으로 늘고, 수능최저학력기준이 폐지됩니다.",
+      "note": "면접과 학생부 해석의 무게가 커질 수 있습니다."
+    },
+    {
+      "kicker": "02  면접 변화",
+      "title": "15분에서 20분.\n질문은 더\n깊어질 수 있습니다",
+      "body": "수시 일반전형 일부 모집단위 면접 시간이 늘어납니다. 기사에서 짚은 방향은 개별 학습 경험을 바탕으로 한 탐침 질문입니다.",
+      "note": "활동의 동기·과정·영향을 자기 말로 설명해야 합니다."
+    },
+    {
+      "kicker": "03  정시 변화",
+      "title": "정시도 이제\n학생부를\n더 봅니다",
+      "body": "정시 일반전형의 교과 역량 평가 비중이 20%에서 40%로 확대됩니다. 평가 등급도 더 세분화됩니다.",
+      "note": "정시=수능만 보는 전형이라고 단순화하기 어렵습니다."
+    },
+    {
+      "kicker": "04  부모가 볼 지점",
+      "title": "스펙 개수보다\n“왜 했는지”가\n남아야 합니다",
+      "body": "어떤 과목을 왜 선택했는지, 수업에서 어떤 질문을 했는지, 협력 경험을 어떻게 설명하는지가 기록의 힘이 됩니다.",
+      "note": "좋은 기록은 활동량보다 해석 가능한 경험에서 나옵니다."
+    },
+    {
+      "kicker": "05  제이쌤 해석",
+      "title": "입시는 결국\n아이의 경험을\n묻는 쪽으로 갑니다",
+      "body": "꿈길 인증 진로체험 현장에서 봐도 강한 아이들은 활동을 많이 한 아이가 아니라, 자기 경험을 설명할 수 있는 아이들입니다.",
+      "note": "저장해두고 중고등 진로·입시 대화 때 보세요."
+    }
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-05-25/extra/eduplus-snu-2028-admission",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-05-25/extra/eduplus-snu-2028-admission/card_01.png",
+    "outputs/cards/github-daily/2026-05-25/extra/eduplus-snu-2028-admission/card_02.png",
+    "outputs/cards/github-daily/2026-05-25/extra/eduplus-snu-2028-admission/card_03.png",
+    "outputs/cards/github-daily/2026-05-25/extra/eduplus-snu-2028-admission/card_04.png",
+    "outputs/cards/github-daily/2026-05-25/extra/eduplus-snu-2028-admission/card_05.png",
+    "outputs/cards/github-daily/2026-05-25/extra/eduplus-snu-2028-admission/card_06.png"
+  ],
+  "created_at": "2026-05-25T22:53:59.317114+09:00"
+}

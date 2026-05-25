@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 const root = process.cwd();
 const automationRoot = path.join(root, "outputs", "automation");
 const publishLogPath = process.env.THREADS_PUBLISH_LOG || "outputs/meta-publish-log.json";
+const requestedDraftPath = process.argv[2] || "";
 
 function readJsonIfExists(filePath, fallback) {
   if (!fs.existsSync(filePath)) return fallback;
@@ -28,7 +29,9 @@ function findJsonFiles(dir) {
 
 const publishedDraftIds = new Set(readJsonIfExists(publishLogPath, []).map((log) => log.draft_id));
 
-const approved = findJsonFiles(automationRoot)
+const sourceFiles = requestedDraftPath ? [path.resolve(root, requestedDraftPath)] : findJsonFiles(automationRoot);
+
+const approved = sourceFiles
   .map((file) => {
     try {
       const data = JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));

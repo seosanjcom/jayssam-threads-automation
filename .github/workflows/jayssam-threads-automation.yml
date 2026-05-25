@@ -25,6 +25,10 @@ on:
           - afternoon
           - evening
           - night
+      draft_path:
+        description: "Optional draft JSON path for publish mode"
+        required: false
+        default: ""
   schedule:
     # KST 10:05 - collect previous reaction metrics
     - cron: "5 1 * * *"
@@ -61,7 +65,7 @@ jobs:
       THREADS_ACCOUNT_HANDLE: "@jayssam_edu"
       THREADS_AUTO_PUBLISH: "true"
       THREADS_SAFETY_MODE: "true"
-      THREADS_DAILY_POST_LIMIT: "2"
+      THREADS_DAILY_POST_LIMIT: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'publish' && '3' || '2' }}
       THREADS_MIN_INTERVAL_HOURS: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'publish' && '0' || '6' }}
       THREADS_PUBLISH_WAIT_MS: "30000"
       THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true"
@@ -164,15 +168,20 @@ jobs:
       - name: Publish latest approved
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'publish'
         run: |
-          python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
-          node scripts/use_github_raw_media.mjs "$(cat outputs/automation/latest-draft-path.txt)"
+          if [[ -n "${{ inputs.draft_path }}" ]]; then
+            DRAFT_PATH="${{ inputs.draft_path }}"
+          else
+            python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+            DRAFT_PATH="$(cat outputs/automation/latest-draft-path.txt)"
+          fi
+          node scripts/use_github_raw_media.mjs "$DRAFT_PATH"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f outputs/automation outputs/cards
           git commit -m "Add generated Jayssam assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git push
-          node scripts/verify_media_urls.mjs "$(cat outputs/automation/latest-draft-path.txt)"
-          node scripts/publish_latest_approved.mjs
+          node scripts/verify_media_urls.mjs "$DRAFT_PATH"
+          node scripts/publish_latest_approved.mjs "$DRAFT_PATH"
           node scripts/send_telegram_message.mjs "[제이쌤 게시 완료] ${{ steps.route.outputs.slot }} 슬롯 게시 완료"
           git add -f outputs/meta-publish-log.json
           git commit -m "Record Jayssam publish $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
