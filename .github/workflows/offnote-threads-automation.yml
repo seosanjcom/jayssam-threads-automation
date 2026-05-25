@@ -13,6 +13,7 @@ on:
           - approval_check
           - auto_publish
           - manual_publish
+          - delete_post
           - health
       slot:
         description: "Posting slot"
@@ -22,6 +23,10 @@ on:
         options:
           - evening
           - night
+      post_ids:
+        description: "Comma-separated Threads post IDs to delete in delete_post mode"
+        required: false
+        type: string
   schedule:
     # KST 17:30 - daily preview for week 1.
     - cron: "30 8 * * *"
@@ -141,6 +146,7 @@ jobs:
           node --check scripts/telegram_check_offnote_approvals.mjs
           node --check scripts/publish_offnote_due.mjs
           node --check scripts/threads_publish.mjs
+          node --check scripts/delete_threads_posts.mjs
           node --check scripts/use_github_raw_media.mjs
           node --check scripts/verify_media_urls.mjs
           node --check scripts/check_offnote_automation_health.mjs
@@ -227,8 +233,17 @@ jobs:
           THREADS_REQUIRE_MEDIA=false THREADS_DAILY_POST_LIMIT=3 THREADS_MIN_INTERVAL_HOURS=0 node scripts/threads_publish.mjs "$DRAFT_PATH"
           node -e "const fs=require('fs');const p=process.argv[1];const d=JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,''));d.status='published';d.published_at=new Date().toISOString();d.manual_publish=true;fs.writeFileSync(p,JSON.stringify(d,null,2)+'\n','utf8');" "$DRAFT_PATH"
 
+      - name: Delete Offnote Threads posts
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'delete_post'
+        run: |
+          if [[ -z "${{ inputs.post_ids }}" ]]; then
+            echo "post_ids is required for delete_post mode"
+            exit 1
+          fi
+          node scripts/delete_threads_posts.mjs "${{ inputs.post_ids }}"
+
       - name: Commit approval check results
-        if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'approval_check' || steps.route.outputs.mode == 'auto_publish' || steps.route.outputs.mode == 'manual_publish')
+        if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'approval_check' || steps.route.outputs.mode == 'auto_publish' || steps.route.outputs.mode == 'manual_publish' || steps.route.outputs.mode == 'delete_post')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
