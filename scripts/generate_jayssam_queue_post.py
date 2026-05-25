@@ -110,14 +110,14 @@ def draw_text_block(
 def slide_texts(row: dict) -> list[tuple[str, str]]:
     source_title = clean(row.get("source_title")) or "오늘 교육뉴스"
     key_facts = split_facts(clean(row.get("key_facts")))
-    parent_takeaway = clean(row.get("parent_takeaway")) or "이 뉴스는 아이의 학교생활과 선택을 어떻게 봐야 하는지 알려주는 신호입니다."
+    parent_takeaway = clean(row.get("parent_takeaway")) or "이 뉴스는 아이의 학교생활과 다음 선택을 연결해서 읽어야 하는 신호입니다."
     jayssam_angle = clean(row.get("jayssam_angle")) or "제이쌤 관점에서는 제도 변화보다 아이가 자기 경험을 설명할 수 있는지가 더 중요합니다."
 
     defaults = [
         (clean(row.get("hook")) or source_title, "기사 제목보다 중요한 건 우리 아이에게 어떤 변화가 오는지입니다."),
         ("핵심 변화 1", key_facts[0] if len(key_facts) > 0 else parent_takeaway),
         ("핵심 변화 2", key_facts[1] if len(key_facts) > 1 else "숫자와 제도 변화는 부모가 먼저 확인해야 할 신호입니다."),
-        ("부모가 볼 지점", parent_takeaway),
+        ("아이에게 연결되는 부분", parent_takeaway),
         ("제이쌤 해석", jayssam_angle),
         ("저장 포인트", "원문은 기사로 확인하고, 핵심은 아이의 선택·기록·설명력으로 연결해서 보세요."),
     ]
