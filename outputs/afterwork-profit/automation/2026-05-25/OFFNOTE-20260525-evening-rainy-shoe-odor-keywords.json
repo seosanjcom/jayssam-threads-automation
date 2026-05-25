@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "장마철 신발 냄새 검색어 선점",
   "topic_tag": "쇼츠부업",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-05-25T12:27:20.939Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -47,5 +47,17 @@
     "No account-mixing: publish only when Threads profile username is offnote.kr.",
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held."
-  ]
+  ],
+  "approved_at": "2026-05-25T12:27:23.117Z",
+  "approval_source": "auto_publish_due:evening",
+  "published_reply_ids": [
+    "18040235168792286",
+    "17877616002664179",
+    "17891495514493227"
+  ],
+  "published_at": "2026-05-25T12:28:38.678Z",
+  "auto_publish": {
+    "slot": "evening",
+    "approved_at": "2026-05-25T12:27:23.117Z"
+  }
 }
