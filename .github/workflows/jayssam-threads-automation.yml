@@ -136,6 +136,7 @@ jobs:
           node --check scripts/use_github_raw_media.mjs
           node --check scripts/verify_media_urls.mjs
           node --check scripts/send_telegram_message.mjs
+          node --check scripts/mark_jayssam_news_queue_posted.mjs
           node --check scripts/check_daily_publish_status.mjs
 
       - name: Collect Threads metrics
@@ -183,8 +184,9 @@ jobs:
           git push
           node scripts/verify_media_urls.mjs "$DRAFT_PATH"
           node scripts/publish_latest_approved.mjs "$DRAFT_PATH"
+          node scripts/mark_jayssam_news_queue_posted.mjs "$DRAFT_PATH"
           node scripts/send_telegram_message.mjs "[제이쌤 게시 완료] ${{ steps.route.outputs.slot }} 슬롯 게시 완료"
-          git add -f outputs/meta-publish-log.json
+          git add -f outputs/meta-publish-log.json content/jayssam-news-queue.csv
           git commit -m "Record Jayssam publish $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git pull --rebase --autostash origin master
           git push

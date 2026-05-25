@@ -14,6 +14,7 @@
 ## 필수 컬럼
 
 - `id`: 짧은 영문/숫자 식별자. 예: `snu-2028-admission`
+- `done_mark`: `⬜`는 예약, `✅`는 발행 완료
 - `status`: `queued`, `approved`, `posted`, `rejected`
 - `due_date`: `YYYY-MM-DD`
 - `slot`: `afternoon`, `evening`, `night`
@@ -37,3 +38,4 @@
 3. 좋은 링크는 `due_date`를 다음 빈 날짜로 배정한다.
 4. 본문, 댓글 2개, 카드뉴스 6장 문구까지 채운다.
 5. 자동화가 해당 날짜에 카드뉴스와 함께 발행한다.
+6. 발행이 끝나면 해당 행을 `✅`, `posted`, `posted_url`, `published_at`으로 자동 표시한다.
