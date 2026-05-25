@@ -128,6 +128,7 @@ jobs:
           node --check scripts/collect_threads_metrics.mjs
           node --check scripts/github_resolve_run.mjs
           python -m py_compile scripts/generate_jayssam_daily_post.py
+          python -m py_compile scripts/generate_jayssam_queue_post.py
           node --check scripts/send_telegram_preview.mjs
           node --check scripts/publish_latest_approved.mjs
           node --check scripts/threads_publish.mjs
@@ -144,19 +145,19 @@ jobs:
       - name: Create draft queue
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'draft'
         run: |
-          python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+          python scripts/generate_jayssam_queue_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}" || python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           node scripts/send_telegram_preview.mjs
 
       - name: Send Telegram preview
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
         run: |
-          python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+          python scripts/generate_jayssam_queue_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}" || python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           node scripts/send_telegram_preview.mjs
 
       - name: Verify publish path without posting
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'verify_publish_path'
         run: |
-          python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+          python scripts/generate_jayssam_queue_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}" || python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           node scripts/use_github_raw_media.mjs "$(cat outputs/automation/latest-draft-path.txt)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -171,7 +172,7 @@ jobs:
           if [[ -n "${{ inputs.draft_path }}" ]]; then
             DRAFT_PATH="${{ inputs.draft_path }}"
           else
-            python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
+            python scripts/generate_jayssam_queue_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}" || python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
             DRAFT_PATH="$(cat outputs/automation/latest-draft-path.txt)"
           fi
           node scripts/use_github_raw_media.mjs "$DRAFT_PATH"
