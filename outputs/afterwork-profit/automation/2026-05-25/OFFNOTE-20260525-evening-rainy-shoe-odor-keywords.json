@@ -1,0 +1,51 @@
+{
+  "id": "OFFNOTE-20260525-evening-rainy-shoe-odor-keywords",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "topic": "장마철 신발 냄새 검색어 선점",
+  "topic_tag": "쇼츠부업",
+  "status": "approved",
+  "created_at": "2026-05-25T12:04:25.218Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "18:00 KST",
+  "experiment_hypothesis": "장마 시작 전 불편 검색어를 먼저 잡으면 쇼츠와 블로그에서 빠른 반응을 만들 수 있다. 냄새 제거, 말리는 법, 건조기 단점을 같이 묶는다.",
+  "threads_text": "이번 주엔 이 키워드 미리 선점하세요.\n\n`장마철 신발 냄새`\n`운동화 냄새 제거`\n`신발 건조기 단점`\n\n비 오기 시작하면 사람들이 생각보다 빨리 찾는 쪽입니다. 포인트는 탈취제 추천이 아니라 \"왜 냄새가 다시 나는지\"예요. 말리는 시간, 깔창 분리, 신발 건조기 사용 조건까지 같이 잡으면 쇼츠도 블로그도 바로 만들 수 있습니다.",
+  "thread_comments": [
+    "1. 검색어는 이렇게 묶으세요.\n\n메인: 장마철 신발 냄새\n서브: 운동화 냄새 제거 / 신발 말리는 법\n구매형: 신발 건조기 / 신발 탈취제 / 신발 제습제\n비교형: 신발 건조기 단점 / 신발 탈취제 효과\n\n이 조합이면 블로그 2개, 쇼츠 3개까지 나옵니다.",
+    "2. 쇼츠 제목은 이렇게 쓰면 됩니다.\n\n장마철 운동화 냄새가 계속 나는 이유\n신발 건조기 사기 전에 보는 3가지\n탈취제 뿌렸는데 냄새 다시 나는 이유\n\n제품명보다 사람들이 지금 겪는 상황을 먼저 꺼내야 합니다.",
+    "3. 블로그에는 이 표를 넣으세요.\n\n건조 시간\n소음\n냄새 제거 정도\n신발 손상 가능성\n보관 크기\n\n이 5개만 비교해도 단순 추천글보다 훨씬 실전형으로 보입니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "이번 주 선점어",
+      "title": "장마철 신발 냄새를 미리 잡아두세요",
+      "body": "비가 오기 시작하면 운동화 냄새 제거, 신발 말리는 법, 신발 건조기 단점 검색이 같이 붙습니다.",
+      "footer": "@offnote.kr"
+    },
+    {
+      "kicker": "검색어 묶음",
+      "title": "메인은 장마철 신발 냄새",
+      "body": "서브는 운동화 냄새 제거, 신발 말리는 법. 구매형은 신발 건조기, 탈취제, 제습제. 비교형은 건조기 단점.",
+      "footer": "블로그 2개 + 쇼츠 3개"
+    },
+    {
+      "kicker": "쇼츠 제목",
+      "title": "지금 겪는 상황을 제목에 넣으세요",
+      "body": "장마철 운동화 냄새가 계속 나는 이유 / 신발 건조기 사기 전에 보는 3가지 / 탈취제 뿌려도 다시 나는 이유",
+      "footer": "문제 상황 먼저"
+    },
+    {
+      "kicker": "블로그 표",
+      "title": "건조 시간, 소음, 냄새, 손상, 크기",
+      "body": "이 5개 기준으로 비교하면 단순 추천글보다 훨씬 실전형으로 보입니다. 장마 키워드는 미리 잡는 쪽이 유리합니다.",
+      "footer": "저장되는 비교 기준"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews optional; use it only for high-density posts.",
+    "Auto-publish unless held."
+  ]
+}
