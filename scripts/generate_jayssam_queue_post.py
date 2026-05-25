@@ -118,8 +118,8 @@ def slide_texts(row: dict) -> list[tuple[str, str]]:
         ("핵심 변화 1", key_facts[0] if len(key_facts) > 0 else parent_takeaway),
         ("핵심 변화 2", key_facts[1] if len(key_facts) > 1 else "숫자와 제도 변화는 부모가 먼저 확인해야 할 신호입니다."),
         ("아이에게 연결되는 부분", parent_takeaway),
-        ("제이쌤 해석", jayssam_angle),
-        ("저장 포인트", "원문은 기사로 확인하고, 핵심은 아이의 선택·기록·설명력으로 연결해서 보세요."),
+        ("이 변화가 말해주는 것", jayssam_angle),
+        ("기억해둘 한 줄", "원문은 기사로 확인하고, 핵심은 아이의 선택·기록·설명력으로 연결해서 보세요."),
     ]
 
     slides = []
@@ -160,7 +160,7 @@ def make_card(out: Path, row: dict, index: int, total: int, title: str, body: st
 
     source = clean(row.get("source_name")) or "source checked"
     draw.rounded_rectangle((margin, 984, width - margin, 1096), radius=56, fill="#1a1c1f")
-    draw_text_block(draw, margin + 42, 1015, "원문 확인 + 제이쌤 해석으로 재구성했습니다.", font(28, True), "#ffffff", width - 2 * margin - 84, 8)
+    draw_text_block(draw, margin + 42, 1015, "원문 확인 후 핵심만 다시 정리했습니다.", font(28, True), "#ffffff", width - 2 * margin - 84, 8)
     draw.line((margin, height - 146, width - margin, height - 146), fill="#dee2e8", width=2)
     draw.text((margin, height - 104), "제이쌤 미래교육 노트", font=font(28, True), fill="#6c727b")
     draw.text((width - margin - 360, height - 104), f"source: {source[:22]}", font=font(24), fill="#6c727b")
