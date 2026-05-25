@@ -16,6 +16,29 @@ function dateKey(date) {
   return date.replaceAll("-", "");
 }
 
+function collectText(value) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value.map(collectText).join("\n");
+  if (typeof value === "object") return Object.values(value).map(collectText).join("\n");
+  return "";
+}
+
+function isShoppingRouteTopic(topic) {
+  const text = collectText(topic);
+  return [
+    /냉감(?:패드|이불|침구)/,
+    /여름 침구/,
+    /장마철 신발/,
+    /운동화 냄새/,
+    /신발 (?:건조기|탈취제|제습제|말리는 법|냄새)/,
+    /상품 링크/,
+    /구매\s*(?:링크|시)/,
+    /추천템/,
+    /제휴 링크/,
+  ].some((pattern) => pattern.test(text));
+}
+
 function pickTopic(date, slot) {
   const seed = [...`${date}-${slot}`].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
   const topics = [
@@ -137,7 +160,11 @@ function pickTopic(date, slot) {
       ],
     },
   ];
-  return topics[seed % topics.length];
+  const offnoteTopics = topics.filter((topic) => !isShoppingRouteTopic(topic));
+  if (offnoteTopics.length === 0) {
+    throw new Error("No offnote-safe topics available. Shopping/product-route topics must go to lifemagazine_.");
+  }
+  return offnoteTopics[seed % offnoteTopics.length];
 }
 
 function makeDraft(date, slot) {
@@ -191,3 +218,4 @@ fs.writeFileSync(outPath, `${JSON.stringify(draft, null, 2)}\n`, "utf8");
 fs.writeFileSync(path.join("outputs", "afterwork-profit", "latest-draft-path.txt"), `${portableOutPath}\n`, "utf8");
 fs.writeFileSync(createdFlagPath, "true\n", "utf8");
 console.log(JSON.stringify({ ok: true, created: true, draft: outPath, id: draft.id }, null, 2));
+

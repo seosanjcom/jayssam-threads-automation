@@ -42,6 +42,34 @@ function todayKst() {
   return `${map.year}-${map.month}-${map.day}`;
 }
 
+function collectText(value) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value.map(collectText).join("\n");
+  if (typeof value === "object") return Object.values(value).map(collectText).join("\n");
+  return "";
+}
+
+function isShoppingRouteContent(draft) {
+  const text = collectText({
+    topic: draft.topic,
+    threads_text: draft.threads_text,
+    thread_comments: draft.thread_comments,
+    cardnews_slides: draft.cardnews_slides,
+  });
+  return [
+    /냉감(?:패드|이불|침구)/,
+    /여름 침구/,
+    /장마철 신발/,
+    /운동화 냄새/,
+    /신발 (?:건조기|탈취제|제습제|말리는 법|냄새)/,
+    /상품 링크/,
+    /구매\s*(?:링크|시)/,
+    /추천템/,
+    /제휴 링크/,
+  ].some((pattern) => pattern.test(text));
+}
+
 async function telegram(method, body) {
   const token = process.env.OFFNOTE_TELEGRAM_BOT_TOKEN;
   if (!token || !process.env.OFFNOTE_TELEGRAM_CHAT_ID) return null;
@@ -99,6 +127,15 @@ if (!pending) {
 }
 
 const draft = pending.data;
+if (isShoppingRouteContent(draft)) {
+  draft.status = "held";
+  draft.held_at = new Date().toISOString();
+  draft.hold_reason = "shopping/product-route content belongs to lifemagazine_, not offnote.kr";
+  writeJson(pending.file, draft);
+  await sendMessage(`[오프노트 발행 보류]\n${draft.id}\n쇼핑/상품형 소재라 lifemagazine_로 보내야 해서 발행을 멈췄어.`);
+  console.log(`Held offnote draft because it belongs to lifemagazine_: ${draft.id}`);
+  process.exit(0);
+}
 draft.status = "approved";
 draft.approved_at = new Date().toISOString();
 draft.approval_source = `auto_publish_due:${slot}`;
@@ -139,3 +176,4 @@ published.auto_publish = {
 writeJson(pending.file, published);
 await sendMessage(`[오프노트 자동 발행 완료]\n${draft.id}\n본문과 댓글 확장까지 발행했습니다.`);
 console.log(result.stdout);
+
