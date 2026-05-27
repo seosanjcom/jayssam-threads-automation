@@ -218,6 +218,9 @@ export function describeDraftProblem(data) {
     const mediaUrls = Array.isArray(data.media_urls) ? data.media_urls.filter(Boolean) : [];
     if (mediaUrls.length === 0) return "사진은 미리보기용으로 저장됐고, Threads 사진 발행용 공개 URL은 아직 없어.";
   }
+  if (data.status === "pending_approval" && data.account === "offnote.kr") {
+    return "오프노트는 텔레그램 미리보기 후 보류하지 않으면 예정 시간에 자동 발행돼. 메시지가 안 왔다면 텔레그램 전송 설정/실행 로그 확인이 필요해.";
+  }
   if (data.status === "pending_approval") return "텔레그램에서 승인 버튼을 눌러야 발행 대기로 넘어가.";
   return "";
 }
@@ -314,6 +317,61 @@ function renderIssueItem(item) {
       <p>${escapeHtml(item.problem || "확인이 필요해.")}</p>
     </article>
   `;
+}
+
+function accountReviewTitle(account) {
+  if (account.accountKey === "offnote") return "오프노트 오늘 글";
+  if (account.accountKey === "jayssam") return "제이쌤 오늘 글";
+  return `${account.displayName} 오늘 글`;
+}
+
+function renderMiniDraftList(items, emptyText) {
+  if (!items.length) return renderEmpty(emptyText);
+  return items.slice(0, 4).map((item) => `
+    <article class="mini-draft">
+      <strong>${escapeHtml(item.title)}</strong>
+      <span>${escapeHtml(item.date || "날짜 없음")} ${escapeHtml(item.time || "")} · ${escapeHtml(item.statusLabel)}</span>
+      ${item.problem ? `<p>${escapeHtml(item.problem)}</p>` : ""}
+    </article>
+  `).join("");
+}
+
+function renderAccountReviewPanel(account, draftItems) {
+  const todayItems = draftItems.filter((item) => item.date === todayKst());
+  const approvalItems = draftItems.filter((item) => item.status === "pending_approval");
+  const issueItems = draftItems.filter((item) => item.status === "publish_failed" || item.problem);
+  const tomorrowItems = draftItems.filter((item) => item.date === kstDate(1));
+  return `
+    <section id="${escapeHtml(account.accountKey)}-review" class="review-panel">
+      <div class="section-title">
+        <p class="eyebrow">${escapeHtml(account.threadsUsername)}</p>
+        <h2>${escapeHtml(accountReviewTitle(account))}</h2>
+        <p class="muted">자동화가 만든 글은 여기서 상태만 확인해. 라이프매거진처럼 자동 소재 생성하지 않고, 계정별 규칙대로 분리해서 보여줘.</p>
+      </div>
+      <div class="review-columns">
+        <div>
+          <h3>오늘 발행/예정</h3>
+          ${renderMiniDraftList(todayItems, "오늘 글 기록은 아직 없어.")}
+        </div>
+        <div>
+          <h3>승인 대기</h3>
+          ${renderMiniDraftList(approvalItems, "승인 대기 글은 없어.")}
+        </div>
+        <div>
+          <h3>발행 실패 이유</h3>
+          ${renderMiniDraftList(issueItems, "실패 기록은 없어.")}
+        </div>
+        <div>
+          <h3>내일 예정</h3>
+          ${renderMiniDraftList(tomorrowItems, "내일 예정 글은 아직 없어.")}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function normalizedDraftsForAccount(account, groupedDrafts) {
+  return (groupedDrafts[account.accountKey] || []).map((item) => normalizeDraft(item, account));
 }
 
 function renderAccountSummary(summary) {
@@ -417,12 +475,12 @@ function renderLifemagazineComposer() {
     <section class="composer" id="lifemagazine-compose">
       <div class="section-title">
         <p class="eyebrow">lifemagazine_</p>
-        <h2>라이프매거진 새 글 만들기</h2>
-        <p class="muted">사진, 메모, 상품 링크를 넣으면 본문과 댓글 초안을 만들어. 확인은 텔레그램에서 하면 돼.</p>
+        <h2>라이프매거진 수동 작성</h2>
+        <p class="muted">자동으로 글감을 만들지 않아. 네가 사진/영상, 출처 메모, 상품링크를 줄 때만 Threads 본문, 댓글, 인스타 문구를 만든다.</p>
       </div>
       <form method="post" action="/api/lifemagazine/drafts" enctype="multipart/form-data">
-        <label for="photos">1. 사진</label>
-        <input id="photos" name="photos" type="file" accept="image/*" multiple>
+        <label for="photos">1. 사진/영상</label>
+        <input id="photos" name="photos" type="file" accept="image/*,video/*" multiple>
 
         <label for="topic">2. 뭐가 눈에 들어왔는지</label>
         <input id="topic" name="topic" required placeholder="예: 환연4 민경님 컨실러, 다크서클 커버템">
@@ -433,7 +491,7 @@ function renderLifemagazineComposer() {
         <label for="celebrity_or_content">4. 어디서 봤는지</label>
         <input id="celebrity_or_content" name="celebrity_or_content" placeholder="예: ㅇㅇ 유튜브, 드라마 3화, 공식 인스타 릴스">
 
-        <label for="notes">5. 왜 줬는지 메모</label>
+        <label for="notes">5. 출처 메모 / 왜 줬는지</label>
         <textarea id="notes" name="notes" placeholder="몇 분쯤 나왔는지, 직접 언급인지, 왜 눈에 띄었는지, 피해야 할 표현 등"></textarea>
 
         <label for="product_links">6. 상품 링크</label>
@@ -443,9 +501,9 @@ function renderLifemagazineComposer() {
           <div>
             <label for="product_relationship">제품 관계</label>
             <select id="product_relationship" name="product_relationship">
-              <option value="official_confirmed">직접 언급/공식 확인</option>
+              <option value="official_confirmed">공식 언급템</option>
               <option value="strong_guess">거의 맞아 보임</option>
-              <option value="similar_mood" selected>비슷한 무드 참고템</option>
+              <option value="similar_mood" selected>비슷한 무드</option>
               <option value="trend_only">트렌드만</option>
             </select>
           </div>
@@ -489,12 +547,24 @@ function renderOperationsDashboard(dashboard) {
         <h1>오늘 운영 현황</h1>
         <p class="muted">${escapeHtml(dashboard.today)} 기준. 승인할 것, 발행 대기, 실패 원인을 먼저 보여줘.</p>
       </div>
-      <a class="primary-link" href="#lifemagazine-compose">라이프매거진 글 만들기</a>
+      <a class="primary-link" href="#lifemagazine-compose">라이프매거진 수동 작성</a>
     </section>
 
     <div class="account-grid">
       ${dashboard.accountSummaries.map(renderAccountSummary).join("")}
     </div>
+
+    <section class="quick-actions">
+      <div class="section-title">
+        <h2>무엇을 할까요?</h2>
+        <p class="muted">계정마다 작업 방식이 달라. 라이프매거진은 네가 준 사진/메모/링크로만 만들고, 오프노트와 제이쌤은 자동화 결과를 확인해.</p>
+      </div>
+      <div class="action-grid">
+        <a class="action-card" href="#lifemagazine-compose"><strong>라이프매거진 수동 작성</strong><span>사진/영상, 출처 메모, 상품링크를 넣고 초안을 만든다.</span></a>
+        <a class="action-card" href="#offnote-review"><strong>오프노트 자동화 확인</strong><span>블로그/체험단 글의 오늘 발행, 내일 예정, 실패 이유를 본다.</span></a>
+        <a class="action-card" href="#jayssam-review"><strong>제이쌤 교육 자동화</strong><span>교육 콘텐츠 발행 상태와 승인 대기 글을 확인한다.</span></a>
+      </div>
+    </section>
 
     <div class="ops-grid">
       <section>
@@ -507,7 +577,7 @@ function renderOperationsDashboard(dashboard) {
       <section>
         <div class="section-title">
           <h2>문제 있는 항목</h2>
-          <p class="muted">실패 이유나 발행 전 확인이 필요한 것만 모아둬.</p>
+          <p class="muted">발행 실패 이유나 발행 전 확인이 필요한 것만 모아둬.</p>
         </div>
         ${dashboard.issues.length ? dashboard.issues.map(renderIssueItem).join("") : renderEmpty("현재 기록된 실패나 경고가 없어.")}
       </section>
@@ -529,6 +599,10 @@ export function renderStudioHome({ accounts = [], drafts = [], draftsByAccount =
     tomorrow: tomorrow || kstDate(1),
   });
   const recentLifeDrafts = (groupedDrafts.lifemagazine || drafts || []).slice(0, 5);
+  const offnoteAccount = accounts.find((account) => account.accountKey === "offnote");
+  const jayssamAccount = accounts.find((account) => account.accountKey === "jayssam");
+  const offnotePanel = offnoteAccount ? renderAccountReviewPanel(offnoteAccount, normalizedDraftsForAccount(offnoteAccount, groupedDrafts)) : "";
+  const jayssamPanel = jayssamAccount ? renderAccountReviewPanel(jayssamAccount, normalizedDraftsForAccount(jayssamAccount, groupedDrafts)) : "";
 
   return `<!doctype html>
 <html lang="ko">
@@ -561,6 +635,16 @@ export function renderStudioHome({ accounts = [], drafts = [], draftsByAccount =
     .metric-grid b { display:block; font-size:24px; }
     .metric-grid span { color:var(--muted); font-size:12px; }
     .ops-grid { display:grid; grid-template-columns:1.1fr 1.1fr .9fr; gap:12px; margin-bottom:16px; align-items:start; }
+    .quick-actions { margin-bottom:14px; }
+    .action-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .action-card { display:block; border:1px solid var(--line); border-radius:8px; padding:12px; color:var(--ink); text-decoration:none; background:var(--soft); }
+    .action-card strong { display:block; margin-bottom:5px; }
+    .action-card span { color:var(--muted); font-size:13px; line-height:1.5; }
+    .review-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; align-items:start; }
+    .review-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .mini-draft { border:1px solid var(--line); border-radius:6px; padding:10px; background:var(--soft); margin-bottom:8px; }
+    .mini-draft strong { display:block; margin-bottom:4px; }
+    .mini-draft span,.mini-draft p { display:block; color:var(--muted); font-size:12px; line-height:1.45; }
     .task-item,.issue-item { border-top:1px solid var(--line); padding:11px 0; }
     .task-item:first-of-type,.issue-item:first-of-type { border-top:0; }
     .task-item div,.issue-item div { display:flex; justify-content:space-between; gap:12px; }
@@ -583,7 +667,7 @@ export function renderStudioHome({ accounts = [], drafts = [], draftsByAccount =
     .inline-action input { display:none; }
     .inline-action button { width:auto; background:#fff; color:var(--brand); border-color:#a8c7bd; font-size:12px; font-weight:900; cursor:pointer; }
     .media-note { background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; padding:8px; }
-    @media (max-width:1100px) { .account-grid,.ops-grid,.workspace { grid-template-columns:1fr; } .hero-panel { align-items:flex-start; flex-direction:column; } }
+    @media (max-width:1100px) { .account-grid,.ops-grid,.workspace,.action-grid,.review-grid,.review-columns { grid-template-columns:1fr; } .hero-panel { align-items:flex-start; flex-direction:column; } }
     @media (max-width:640px) { main { padding:12px; } .form-row,.tone-grid { grid-template-columns:1fr; } .task-item div,.issue-item div,.draft-head { flex-direction:column; } .task-item span,.issue-item span { text-align:left; } }
   </style>
 </head>
@@ -594,6 +678,10 @@ export function renderStudioHome({ accounts = [], drafts = [], draftsByAccount =
   </header>
   <main>
     ${renderOperationsDashboard(dashboard)}
+    <div class="review-grid">
+      ${offnotePanel}
+      ${jayssamPanel}
+    </div>
     <div class="workspace">
       ${renderLifemagazineComposer()}
       <section>

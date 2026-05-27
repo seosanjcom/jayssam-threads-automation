@@ -374,7 +374,17 @@ test("studio home renders operator dashboard and simplified creator workflow", (
   assert.match(html, /오늘 할 일/);
   assert.match(html, /문제 있는 항목/);
   assert.match(html, /내일 예정/);
-  assert.match(html, /라이프매거진 새 글 만들기/);
+  assert.match(html, /라이프매거진 수동 작성/);
+  assert.match(html, /사진\/영상/);
+  assert.match(html, /출처 메모/);
+  assert.match(html, /공식 언급템/);
+  assert.match(html, /비슷한 무드/);
+  assert.match(html, /오프노트 자동화 확인/);
+  assert.match(html, /제이쌤 교육 자동화/);
+  assert.match(html, /오프노트 오늘 글/);
+  assert.match(html, /제이쌤 오늘 글/);
+  assert.match(html, /승인 대기/);
+  assert.match(html, /발행 실패 이유/);
   assert.match(html, /작성 중|초안|승인 기다림/);
   assert.match(html, /type="file"/);
   assert.match(html, /name="photos"/);
