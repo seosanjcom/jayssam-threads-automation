@@ -43,7 +43,11 @@ function findDraftById(root, id) {
       }
     })
     .filter(Boolean)
-    .find((item) => item.data.account === "offnote.kr" && item.data.id === id && item.data.status !== "published");
+    .find((item) =>
+      item.data.account === "offnote.kr" &&
+      (item.data.id === id || item.data.telegram_approval_token === id) &&
+      item.data.status !== "published"
+    );
 }
 
 function findLatestPendingDraft(root) {

@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 
 function loadEnv() {
   if (!fs.existsSync(".env")) return;
@@ -63,6 +64,11 @@ function commentPreview(draft) {
     .join("\n\n");
 }
 
+function approvalTokenForDraft(draft, draftItem) {
+  const seed = draft.id || path.basename(draftItem.file, ".json");
+  return draft.telegram_approval_token || crypto.createHash("sha256").update(String(seed)).digest("hex").slice(0, 16);
+}
+
 async function telegram(method, body) {
   const token = process.env.OFFNOTE_TELEGRAM_BOT_TOKEN;
   const res = await fetch(`https://api.telegram.org/bot${token}/${method}`, {
@@ -109,8 +115,9 @@ if (finalStatuses.has(draft.status)) {
 if (draft.status === "approved" || draft.status === "draft") {
   draft.status = "pending_approval";
   draft.approval_requested_at = new Date().toISOString();
-  writeJson(draftItem.file, draft);
 }
+draft.telegram_approval_token = approvalTokenForDraft(draft, draftItem);
+writeJson(draftItem.file, draft);
 
 const runUrl = process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID
   ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
@@ -146,8 +153,8 @@ messageBody.set(
   JSON.stringify({
     inline_keyboard: [
       [
-        { text: "승인하고 발행", callback_data: `offnote:approve:${draft.id || path.basename(draftItem.file, ".json")}` },
-        { text: "보류", callback_data: `offnote:hold:${draft.id || path.basename(draftItem.file, ".json")}` },
+        { text: "승인하고 발행", callback_data: `offnote:approve:${draft.telegram_approval_token}` },
+        { text: "보류", callback_data: `offnote:hold:${draft.telegram_approval_token}` },
       ],
     ],
   }),

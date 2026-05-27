@@ -33,6 +33,20 @@ try {
   copyScript("generate_offnote_daily_post.mjs");
   copyScript("publish_offnote_due.mjs");
   copyScript("validate_offnote_draft.mjs");
+  copyScript("send_offnote_preview_telegram.mjs");
+  copyScript("telegram_check_offnote_approvals.mjs");
+
+  const previewScript = fs.readFileSync(path.join(tmp, "scripts", "send_offnote_preview_telegram.mjs"), "utf8");
+  const checkerScript = fs.readFileSync(path.join(tmp, "scripts", "telegram_check_offnote_approvals.mjs"), "utf8");
+  if (!previewScript.includes("telegram_approval_token")) {
+    throw new Error("Offnote preview must use a short telegram_approval_token for callback buttons.");
+  }
+  if (/callback_data:\s*`offnote:[^`]*\$\{draft\.id/.test(previewScript)) {
+    throw new Error("Offnote preview callback_data must not use the long draft id directly.");
+  }
+  if (!checkerScript.includes("telegram_approval_token")) {
+    throw new Error("Offnote approval checker must resolve callback tokens back to drafts.");
+  }
 
   const firstGenerate = runNode(["scripts/generate_offnote_daily_post.mjs", "2026-05-23", "evening"]);
   if (firstGenerate.status !== 0) {
