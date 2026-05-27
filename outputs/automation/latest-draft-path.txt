@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-27/QUEUE-20260527-afternoon-junior-college-2028-admission.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-28/GHA-20260528-night-ebsi-career-exploration.json
