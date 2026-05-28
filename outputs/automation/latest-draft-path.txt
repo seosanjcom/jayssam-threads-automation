@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-28/QUEUE-20260528-afternoon-sejong-ai-virtual-studio.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-29/GHA-20260529-night-ebsi-career-exploration.json
