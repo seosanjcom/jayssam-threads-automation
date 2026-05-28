@@ -1,0 +1,74 @@
+{
+  "id": "QUEUE-20260528-afternoon-sejong-ai-virtual-studio",
+  "date": "2026-05-28",
+  "slot": "afternoon",
+  "account": "26746590168375878",
+  "status": "approved",
+  "pillar": "AI진로",
+  "keyword": "AI진로",
+  "title": "세종대, AI 버추얼 스튜디오 개관…“버추얼 아이돌 공연도 실시간으로”",
+  "topic": "세종대, AI 버추얼 스튜디오 개관…“버추얼 아이돌 공연도 실시간으로”",
+  "content_type": "queued_education_news",
+  "threads_text": "AI 진로를 아직도 개발자 하나로만 보면 너무 좁습니다.\n\n세종대가 AI 기반 버추얼 콘텐츠 제작 거점인 TEAM STUDIOS SEJONG을 개관했습니다.\n버추얼 콘텐츠·실시간 공연·AI 제작 환경이 대학 교육 안으로 들어오고 있습니다.\nAI는 코딩뿐 아니라 영상, 공연, 디자인, 콘텐츠 산업과 결합하고 있습니다.\n\nAI 진로는 직업명 하나가 아니라 좋아하는 분야와 기술이 만나는 방식으로 이해해야 합니다.\n\n제이쌤 관점에서는 AI 진로교육이 개발자 진로교육만으로 끝나면 안 됩니다. 콘텐츠·예술·기획과 연결되는 장면을 보여줘야 합니다.\n\n기사: https://www.eduplusnews.com/news/articleView.html?idxno=18985\n\n#교육 #AI교육 #진로교육 #미래교육",
+  "thread_comments": [
+    "AI 진로를 말할 때 ‘프로그래머 될 거야?’만 묻지 마세요. AI가 어느 분야와 만나고 있는지 보여주는 것이 훨씬 넓은 진로 대화가 됩니다.",
+    "강사라면 이 기사 하나로 수업 질문을 만들 수 있습니다. “AI가 공연, 영상, 캐릭터 산업과 만나면 어떤 직업이 새로 생길까?”"
+  ],
+  "carousel_slides": [
+    "AI 진로는 개발자만이 아닙니다\nAI가 버추얼 콘텐츠·공연·디자인 영역과 결합하고 있습니다.",
+    "대학이 바뀌는 신호\nAI 제작 스튜디오가 대학 교육 공간으로 들어오고 있습니다.",
+    "진로가 넓어지는 순간\nAI를 도구로 어떤 분야에 연결할 수 있는지가 중요합니다.",
+    "진로 질문\nAI가 내가 좋아하는 분야와 만나면 어떤 일이 생길까요?",
+    "기술 하나보다 강한 것\n미래 진로는 기술 하나보다 기술과 분야를 연결하는 힘에서 나옵니다.",
+    "AI 진로 대화의 시작점\nAI 진로 대화는 직업명보다 결합 분야에서 시작하세요."
+  ],
+  "cardnews_slides": [
+    {
+      "title": "AI 진로는 개발자만이 아닙니다",
+      "body": "AI가 버추얼 콘텐츠·공연·디자인 영역과 결합하고 있습니다."
+    },
+    {
+      "title": "대학이 바뀌는 신호",
+      "body": "AI 제작 스튜디오가 대학 교육 공간으로 들어오고 있습니다."
+    },
+    {
+      "title": "진로가 넓어지는 순간",
+      "body": "AI를 도구로 어떤 분야에 연결할 수 있는지가 중요합니다."
+    },
+    {
+      "title": "진로 질문",
+      "body": "AI가 내가 좋아하는 분야와 만나면 어떤 일이 생길까요?"
+    },
+    {
+      "title": "기술 하나보다 강한 것",
+      "body": "미래 진로는 기술 하나보다 기술과 분야를 연결하는 힘에서 나옵니다."
+    },
+    {
+      "title": "AI 진로 대화의 시작점",
+      "body": "AI 진로 대화는 직업명보다 결합 분야에서 시작하세요."
+    }
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_01.png",
+    "outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_02.png",
+    "outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_03.png",
+    "outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_04.png",
+    "outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_05.png",
+    "outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.eduplusnews.com/news/articleView.html?idxno=18985"
+  ],
+  "source_note": "에듀플러스",
+  "queue_id": "sejong-ai-virtual-studio",
+  "created_at": "2026-05-28T19:11:22+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-28/afternoon/sejong-ai-virtual-studio/card_06.png"
+  ]
+}
