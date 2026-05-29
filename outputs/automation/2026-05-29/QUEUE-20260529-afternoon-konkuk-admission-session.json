@@ -1,0 +1,74 @@
+{
+  "id": "QUEUE-20260529-afternoon-konkuk-admission-session",
+  "date": "2026-05-29",
+  "slot": "afternoon",
+  "account": "26746590168375878",
+  "status": "approved",
+  "pillar": "입시정보",
+  "keyword": "입시정보",
+  "title": "건국대 입시설명회, 3분만에 접수 마감… 학생 선호 입증",
+  "topic": "건국대 입시설명회, 3분만에 접수 마감… 학생 선호 입증",
+  "content_type": "queued_education_news",
+  "threads_text": "입시설명회가 3분 만에 마감됐다는 건, 부모 불안만의 문제가 아닙니다.\n\n건국대 2027학년도 입학전형설명회 첫 회차가 3분 만에 접수 마감됐습니다.\n고교생과 학부모의 전형 정보 수요가 매우 높다는 신호입니다.\n입시는 정보 접근 속도와 해석력이 함께 중요해지고 있습니다.\n\n설명회 신청 성공보다 들은 정보를 우리 아이 상황에 맞게 걸러내는 과정이 필요합니다.\n\n제이쌤 관점에서는 입시 정보는 많이 듣는 것보다 우리 아이 과목 선택·학생부·진로 방향과 연결해 해석하는 것이 중요합니다.\n\n기사: https://www.eduplusnews.com/news/articleView.html?idxno=18970\n\n#교육 #입시정보 #고등맘 #자녀교육",
+  "thread_comments": [
+    "설명회는 꼭 필요하지만, 설명회만 따라다니면 더 불안해질 수 있습니다. 들은 정보를 우리 아이 기준으로 정리하는 과정이 있어야 합니다.",
+    "오늘 확인할 것은 하나입니다. 설명회에서 들은 전형 변화가 우리 아이의 현재 과목 선택, 활동 기록, 면접 준비와 어디에 연결되는지입니다."
+  ],
+  "carousel_slides": [
+    "입시설명회 3분 마감\n입시 정보 수요가 그만큼 높다는 신호입니다.",
+    "문제는 정보량이 아닙니다\n설명회를 많이 듣는다고 자동으로 방향이 잡히지는 않습니다.",
+    "설명회 후에 남겨야 할 것\n우리 아이 기준으로 필요한 정보와 아닌 정보를 나눠야 합니다.",
+    "정리 질문\n이 전형 변화가 우리 아이 학교생활의 무엇과 연결되나요?",
+    "정보보다 중요한 건 정리입니다\n입시 정보는 속도보다 해석력이 중요합니다.",
+    "설명회 끝나고 꼭 남길 것\n설명회 후에는 반드시 아이 기준 요약표를 만들어야 합니다."
+  ],
+  "cardnews_slides": [
+    {
+      "title": "입시설명회 3분 마감",
+      "body": "입시 정보 수요가 그만큼 높다는 신호입니다."
+    },
+    {
+      "title": "문제는 정보량이 아닙니다",
+      "body": "설명회를 많이 듣는다고 자동으로 방향이 잡히지는 않습니다."
+    },
+    {
+      "title": "설명회 후에 남겨야 할 것",
+      "body": "우리 아이 기준으로 필요한 정보와 아닌 정보를 나눠야 합니다."
+    },
+    {
+      "title": "정리 질문",
+      "body": "이 전형 변화가 우리 아이 학교생활의 무엇과 연결되나요?"
+    },
+    {
+      "title": "정보보다 중요한 건 정리입니다",
+      "body": "입시 정보는 속도보다 해석력이 중요합니다."
+    },
+    {
+      "title": "설명회 끝나고 꼭 남길 것",
+      "body": "설명회 후에는 반드시 아이 기준 요약표를 만들어야 합니다."
+    }
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_01.png",
+    "outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_02.png",
+    "outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_03.png",
+    "outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_04.png",
+    "outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_05.png",
+    "outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.eduplusnews.com/news/articleView.html?idxno=18970"
+  ],
+  "source_note": "에듀플러스",
+  "queue_id": "konkuk-admission-session",
+  "created_at": "2026-05-29T19:00:34+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-29/afternoon/konkuk-admission-session/card_06.png"
+  ]
+}
