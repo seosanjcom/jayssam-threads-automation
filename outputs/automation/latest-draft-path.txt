@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-30/GHA-20260530-night-ebsi-career-exploration.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-30/QUEUE-20260530-afternoon-glocal-university-open-evaluation.json
