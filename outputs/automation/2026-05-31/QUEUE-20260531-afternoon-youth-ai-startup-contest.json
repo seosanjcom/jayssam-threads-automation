@@ -1,0 +1,74 @@
+{
+  "id": "QUEUE-20260531-afternoon-youth-ai-startup-contest",
+  "date": "2026-05-31",
+  "slot": "afternoon",
+  "account": "26746590168375878",
+  "status": "approved",
+  "pillar": "AI·진로교육",
+  "keyword": "AI·진로교육",
+  "title": "교육부, 인공지능(AI) 시대, 창업을 꿈꾸는 청소년을 위한 창업경진대회 개최",
+  "topic": "교육부, 인공지능(AI) 시대, 창업을 꿈꾸는 청소년을 위한 창업경진대회 개최",
+  "content_type": "queued_education_news",
+  "threads_text": "AI 시대 진로교육은 ‘무슨 직업?’보다 ‘무슨 문제를 해결할래?’에 가까워집니다.\n\n교육부와 17개 시도교육청이 2026년 대한민국 청소년 창업경진대회를 개최합니다.\n참가 동아리는 5월 19일부터 7월 7일까지 모집합니다.\n주제는 인공지능 대도약 시대와 청소년 창업입니다.\n\n창업 자체보다 아이가 문제를 발견하고 팀으로 해결안을 만드는 경험이 중요합니다.\n\n제이쌤 관점에서는 청소년 창업교육은 돈 버는 교육이 아니라 문제를 발견하고 해결안을 설계하는 진로교육에 가깝습니다.\n\n기사: https://www.kedupress.com/news/article.html?no=437818\n\n#교육 #AI교육 #진로교육 #청소년창업",
+  "thread_comments": [
+    "청소년 창업이라는 말을 너무 거창하게 볼 필요는 없습니다. 핵심은 사업자가 되는 것이 아니라 문제를 발견하고 해결책을 만들어보는 경험입니다.",
+    "수업에서는 이렇게 바꿔 물을 수 있습니다. “네가 불편하다고 느낀 문제 하나를 AI로 줄인다면 어떤 서비스가 될까?”"
+  ],
+  "carousel_slides": [
+    "청소년 창업경진대회\nAI 시대를 주제로 청소년 창업 동아리를 모집합니다.",
+    "핵심은 창업이 아닙니다\n문제 발견, 협업, 해결안 설계 경험이 중요합니다.",
+    "아이에게 남는 경험\n문제 발견, 협업, 해결안 설계 경험이 중요합니다.",
+    "수업 질문\nAI로 줄이고 싶은 불편함 하나는 무엇인가요?",
+    "창업교육이 진로교육이 되는 순간\n창업교육은 진로교육의 아주 좋은 실전형 도구가 될 수 있습니다.",
+    "진로는 문제에서 시작할 수 있습니다\n진로는 직업명보다 해결하고 싶은 문제에서 시작할 수 있습니다."
+  ],
+  "cardnews_slides": [
+    {
+      "title": "청소년 창업경진대회",
+      "body": "AI 시대를 주제로 청소년 창업 동아리를 모집합니다."
+    },
+    {
+      "title": "핵심은 창업이 아닙니다",
+      "body": "문제 발견, 협업, 해결안 설계 경험이 중요합니다."
+    },
+    {
+      "title": "아이에게 남는 경험",
+      "body": "문제 발견, 협업, 해결안 설계 경험이 중요합니다."
+    },
+    {
+      "title": "수업 질문",
+      "body": "AI로 줄이고 싶은 불편함 하나는 무엇인가요?"
+    },
+    {
+      "title": "창업교육이 진로교육이 되는 순간",
+      "body": "창업교육은 진로교육의 아주 좋은 실전형 도구가 될 수 있습니다."
+    },
+    {
+      "title": "진로는 문제에서 시작할 수 있습니다",
+      "body": "진로는 직업명보다 해결하고 싶은 문제에서 시작할 수 있습니다."
+    }
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_01.png",
+    "outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_02.png",
+    "outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_03.png",
+    "outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_04.png",
+    "outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_05.png",
+    "outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.kedupress.com/news/article.html?no=437818"
+  ],
+  "source_note": "대한민국교육신문",
+  "queue_id": "youth-ai-startup-contest",
+  "created_at": "2026-05-31T17:51:52+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-05-31/afternoon/youth-ai-startup-contest/card_06.png"
+  ]
+}
