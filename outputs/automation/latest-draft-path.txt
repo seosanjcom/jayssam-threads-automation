@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-31/QUEUE-20260531-afternoon-youth-ai-startup-contest.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-05-31/GHA-20260531-night-ebsi-career-exploration.json
