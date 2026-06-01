@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-06-01/QUEUE-20260601-afternoon-ai-talent-tf-education-science.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-06-02/GHA-20260602-night-careernet-vocation-aptitude.json
