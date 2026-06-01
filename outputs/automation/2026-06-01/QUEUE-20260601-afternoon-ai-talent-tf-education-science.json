@@ -1,0 +1,74 @@
+{
+  "id": "QUEUE-20260601-afternoon-ai-talent-tf-education-science",
+  "date": "2026-06-01",
+  "slot": "afternoon",
+  "account": "26746590168375878",
+  "status": "approved",
+  "pillar": "AI교육정책",
+  "keyword": "AI교육정책",
+  "title": "교육부-과기정통부, 인공지능 인재양성 전담팀(TF) 출범",
+  "topic": "교육부-과기정통부, 인공지능 인재양성 전담팀(TF) 출범",
+  "content_type": "queued_education_news",
+  "threads_text": "AI 인재 양성은 이제 교육부 혼자 하는 일이 아닙니다.\n\n교육부와 과학기술정보통신부가 인공지능 인재양성 협력 전담팀을 출범했습니다.\n부처 간 인재정책 협력의 후속 조치로 구성됐습니다.\nAI 인재 양성은 학교 교육과 산업 정책이 함께 움직이는 방향입니다.\n\nAI는 단순 교과나 학원 과목이 아니라 여러 역량이 묶이는 교육 흐름입니다.\n\n제이쌤 관점에서는 AI 교육은 코딩 기술 하나가 아니라 수학, 데이터, 언어, 윤리, 산업 이해가 함께 묶이는 흐름입니다.\n\n기사: https://www.kedupress.com/news/article.html?no=427422\n\n#교육 #AI교육 #미래교육 #자녀교육",
+  "thread_comments": [
+    "AI 교육정책을 볼 때 ‘코딩을 빨리 시켜야 하나’로만 가면 좁아집니다. 국가 정책은 AI를 산업과 인재 양성 전체로 보고 있습니다.",
+    "그래서 아이에게 필요한 건 특정 언어 하나보다 문제 이해력, 데이터 해석, 협업, 자기 생각을 설명하는 힘입니다."
+  ],
+  "carousel_slides": [
+    "AI 인재양성 TF 출범\n교육부와 과기정통부가 AI 인재 양성을 함께 논의합니다.",
+    "왜 중요할까요\nAI 교육이 학교와 산업 정책을 같이 타기 시작했다는 신호입니다.",
+    "AI를 좁게 보면 놓치는 것\nAI를 코딩 과목 하나로만 보면 흐름을 놓칩니다.",
+    "필요한 힘\n문제 이해, 데이터 해석, 협업, 설명력이 함께 필요합니다.",
+    "기술교육을 넘어 사고력으로\nAI 교육은 기술교육이면서 동시에 사고력 교육입니다.",
+    "AI 진로를 넓게 봐야 합니다\nAI 진로는 코딩보다 넓은 역량 묶음으로 보세요."
+  ],
+  "cardnews_slides": [
+    {
+      "title": "AI 인재양성 TF 출범",
+      "body": "교육부와 과기정통부가 AI 인재 양성을 함께 논의합니다."
+    },
+    {
+      "title": "왜 중요할까요",
+      "body": "AI 교육이 학교와 산업 정책을 같이 타기 시작했다는 신호입니다."
+    },
+    {
+      "title": "AI를 좁게 보면 놓치는 것",
+      "body": "AI를 코딩 과목 하나로만 보면 흐름을 놓칩니다."
+    },
+    {
+      "title": "필요한 힘",
+      "body": "문제 이해, 데이터 해석, 협업, 설명력이 함께 필요합니다."
+    },
+    {
+      "title": "기술교육을 넘어 사고력으로",
+      "body": "AI 교육은 기술교육이면서 동시에 사고력 교육입니다."
+    },
+    {
+      "title": "AI 진로를 넓게 봐야 합니다",
+      "body": "AI 진로는 코딩보다 넓은 역량 묶음으로 보세요."
+    }
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_01.png",
+    "outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_02.png",
+    "outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_03.png",
+    "outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_04.png",
+    "outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_05.png",
+    "outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.kedupress.com/news/article.html?no=427422"
+  ],
+  "source_note": "대한민국교육신문",
+  "queue_id": "ai-talent-tf-education-science",
+  "created_at": "2026-06-01T20:43:50+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-01/afternoon/ai-talent-tf-education-science/card_06.png"
+  ]
+}
