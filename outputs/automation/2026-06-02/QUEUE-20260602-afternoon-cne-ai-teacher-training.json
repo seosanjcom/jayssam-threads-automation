@@ -1,0 +1,74 @@
+{
+  "id": "QUEUE-20260602-afternoon-cne-ai-teacher-training",
+  "date": "2026-06-02",
+  "slot": "afternoon",
+  "account": "26746590168375878",
+  "status": "approved",
+  "pillar": "AI교육",
+  "keyword": "AI교육",
+  "title": "충남교육청, 공주교대와 인공지능(AI) 융합 교육 협약",
+  "topic": "충남교육청, 공주교대와 인공지능(AI) 융합 교육 협약",
+  "content_type": "queued_education_news",
+  "threads_text": "AI 교육의 진짜 변화는 교실 안 교사가 먼저 바뀌는 데서 시작됩니다.\n\n충남교육청이 공주교대와 AI 융합 교육 대학원 교육과정 업무협약을 체결했습니다.\n공주교대를 통해 276명이 입학했고 161명의 석사급 전문 인력이 배출됐다고 밝혔습니다.\n올해는 6개 대학에서 신입생 선발 인원을 172명까지 늘렸습니다.\n\nAI 수업은 도구 도입보다 교사가 어떤 질문과 활동으로 연결하는지가 중요합니다.\n\n제이쌤 관점에서는 AI 교육의 질은 기기 보급보다 교사의 수업 설계 역량에서 갈립니다.\n\n기사: http://news.cne.go.kr/news/view.do?s=news&bbs_id=S2N1&bbs_seq=819102\n\n#교육 #AI교육 #충남교육 #미래교육",
+  "thread_comments": [
+    "AI 교육은 기기나 프로그램만 들어온다고 좋아지지 않습니다. 교사가 어떤 질문을 만들고, 어떤 활동으로 연결하느냐가 수업의 질을 결정합니다.",
+    "학부모 입장에서는 학교가 AI를 한다고 할 때 ‘무슨 앱 쓰나요?’보다 ‘아이들이 어떤 문제를 해결하나요?’를 물어보는 편이 더 좋습니다."
+  ],
+  "carousel_slides": [
+    "AI 교육 협약\n충남교육청과 공주교대가 AI 융합 교육과정 협약을 맺었습니다.",
+    "숫자로 보는 변화\n276명 입학, 161명 석사급 전문 인력 배출 성과가 언급됐습니다.",
+    "올해 확대\n6개 대학에서 신입생 선발 인원 172명까지 늘어났습니다.",
+    "아이에게 연결되는 부분\nAI 교육은 도구보다 수업 설계가 중요합니다.",
+    "수업의 질을 가르는 것\n좋은 AI 수업은 교사가 질문과 활동을 어떻게 짜느냐에서 갈립니다.",
+    "학교 AI 교육을 확인하는 법\n학교 AI 교육은 앱 이름보다 수업 질문을 확인하세요."
+  ],
+  "cardnews_slides": [
+    {
+      "title": "AI 교육 협약",
+      "body": "충남교육청과 공주교대가 AI 융합 교육과정 협약을 맺었습니다."
+    },
+    {
+      "title": "숫자로 보는 변화",
+      "body": "276명 입학, 161명 석사급 전문 인력 배출 성과가 언급됐습니다."
+    },
+    {
+      "title": "올해 확대",
+      "body": "6개 대학에서 신입생 선발 인원 172명까지 늘어났습니다."
+    },
+    {
+      "title": "아이에게 연결되는 부분",
+      "body": "AI 교육은 도구보다 수업 설계가 중요합니다."
+    },
+    {
+      "title": "수업의 질을 가르는 것",
+      "body": "좋은 AI 수업은 교사가 질문과 활동을 어떻게 짜느냐에서 갈립니다."
+    },
+    {
+      "title": "학교 AI 교육을 확인하는 법",
+      "body": "학교 AI 교육은 앱 이름보다 수업 질문을 확인하세요."
+    }
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_01.png",
+    "outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_02.png",
+    "outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_03.png",
+    "outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_04.png",
+    "outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_05.png",
+    "outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_06.png"
+  ],
+  "source_urls": [
+    "http://news.cne.go.kr/news/view.do?s=news&bbs_id=S2N1&bbs_seq=819102"
+  ],
+  "source_note": "충남교육청",
+  "queue_id": "cne-ai-teacher-training",
+  "created_at": "2026-06-02T19:43:39+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-02/afternoon/cne-ai-teacher-training/card_06.png"
+  ]
+}
