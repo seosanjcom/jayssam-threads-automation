@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-06-02/QUEUE-20260602-afternoon-cne-ai-teacher-training.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-06-03/GHA-20260603-afternoon-ebsi-career-exploration.json
