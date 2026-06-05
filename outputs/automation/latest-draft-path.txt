@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-06-05/GHA-20260605-afternoon-careernet-holland-interest.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-06-06/GHA-20260606-night-ebsi-career-exploration.json
