@@ -1,0 +1,38 @@
+{
+  "accounts": [
+    {
+      "accountKey": "temanju",
+      "displayName": "테만주 블로그",
+      "channel": "naver_blog",
+      "dailyMinimumPosts": 5,
+      "outputRoot": "outputs/blog/temanju",
+      "defaultPublishTimesKst": ["09:30", "11:30", "14:30", "17:30", "20:30"],
+      "contentMix": [
+        "search_answer",
+        "shopping_cpa",
+        "shopping_cpa",
+        "comparison_guide",
+        "experience_review"
+      ],
+      "affiliatePlatforms": ["coupang", "naver_shopping_connect"],
+      "requiresAffiliateDisclosure": true
+    },
+    {
+      "accountKey": "offnote_blog",
+      "displayName": "오프노트 블로그",
+      "channel": "naver_blog",
+      "dailyMinimumPosts": 5,
+      "outputRoot": "outputs/blog/offnote",
+      "defaultPublishTimesKst": ["09:40", "11:40", "14:40", "17:40", "20:40"],
+      "contentMix": [
+        "search_answer",
+        "how_to",
+        "comparison_guide",
+        "shopping_cpa",
+        "experience_review"
+      ],
+      "affiliatePlatforms": ["coupang", "naver_shopping_connect"],
+      "requiresAffiliateDisclosure": true
+    }
+  ]
+}
