@@ -107,7 +107,6 @@ if (isDirectRun) {
     console.log("Lifemagazine photo draft has local images. Uploading to public media_urls before publishing...");
     const upload = spawnSync("node", ["scripts/upload_cardnews_to_catbox.mjs", latest.file], {
       cwd: process.cwd(),
-      shell: true,
       encoding: "utf8",
       env: process.env,
     });
@@ -120,7 +119,6 @@ if (isDirectRun) {
 
     const verify = spawnSync("node", ["scripts/verify_media_urls.mjs", latest.file], {
       cwd: process.cwd(),
-      shell: true,
       encoding: "utf8",
       env: process.env,
     });
@@ -135,7 +133,6 @@ if (isDirectRun) {
   console.log(`Publishing latest approved lifemagazine_ post: ${latest.file}`);
   const result = spawnSync("node", ["scripts/threads_publish.mjs", latest.file], {
     cwd: process.cwd(),
-    shell: true,
     encoding: "utf8",
     env: {
       ...process.env,
