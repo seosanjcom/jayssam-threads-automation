@@ -5,31 +5,30 @@ export const QUALITY_RULES = {
   SUA: {
     label: "Search-User-Action",
     checks: [
-      "검색자가 실제로 입력할 질문/키워드를 제목과 첫 문단에 반영한다.",
-      "독자의 상황을 한 문장으로 좁힌다.",
-      "읽고 바로 할 수 있는 행동을 본문에 넣는다."
+      "검색자가 실제로 입력할 질문이나 키워드를 제목과 첫 문단에 반영한다.",
+      "읽는 사람의 상황을 한 문장으로 좁힌다.",
+      "읽고 바로 할 수 있는 다음 행동을 본문에 넣는다."
     ]
   },
   AU: {
     label: "Authority-Usefulness",
     checks: [
-      "공식 출처, 가격, 조건, 기준, 비교표 중 하나 이상을 넣는다.",
+      "공식 출처, 가격, 조건, 기준, 후기 수 중 하나 이상을 넣는다.",
       "추상적인 조언보다 사이트명, 절차, 숫자, 선택 기준을 우선한다."
     ]
   },
   GU: {
     label: "Gain-Use",
     checks: [
-      "독자가 얻는 이득을 저장 가능한 체크리스트나 판단 기준으로 만든다.",
-      "구매/신청/검색/비교 중 다음 행동이 분명해야 한다."
+      "읽는 사람이 얻는 이득을 저장 가능한 체크리스트나 판단 기준으로 만든다.",
+      "구매, 신청, 검색, 비교 중 다음 행동이 분명해야 한다."
     ]
   }
 };
 
 export const DISCLOSURES = {
   coupang: "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
-  naver_shopping_connect:
-    "이 포스팅은 네이버 쇼핑 커넥트 활동의 일환으로, 판매 발생 시 수수료를 제공받습니다."
+  naver_shopping_connect: "이 포스팅은 네이버 쇼핑 커넥트 활동의 일환으로, 판매 발생 시 수수료를 제공받습니다."
 };
 
 export function requiresCpa(contentType) {
@@ -58,14 +57,14 @@ export function scoreAeo(post) {
   const reasons = [];
   let score = 0;
 
-  if (title.length >= 18 && includesAny(title, [/기준|방법|비교|추천|고르는|체크|2026|오늘|실전/])) score += 15;
+  if (title.length >= 18 && includesAny(title, [/기준|방법|비교|추천|고르는|체크|2026|오늘|실전|선점/])) score += 15;
   else reasons.push("title needs search intent and a concrete angle.");
 
   const firstLines = body.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).slice(0, 3).join(" ");
-  if (firstLines.length >= 60 && includesAny(firstLines, [/먼저|기준|봐야|줄일 수|정리|아래/])) score += 15;
+  if (firstLines.length >= 60 && includesAny(firstLines, [/먼저|기준|봐야|줄일 수|정리|바로/])) score += 15;
   else reasons.push("first 3 lines need a direct answer.");
 
-  if (includesAny(text, [/비교 기준|비교표|가격|후기|조건|공식|사이트|절차|신청|구매/])) score += 15;
+  if (includesAny(text, [/비교 기준|가격|후기|조건|공식|사이트|절차|신청|구매|리뷰 수|검색량/])) score += 15;
   else reasons.push("authority/usefulness evidence is missing.");
 
   if (includesAny(text, [/체크리스트|1\.|2\.|3\.|Q\.|FAQ|자주 묻는/])) score += 15;

@@ -43,8 +43,10 @@ jobs:
         run: |
           node --check scripts/blog_marketing_policy.mjs
           node --check scripts/generate_blog_daily_queue.mjs
+          node --check scripts/affiliate_candidate_queue.mjs
           node --check scripts/validate_blog_daily_queue.mjs
           node --test scripts/test_blog_marketing_policy.mjs
+          node --test scripts/test_affiliate_candidate_queue.mjs
 
       - name: Generate daily queues
         shell: bash
@@ -57,6 +59,23 @@ jobs:
             node scripts/generate_blog_daily_queue.mjs temanju "$DATE"
             node scripts/generate_blog_daily_queue.mjs offnote_blog "$DATE"
           fi
+
+      - name: Apply approved affiliate candidates when present
+        shell: bash
+        run: |
+          DATE="$(TZ=Asia/Seoul date +%F)"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            ACCOUNTS=("${{ inputs.account }}")
+          else
+            ACCOUNTS=(taemomjo temanju offnote_blog)
+          fi
+          for ACCOUNT in "${ACCOUNTS[@]}"; do
+            if [[ -f "inputs/blog/affiliate-products/$DATE/$ACCOUNT.json" ]]; then
+              node scripts/affiliate_candidate_queue.mjs "$ACCOUNT" "$DATE"
+            else
+              echo "No approved affiliate candidate file for $ACCOUNT on $DATE; CPA placeholder posts remain blocked."
+            fi
+          done
 
       - name: Commit queue results
         run: |
