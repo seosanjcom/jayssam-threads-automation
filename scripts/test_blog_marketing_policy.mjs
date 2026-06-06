@@ -6,6 +6,20 @@ import test from "node:test";
 import { spawnSync } from "node:child_process";
 import { scoreAeo, selectAffiliateCandidates, validateDailyQueue } from "./blog_marketing_policy.mjs";
 
+const mojibakePattern = /[�]|寃|媛|吏|釉|荑|湲|鍮|臾|諛|(?:\?[ㄱ-ㅎㅏ-ㅣ])|(?:[ㄱ-ㅎㅏ-ㅣ]\?)|(?:좏|뚰|쒕|먯|섎|덈|닿|쓽|낅|룄|곗|뺣)/;
+
+test("automation source text must not contain broken Korean mojibake", () => {
+  const files = [
+    "scripts/blog_marketing_policy.mjs",
+    "scripts/generate_blog_daily_queue.mjs",
+    "config/blog-accounts.json"
+  ];
+  for (const file of files) {
+    const content = fs.readFileSync(path.join(process.cwd(), file), "utf8");
+    assert.equal(mojibakePattern.test(content), false, `${file} contains broken Korean text`);
+  }
+});
+
 test("blog queue requires at least five posts per account per day", () => {
   const errors = validateDailyQueue({
     accountKey: "temanju",
@@ -92,16 +106,16 @@ test("AEO scoring approves answer-first posts with FAQ and comparison criteria",
   const strong = scoreAeo({
     title: "2026 장마철 신발 냄새 제거제 고르는 기준 5가지",
     body: [
-      "장마철 신발 냄새 제거제는 향보다 건조력과 항균 지속 시간을 먼저 봐야 합니다.",
-      "운동화, 구두, 아이 신발은 기준이 다릅니다.",
+      "장마철 신발 냄새 제거제는 향보다 건조력과 탈취 지속 시간을 먼저 봐야 합니다.",
+      "운동화, 구두, 아이 신발은 기준이 조금 다릅니다.",
       "아래 기준대로 고르면 실패 확률을 줄일 수 있습니다.",
-      "비교 기준: 건조 방식, 향 지속 시간, 사용 횟수, 가격, 후기 수.",
+      "비교 기준: 건조 방식, 탈취 지속 시간, 사용 횟수, 가격, 후기 수",
       "체크리스트: 신발 소재, 사용 장소, 건조 시간, 교체 주기, 가족 사용 여부.",
-      "이 글은 장마철에 신발 냄새가 반복되는 사람을 위해 작성합니다. 제품을 고를 때 향만 보면 실패하기 쉽습니다. 비가 많이 오는 날에는 냄새보다 습기 관리가 먼저이고, 출근화와 운동화와 아이 신발은 필요한 기준이 다릅니다.",
+      "이 글은 장마철에 신발 냄새가 반복되는 사람을 위해 작성합니다. 상품을 고를 때 향만 보면 실패하기 쉽습니다. 비가 많이 오는 날에는 냄새보다 습기 관리가 먼저이고, 출근화인지 운동화인지 아이 신발인지에 따라 필요한 기준이 달라집니다.",
       "가격을 볼 때는 1회 사용 비용, 교체 주기, 후기 수, 사용 가능한 신발 종류를 같이 봐야 합니다. 같은 가격이라도 여러 켤레에 쓸 수 있는 제품과 한 켤레 전용 제품은 실제 비용이 다릅니다.",
-      "구매 전에는 후기에서 향이 세다는 말보다 건조가 빨랐는지, 재사용이 가능한지, 신발 안쪽까지 들어가는지, 장마철에도 효과가 유지됐는지를 확인하세요.",
+      "구매 전에 후기에서 향이 좋다는 말보다 건조가 빠른지, 재사용이 가능한지, 신발 안쪽까지 들어가는지, 장마철에 효과가 있었는지를 확인하세요.",
       "FAQ",
-      "Q. 향이 강한 제품이 더 좋은가요?",
+      "Q. 향이 강한 제품이면 좋은가요?",
       "A. 냄새를 덮는 제품보다 습기를 줄이는 제품을 먼저 봐야 합니다.",
       "다음 행동: 쿠팡과 네이버에서 후기 500개 이상 제품을 비교하세요."
     ].join("\n").repeat(3),

@@ -1,0 +1,59 @@
+name: Blog Performance Loop
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "KST date to analyze, YYYY-MM-DD. Empty means today."
+        required: false
+        default: ""
+  schedule:
+    # KST 21:30 - after the main Korean engagement window, build the improvement loop.
+    - cron: "30 12 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: blog-performance-loop
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Validate scripts
+        run: |
+          node --check scripts/blog_marketing_policy.mjs
+          node --check scripts/blog_performance_loop.mjs
+          node --test scripts/test_blog_performance_loop.mjs
+
+      - name: Build performance report
+        shell: bash
+        run: |
+          DATE="${{ inputs.date }}"
+          if [[ -z "$DATE" ]]; then
+            DATE="$(TZ=Asia/Seoul date +%F)"
+          fi
+          node scripts/blog_performance_loop.mjs "$DATE"
+
+      - name: Commit performance report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f outputs/blog/performance
+          git commit -m "Build blog performance report $(TZ=Asia/Seoul date +%F)" || true
+          git pull --rebase
+          git push

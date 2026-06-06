@@ -15,7 +15,7 @@
     },
     {
       "accountKey": "temanju",
-      "displayName": "테만주 블로그",
+      "displayName": "테만주 네이버 블로그",
       "channel": "naver_blog",
       "dailyMinimumPosts": 5,
       "outputRoot": "outputs/blog/temanju",
@@ -28,10 +28,10 @@
     },
     {
       "accountKey": "offnote_blog",
-      "displayName": "오프노트 블로그",
+      "displayName": "오프노트 네이버 블로그",
       "channel": "naver_blog",
       "dailyMinimumPosts": 5,
-      "outputRoot": "outputs/blog/offnote",
+      "outputRoot": "outputs/blog/offnote_blog",
       "defaultPublishTimesKst": ["09:40", "11:40", "14:40", "17:40", "20:40"],
       "contentMix": ["search_answer", "how_to", "comparison_guide", "shopping_cpa", "experience_review"],
       "affiliatePlatforms": ["coupang", "naver_shopping_connect"],
