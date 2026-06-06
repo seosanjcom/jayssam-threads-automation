@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-06-06/GHA-20260606-afternoon-careernet-vocation-aptitude.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-06-06/GHA-20260606-night-ebsi-career-exploration.json

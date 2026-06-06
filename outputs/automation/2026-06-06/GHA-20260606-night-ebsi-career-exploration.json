@@ -36,16 +36,16 @@
   ],
   "source_urls": [
     "https://www.ebsi.co.kr/ebs/xip/career/careerHome.ebs",
-    "https://news.google.com/rss/articles/CBMiT0FVX3lxTE8ySlNILTZ5Q0hNNU54aF9KMGlCS0VBS2ZEMDZ4MFlQbEd2YUw1SDBjTHpnS2JfNngzQ2ptbHdTNVZQbF9IZ3h2T1I2VUhLaWc?oc=5"
+    "https://www.korea.kr/news/policyNewsView.do?newsId=148965857&call_from=rsslink"
   ],
   "source_note": "EBSi 진로탐색검사",
   "latest_signal": {
-    "title": "AI 활용법, 대학생 멘토가 가르친다…교육부, 청소년 AI 교육 지원 - v.daum.net",
-    "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE8ySlNILTZ5Q0hNNU54aF9KMGlCS0VBS2ZEMDZ4MFlQbEd2YUw1SDBjTHpnS2JfNngzQ2ptbHdTNVZQbF9IZ3h2T1I2VUhLaWc?oc=5",
-    "pub_date": "Wed, 27 May 2026 03:02:08 GMT",
-    "source": "Google News 교육 이슈 RSS"
+    "title": "해외 학생들, BTS·K-드라마로 한국어 배운다",
+    "link": "https://www.korea.kr/news/policyNewsView.do?newsId=148965857&call_from=rsslink",
+    "pub_date": "Thu, 04 Jun 2026 06:49:00 GMT",
+    "source": "대한민국 정책브리핑 교육부 RSS"
   },
-  "created_at": "2026-06-06T00:14:39+09:00",
+  "created_at": "2026-06-06T22:53:35+09:00",
   "media_urls": [
     "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-06/night/ebsi-career-exploration/card_01.png",
     "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-06-06/night/ebsi-career-exploration/card_02.png",
