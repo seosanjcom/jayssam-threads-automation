@@ -43,9 +43,11 @@ jobs:
         run: |
           node --check scripts/blog_marketing_policy.mjs
           node --check scripts/generate_blog_daily_queue.mjs
+          node --check scripts/collect_affiliate_candidates.mjs
           node --check scripts/affiliate_candidate_queue.mjs
           node --check scripts/validate_blog_daily_queue.mjs
           node --test scripts/test_blog_marketing_policy.mjs
+          node --test scripts/test_collect_affiliate_candidates.mjs
           node --test scripts/test_affiliate_candidate_queue.mjs
 
       - name: Generate daily queues
@@ -59,6 +61,22 @@ jobs:
             node scripts/generate_blog_daily_queue.mjs temanju "$DATE"
             node scripts/generate_blog_daily_queue.mjs offnote_blog "$DATE"
           fi
+
+      - name: Collect affiliate product candidates
+        shell: bash
+        env:
+          NAVER_SEARCH_CLIENT_ID: ${{ secrets.NAVER_SEARCH_CLIENT_ID }}
+          NAVER_SEARCH_CLIENT_SECRET: ${{ secrets.NAVER_SEARCH_CLIENT_SECRET }}
+        run: |
+          DATE="$(TZ=Asia/Seoul date +%F)"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            ACCOUNTS=("${{ inputs.account }}")
+          else
+            ACCOUNTS=(taemomjo temanju offnote_blog)
+          fi
+          for ACCOUNT in "${ACCOUNTS[@]}"; do
+            node scripts/collect_affiliate_candidates.mjs "$ACCOUNT" "$DATE"
+          done
 
       - name: Apply approved affiliate candidates when present
         shell: bash
