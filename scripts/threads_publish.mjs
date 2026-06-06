@@ -12,7 +12,7 @@ function loadEnv() {
 
 async function graphPost(url, params) {
   const body = new URLSearchParams(params);
-  const res = await fetch(url, { method: "POST", body });
+  const res = await fetchWithTimeout(url, { method: "POST", body });
   const text = await res.text();
   if (!res.ok) throw new Error(`${res.status} ${text}`);
   return JSON.parse(text);
@@ -43,7 +43,7 @@ async function graphGet(url, params) {
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined && value !== "") requestUrl.searchParams.set(key, value);
   }
-  const res = await fetch(requestUrl);
+  const res = await fetchWithTimeout(requestUrl);
   const text = await res.text();
   if (!res.ok) throw new Error(`${res.status} ${text}`);
   return JSON.parse(text);
@@ -51,6 +51,16 @@ async function graphGet(url, params) {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 60000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function readJsonIfExists(filePath, fallback) {
