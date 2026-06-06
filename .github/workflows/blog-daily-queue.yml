@@ -9,6 +9,7 @@ on:
         default: "temanju"
         type: choice
         options:
+          - taemomjo
           - temanju
           - offnote_blog
   schedule:
@@ -52,6 +53,7 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             node scripts/generate_blog_daily_queue.mjs "${{ inputs.account }}" "$DATE"
           else
+            node scripts/generate_blog_daily_queue.mjs taemomjo "$DATE"
             node scripts/generate_blog_daily_queue.mjs temanju "$DATE"
             node scripts/generate_blog_daily_queue.mjs offnote_blog "$DATE"
           fi
