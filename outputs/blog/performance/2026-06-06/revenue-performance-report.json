@@ -1,0 +1,326 @@
+{
+  "date": "2026-06-06",
+  "accounts": [
+    {
+      "accountKey": "offnote_blog",
+      "date": "2026-06-06",
+      "postsPlanned": 6,
+      "readyPosts": 5,
+      "blockedCpaPosts": 1,
+      "views": 0,
+      "affiliateClicks": 0,
+      "conversions": 0,
+      "revenueKrw": 0,
+      "comments": 0,
+      "topPosts": [
+        {
+          "id": "offnote_blog-20260606-01-search_answer",
+          "title": "초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요",
+          "status": "ready_to_review",
+          "contentType": "search_answer",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "offnote_blog-20260606-02-how_to",
+          "title": "퇴근 후 블로그 글은 30분 안에 쓸 수 있는 구조가 있어야 합니다",
+          "status": "ready_to_review",
+          "contentType": "how_to",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "offnote_blog-20260606-03-comparison_guide",
+          "title": "블로그 글 하나로 저장을 만들려면 비교표가 먼저입니다",
+          "status": "ready_to_review",
+          "contentType": "comparison_guide",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        }
+      ],
+      "weakPosts": [
+        {
+          "id": "offnote_blog-20260606-01-search_answer",
+          "title": "초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요",
+          "status": "ready_to_review",
+          "contentType": "search_answer",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "offnote_blog-20260606-02-how_to",
+          "title": "퇴근 후 블로그 글은 30분 안에 쓸 수 있는 구조가 있어야 합니다",
+          "status": "ready_to_review",
+          "contentType": "how_to",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "offnote_blog-20260606-03-comparison_guide",
+          "title": "블로그 글 하나로 저장을 만들려면 비교표가 먼저입니다",
+          "status": "ready_to_review",
+          "contentType": "comparison_guide",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        }
+      ],
+      "nextDayActions": [
+        "제휴 링크 미검수 글 존재: 쿠팡/네이버 쇼핑 커넥트 승인 링크 없으면 발행하지 말 것",
+        "재작성: \"초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화",
+        "재작성: \"퇴근 후 블로그 글은 30분 안에 쓸 수 있는 구조가 있어야 합니다\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화",
+        "재작성: \"블로그 글 하나로 저장을 만들려면 비교표가 먼저입니다\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화",
+        "제휴 링크 검수 필요: \"네이버 쇼핑커넥트 글은 링크보다 구매 상황이 먼저입니다\"은 승인 링크 없으면 발행 금지, 대체 글로 슬롯 유지",
+        "재작성: \"체험형 블로그 글은 후기보다 신청 전 준비물이 중요합니다\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화"
+      ]
+    },
+    {
+      "accountKey": "taemomjo",
+      "date": "2026-06-06",
+      "postsPlanned": 7,
+      "readyPosts": 5,
+      "blockedCpaPosts": 2,
+      "views": 0,
+      "affiliateClicks": 0,
+      "conversions": 0,
+      "revenueKrw": 0,
+      "comments": 0,
+      "topPosts": [
+        {
+          "id": "taemomjo-20260606-01-search_answer",
+          "title": "초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요",
+          "status": "ready_to_review",
+          "contentType": "search_answer",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "taemomjo-20260606-02-shopping_cpa",
+          "title": "네이버 쇼핑커넥트 글은 링크보다 구매 상황이 먼저입니다",
+          "status": "blocked_cpa_link_required",
+          "contentType": "shopping_cpa",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "taemomjo-20260606-03-shopping_cpa",
+          "title": "오늘 쿠팡 글은 상품보다 비교 기준을 먼저 잡아야 합니다",
+          "status": "blocked_cpa_link_required",
+          "contentType": "shopping_cpa",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        }
+      ],
+      "weakPosts": [
+        {
+          "id": "taemomjo-20260606-01-search_answer",
+          "title": "초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요",
+          "status": "ready_to_review",
+          "contentType": "search_answer",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "taemomjo-20260606-04-comparison_guide",
+          "title": "블로그 글 하나로 저장을 만들려면 비교표가 먼저입니다",
+          "status": "ready_to_review",
+          "contentType": "comparison_guide",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "taemomjo-20260606-05-experience_review",
+          "title": "체험형 블로그 글은 후기보다 신청 전 준비물이 중요합니다",
+          "status": "ready_to_review",
+          "contentType": "experience_review",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        }
+      ],
+      "nextDayActions": [
+        "제휴 링크 미검수 글 존재: 쿠팡/네이버 쇼핑 커넥트 승인 링크 없으면 발행하지 말 것",
+        "재작성: \"초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화",
+        "제휴 링크 검수 필요: \"네이버 쇼핑커넥트 글은 링크보다 구매 상황이 먼저입니다\"은 승인 링크 없으면 발행 금지, 대체 글로 슬롯 유지",
+        "제휴 링크 검수 필요: \"오늘 쿠팡 글은 상품보다 비교 기준을 먼저 잡아야 합니다\"은 승인 링크 없으면 발행 금지, 대체 글로 슬롯 유지",
+        "재작성: \"블로그 글 하나로 저장을 만들려면 비교표가 먼저입니다\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화",
+        "재작성: \"체험형 블로그 글은 후기보다 신청 전 준비물이 중요합니다\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화"
+      ]
+    },
+    {
+      "accountKey": "temanju",
+      "date": "2026-06-06",
+      "postsPlanned": 7,
+      "readyPosts": 5,
+      "blockedCpaPosts": 2,
+      "views": 0,
+      "affiliateClicks": 0,
+      "conversions": 0,
+      "revenueKrw": 0,
+      "comments": 0,
+      "topPosts": [
+        {
+          "id": "temanju-20260606-01-search_answer",
+          "title": "초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요",
+          "status": "ready_to_review",
+          "contentType": "search_answer",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "temanju-20260606-02-shopping_cpa",
+          "title": "네이버 쇼핑커넥트 글은 링크보다 구매 상황이 먼저입니다",
+          "status": "blocked_cpa_link_required",
+          "contentType": "shopping_cpa",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "temanju-20260606-03-shopping_cpa",
+          "title": "오늘 쿠팡 글은 상품보다 비교 기준을 먼저 잡아야 합니다",
+          "status": "blocked_cpa_link_required",
+          "contentType": "shopping_cpa",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        }
+      ],
+      "weakPosts": [
+        {
+          "id": "temanju-20260606-01-search_answer",
+          "title": "초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요",
+          "status": "ready_to_review",
+          "contentType": "search_answer",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "temanju-20260606-04-comparison_guide",
+          "title": "블로그 글 하나로 저장을 만들려면 비교표가 먼저입니다",
+          "status": "ready_to_review",
+          "contentType": "comparison_guide",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        },
+        {
+          "id": "temanju-20260606-05-experience_review",
+          "title": "체험형 블로그 글은 후기보다 신청 전 준비물이 중요합니다",
+          "status": "ready_to_review",
+          "contentType": "experience_review",
+          "metrics": {
+            "views": 0,
+            "clicks": 0,
+            "conversions": 0,
+            "revenueKrw": 0,
+            "comments": 0
+          }
+        }
+      ],
+      "nextDayActions": [
+        "제휴 링크 미검수 글 존재: 쿠팡/네이버 쇼핑 커넥트 승인 링크 없으면 발행하지 말 것",
+        "재작성: \"초보 블로그 글감은 넓은 키워드보다 이 질문부터 잡으세요\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화",
+        "제휴 링크 검수 필요: \"네이버 쇼핑커넥트 글은 링크보다 구매 상황이 먼저입니다\"은 승인 링크 없으면 발행 금지, 대체 글로 슬롯 유지",
+        "제휴 링크 검수 필요: \"오늘 쿠팡 글은 상품보다 비교 기준을 먼저 잡아야 합니다\"은 승인 링크 없으면 발행 금지, 대체 글로 슬롯 유지",
+        "재작성: \"블로그 글 하나로 저장을 만들려면 비교표가 먼저입니다\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화",
+        "재작성: \"체험형 블로그 글은 후기보다 신청 전 준비물이 중요합니다\"은 제목을 실제 검색 질문형으로 바꾸고 첫 3줄 결론 강화"
+      ]
+    }
+  ],
+  "totals": {
+    "readyPosts": 15,
+    "blockedCpaPosts": 5,
+    "affiliateClicks": 0,
+    "revenueKrw": 0
+  },
+  "globalActions": [
+    "offnote_blog: 제휴 링크 미검수 글 1개는 승인 링크 확보 전 발행 금지",
+    "offnote_blog: 클릭 10회 미만, 제목보다 본문 상단 비교표와 가격/후기 기준 강화",
+    "taemomjo: 제휴 링크 미검수 글 2개는 승인 링크 확보 전 발행 금지",
+    "taemomjo: 클릭 10회 미만, 제목보다 본문 상단 비교표와 가격/후기 기준 강화",
+    "temanju: 제휴 링크 미검수 글 2개는 승인 링크 확보 전 발행 금지",
+    "temanju: 클릭 10회 미만, 제목보다 본문 상단 비교표와 가격/후기 기준 강화",
+    "하루 5개 발행 기준은 충족, 성과 상위 글을 다음날 3개 후속 주제로 확장"
+  ]
+}
