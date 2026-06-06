@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-06-06/OFFNOTE-20260606-night-blog-not-diary.json
+outputs/afterwork-profit/automation/2026-06-06/OFFNOTE-20260606-evening-blog-not-diary.json

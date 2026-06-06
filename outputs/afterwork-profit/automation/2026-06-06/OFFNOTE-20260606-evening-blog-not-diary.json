@@ -1,0 +1,52 @@
+{
+  "id": "OFFNOTE-20260606-evening-blog-not-diary",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "topic": "일기형 블로그에서 정보형 블로그로 바꾸는 법",
+  "topic_tag": "블로그운영",
+  "status": "approved",
+  "created_at": "2026-06-06T10:27:17.904Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "18:00 KST",
+  "experiment_hypothesis": "초보 블로그는 일기 말투를 버리기보다 독자가 가져갈 정보를 한 줄 더 얹는 방식으로 바꾸면 부담이 적다.",
+  "threads_text": "블로그가 전부 일기처럼 보인다고 해서 말투를 싹 바꿀 필요는 없습니다.\n\n다만 마지막에 읽는 사람이 가져갈 정보를 하나씩만 붙이면 돼요. 오늘 좋았다에서 끝내지 말고, 누가 가면 좋은지, 가격은 어땠는지, 다음엔 뭘 고를지까지 적는 겁니다.\n\n그 한 줄 차이가 일기와 정보글을 나눕니다. 어렵게 말고 친구한테 알려주듯 쓰면 됩니다.",
+  "thread_comments": [
+    "일기형 문장을 정보형으로 바꾸면 이렇게 됩니다.\n\n오늘 카페 좋았다\n-> 조용해서 노트북 작업하기 좋았고 콘센트는 창가 쪽에만 있었어요.\n\n머리 마음에 들었다\n-> 숱 많은 분들은 레이어를 조금 더 내도 괜찮을 것 같아요.",
+    "글마다 이 3개만 넣어도 달라집니다.\n\n가격이나 메뉴\n누구에게 맞는지\n다음에 다시 간다면 뭘 고를지\n\n이건 어려운 분석이 아니라 친구한테 알려주는 정보에 가깝습니다.",
+    "블로그는 전문가처럼 쓰려고 하면 오래 못 갑니다.\n\n내가 먼저 가보고 친구한테 알려준다는 느낌이면 충분합니다. 대신 친구가 진짜 궁금해할 것까지 적어주는 게 포인트예요."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "블로그 운영",
+      "title": "일기를 버릴 필요는 없습니다",
+      "body": "대신 읽는 사람이 가져갈 정보 한 줄을 더 붙이면 됩니다.",
+      "footer": "@offnote.kr"
+    },
+    {
+      "kicker": "차이",
+      "title": "좋았다에서 끝내지 마세요",
+      "body": "가격, 대상, 다음 선택까지 적으면 일기가 정보글로 바뀝니다.",
+      "footer": "정보 한 줄"
+    },
+    {
+      "kicker": "말투",
+      "title": "친구한테 알려주듯이",
+      "body": "전문가 말투보다 먼저 가본 사람이 알려주는 느낌이 오래 갑니다.",
+      "footer": "쉬운 블로그"
+    },
+    {
+      "kicker": "루틴",
+      "title": "글마다 3개만 넣기",
+      "body": "가격, 맞는 사람, 다음 선택. 이 정도면 초보 글도 훨씬 쓸모 있어집니다.",
+      "footer": "찐 정보"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews optional; use it only for high-density posts.",
+    "Auto-publish unless held.",
+    "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
+  ]
+}
