@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "블로그를 일기장으로만 쓰는 사람에게",
   "topic_tag": "블로그체험단",
-  "status": "pending_approval",
+  "status": "published",
   "created_at": "2026-06-07T10:38:51.219Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -50,5 +50,17 @@
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
   ],
   "approval_requested_at": "2026-06-07T10:38:52.602Z",
-  "telegram_approval_token": "f1adf4487e0291f1"
+  "telegram_approval_token": "f1adf4487e0291f1",
+  "approved_at": "2026-06-07T11:09:40.858Z",
+  "approval_source": "auto_publish_due:evening",
+  "published_reply_ids": [
+    "18113203765675453",
+    "18007634045870593",
+    "18404948401151617"
+  ],
+  "published_at": "2026-06-07T11:10:57.029Z",
+  "auto_publish": {
+    "slot": "evening",
+    "approved_at": "2026-06-07T11:09:40.858Z"
+  }
 }
