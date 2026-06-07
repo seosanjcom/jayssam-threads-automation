@@ -1,0 +1,52 @@
+{
+  "id": "OFFNOTE-20260607-night-experience-review-savings",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "topic": "블로그를 일기장으로만 쓰는 사람에게",
+  "topic_tag": "블로그체험단",
+  "status": "approved",
+  "created_at": "2026-06-07T13:04:30.301Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "21:00 KST",
+  "experiment_hypothesis": "체험단은 거창한 부업보다 먼저 체감되는 블로그 수익화다. 생활비 절약 사례로 접근하면 초보도 바로 이해한다.",
+  "threads_text": "블로그 아직도 일기장처럼만 쓰고 있으면 조금 아까워요.\n\n미용실, 네일샵, 카페, 음식점 전부 체험단으로 갈 수 있습니다. 처음부터 돈 벌려고 하면 막막한데, 한 달에 커트 1번, 네일 1번, 외식 2번만 줄어도 체감이 꽤 커요.\n\n블로그 수익화는 꼭 광고비 입금부터가 아니라 생활비가 덜 나가는 순간부터 시작됩니다. 진짜 처음은 이렇게 가볍게 잡는 게 오래 갑니다.",
+  "thread_comments": [
+    "처음엔 큰 협찬보다 동네 체험단부터 보세요.\n\n미용실\n네일샵\n카페\n음식점\n피부관리\n운동 클래스\n\n이런 건 글 쓰는 난이도도 낮고, 내 일상 사진으로 자연스럽게 풀기 좋습니다.",
+    "초보 블로그가 체험단 신청할 때 필요한 건 대단한 방문자보다 글의 성실함이에요.\n\n사진 8장 이상\n방문 전 기대\n이용 과정\n좋았던 점\n아쉬운 점 1개\n재방문할 사람 유형\n\n이렇게만 써도 광고글 느낌이 훨씬 줄어듭니다.",
+    "체험단을 돈으로 바꿔 계산해보면 감이 옵니다.\n\n네일 5만원\n커트 4만원\n외식 6만원\n카페 2만원\n\n이걸 한 달에 몇 번만 줄여도 블로그가 생활비 방어를 해주는 셈입니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "블로그 시작",
+      "title": "일기만 쓰기엔 아깝습니다",
+      "body": "미용실, 네일샵, 카페, 음식점 체험단만 잘 써도 생활비가 먼저 줄어듭니다.",
+      "footer": "@offnote.kr"
+    },
+    {
+      "kicker": "처음 목표",
+      "title": "수익보다 절약부터",
+      "body": "광고비 입금보다 쉬운 첫 체감은 내가 쓰던 돈이 덜 나가는 순간입니다.",
+      "footer": "블로그 체험단"
+    },
+    {
+      "kicker": "글 구성",
+      "title": "사진, 과정, 좋았던 점, 아쉬운 점",
+      "body": "후기글은 솔직한 기준이 있어야 저장되고 믿음이 생깁니다.",
+      "footer": "광고글 티 줄이기"
+    },
+    {
+      "kicker": "계산법",
+      "title": "한 달 절약액을 적어보세요",
+      "body": "네일, 커트, 외식, 카페 비용을 합치면 블로그의 첫 성과가 숫자로 보입니다.",
+      "footer": "생활비 방어"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews optional; use it only for high-density posts.",
+    "Auto-publish unless held.",
+    "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
+  ]
+}
