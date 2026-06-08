@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "체험단 글이 광고처럼 보이지 않게 쓰는 법",
   "topic_tag": "후기글쓰기",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-06-08T16:00:54.538Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -48,5 +48,17 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-06-08T16:00:57.269Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "18192035506374815",
+    "18100149817889643",
+    "18101504423117264"
+  ],
+  "published_at": "2026-06-08T16:02:17.135Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-06-08T16:00:57.269Z"
+  }
 }
