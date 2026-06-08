@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-06-08/OFFNOTE-20260608-night-experience-review-application.json
+outputs/afterwork-profit/automation/2026-06-09/OFFNOTE-20260609-night-review-post-template.json

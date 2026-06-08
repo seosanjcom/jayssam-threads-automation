@@ -1,0 +1,52 @@
+{
+  "id": "OFFNOTE-20260609-night-review-post-template",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "topic": "체험단 글이 광고처럼 보이지 않게 쓰는 법",
+  "topic_tag": "후기글쓰기",
+  "status": "approved",
+  "created_at": "2026-06-08T16:00:54.538Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "21:00 KST",
+  "experiment_hypothesis": "체험단 글도 독자 입장에서 궁금한 순서로 쓰면 광고티가 줄고 검색 유입에도 유리하다.",
+  "threads_text": "체험단 글이 광고처럼 보이는 이유는 대부분 순서 때문입니다.\n\n처음부터 업체 칭찬, 인테리어 칭찬, 메뉴판 사진만 쭉 나오면 읽는 사람은 바로 알아차려요. 사람들은 거기가 예쁜지보다 내가 가도 괜찮을지 알고 싶어합니다.\n\n그래서 첫 문단은 내 상황부터 쓰는 게 좋습니다. 내가 왜 갔는지가 나오면 글이 훨씬 사람 같아져요.",
+  "thread_comments": [
+    "후기글 순서는 이렇게 가면 자연스럽습니다.\n\n왜 찾아봤는지\n예약이나 대기 어땠는지\n가격대가 어떤지\n직접 받은 과정\n좋았던 점\n아쉬웠던 점\n누구에게 맞는지\n\n이 순서면 체험단이어도 정보글처럼 읽힙니다.",
+    "예를 들면 이렇게 시작하면 좋아요.\n\n손톱이 너무 잘 깨져서 오래가는 네일샵을 찾고 있었어요.\n회사 근처에서 점심시간에 다녀올 수 있는 곳 위주로 봤고, 예약 가능한 시간이 맞아서 방문했습니다.\n\n이렇게 내 이유가 먼저 나오면 글이 덜 딱딱합니다.",
+    "사진도 예쁜 컷만 넣지 말고 정보 컷을 섞으세요.\n\n입구\n가격표\n좌석\n시술 전후\n메뉴 실제 크기\n주차나 화장실\n\n이런 사진이 저장되는 블로그 글을 만듭니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "후기글",
+      "title": "광고처럼 보이는 건 순서 때문입니다",
+      "body": "업체 칭찬보다 내가 왜 갔는지부터 쓰면 훨씬 자연스럽습니다.",
+      "footer": "@offnote.kr"
+    },
+    {
+      "kicker": "첫 문단",
+      "title": "내 상황을 먼저 꺼내세요",
+      "body": "손톱이 깨졌다, 머리가 부스스했다, 조용한 카페가 필요했다처럼 이유가 있어야 읽힙니다.",
+      "footer": "사람 냄새"
+    },
+    {
+      "kicker": "사진",
+      "title": "예쁜 컷보다 정보 컷",
+      "body": "가격표, 전후, 실제 크기, 주차처럼 독자가 궁금한 장면을 넣으세요.",
+      "footer": "저장되는 글"
+    },
+    {
+      "kicker": "마무리",
+      "title": "누구에게 맞는지까지",
+      "body": "전부 추천보다 이런 사람에게 맞는다고 정리하면 신뢰가 생깁니다.",
+      "footer": "찐 정보"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews optional; use it only for high-density posts.",
+    "Auto-publish unless held.",
+    "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
+  ]
+}
