@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "블로그를 일기장으로만 쓰는 사람에게",
   "topic_tag": "블로그체험단",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-06-09T15:13:24.142Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -48,5 +48,17 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-06-09T15:13:26.732Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "18096266018185244",
+    "18104662019050978",
+    "18106666772051710"
+  ],
+  "published_at": "2026-06-09T15:14:50.530Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-06-09T15:13:26.732Z"
+  }
 }
