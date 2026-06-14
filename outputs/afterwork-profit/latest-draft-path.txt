@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-06-14/OFFNOTE-20260614-evening-local-review-blog.json
+outputs/afterwork-profit/automation/2026-06-14/OFFNOTE-20260614-night-local-review-blog.json
