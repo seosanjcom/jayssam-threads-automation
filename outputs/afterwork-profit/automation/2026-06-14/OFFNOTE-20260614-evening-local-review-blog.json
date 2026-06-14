@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "동네 후기 블로그가 초보에게 좋은 이유",
   "topic_tag": "동네블로그",
-  "status": "pending_approval",
+  "status": "published",
   "created_at": "2026-06-14T11:10:46.834Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -50,5 +50,17 @@
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
   ],
   "approval_requested_at": "2026-06-14T11:10:48.305Z",
-  "telegram_approval_token": "9c4692f280e32663"
+  "telegram_approval_token": "9c4692f280e32663",
+  "approved_at": "2026-06-14T11:30:51.762Z",
+  "approval_source": "auto_publish_due:evening",
+  "published_reply_ids": [
+    "18412816738178708",
+    "17904504798441902",
+    "18212299537337039"
+  ],
+  "published_at": "2026-06-14T11:32:14.071Z",
+  "auto_publish": {
+    "slot": "evening",
+    "approved_at": "2026-06-14T11:30:51.762Z"
+  }
 }
