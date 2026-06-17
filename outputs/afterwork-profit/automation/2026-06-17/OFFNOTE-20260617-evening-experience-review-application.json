@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "체험단 신청 전에 블로그가 준비해야 할 것",
   "topic_tag": "체험단신청",
-  "status": "approved",
+  "status": "pending_approval",
   "created_at": "2026-06-17T12:32:52.695Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -48,5 +48,7 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approval_requested_at": "2026-06-17T12:32:54.371Z",
+  "telegram_approval_token": "19483770c3b6efe8"
 }
