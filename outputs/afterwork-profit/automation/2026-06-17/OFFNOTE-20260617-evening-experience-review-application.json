@@ -1,0 +1,52 @@
+{
+  "id": "OFFNOTE-20260617-evening-experience-review-application",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "topic": "체험단 신청 전에 블로그가 준비해야 할 것",
+  "topic_tag": "체험단신청",
+  "status": "approved",
+  "created_at": "2026-06-17T12:32:52.695Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "18:00 KST",
+  "experiment_hypothesis": "체험단 신청은 방문자 수보다 블로그의 기본 신뢰 신호가 먼저다. 초보가 바로 고칠 수 있는 항목으로 알려준다.",
+  "threads_text": "체험단 신청할 때 방문자 수만 보는 줄 아는 분들이 많은데, 초보는 블로그 상태부터 봐야 합니다.\n\n최근 글이 3개월 전이고, 사진은 2장뿐이고, 제목이 전부 감정일기면 업체 입장에선 맡기기 어렵습니다.\n\n어렵게 꾸밀 필요는 없고, 내가 다녀온 곳을 사람 대신 미리 가본 것처럼 써두면 됩니다. 이게 쌓이면 신청할 때 훨씬 덜 민망해요.",
+  "thread_comments": [
+    "신청 전 최소 세팅은 이 정도면 됩니다.\n\n최근 2주 안에 쓴 글 3개\n사진 8장 이상 들어간 후기 2개\n동네명이나 메뉴명이 들어간 제목\n내 돈으로 간 곳의 솔직 후기\n프로필에 관심 분야 한 줄\n\n이 정도만 있어도 훨씬 덜 비어 보입니다.",
+    "제목은 감정보다 검색어가 좋아요.\n\n오늘 너무 좋았다 X\n연남동 브런치 카페 혼밥 후기 O\n머리 망한 날 X\n강남 레이어드컷 미용실 상담 후기 O\n\n사람들이 찾는 말로 써야 블로그가 일을 합니다.",
+    "초보가 제일 피해야 할 건 전부 좋았다는 글입니다.\n\n좋았던 점 2개\n아쉬웠던 점 1개\n누가 가면 좋을지\n다음에 다시 간다면 뭘 고를지\n\n이렇게 쓰면 협찬이어도 사람이 쓴 글처럼 읽힙니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "체험단 신청",
+      "title": "방문자보다 먼저 보는 게 있습니다",
+      "body": "최근 글, 사진 수, 후기 구조가 비어 있으면 초보 블로그처럼 보입니다.",
+      "footer": "@offnote.kr"
+    },
+    {
+      "kicker": "기본 세팅",
+      "title": "후기글 3개만 먼저 정리하세요",
+      "body": "내 돈으로 간 곳을 체험단 글처럼 써두면 신청할 때 훨씬 자연스럽습니다.",
+      "footer": "초보 블로그"
+    },
+    {
+      "kicker": "제목",
+      "title": "감정보다 검색어",
+      "body": "좋았다보다 동네명, 메뉴명, 시술명, 상황이 들어간 제목이 오래 갑니다.",
+      "footer": "검색 유입"
+    },
+    {
+      "kicker": "신뢰",
+      "title": "아쉬운 점 1개가 글을 살립니다",
+      "body": "전부 좋았다는 글보다 기준이 있는 후기가 더 믿음이 갑니다.",
+      "footer": "찐 후기"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews optional; use it only for high-density posts.",
+    "Auto-publish unless held.",
+    "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
+  ]
+}
