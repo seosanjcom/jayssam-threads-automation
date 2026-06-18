@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-06-18/OFFNOTE-20260618-evening-review-post-template.json
+outputs/afterwork-profit/automation/2026-06-19/OFFNOTE-20260619-night-blog-savings-ledger.json
