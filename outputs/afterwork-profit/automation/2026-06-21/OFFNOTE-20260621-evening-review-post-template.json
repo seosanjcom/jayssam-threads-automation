@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "체험단 글이 광고처럼 보이지 않게 쓰는 법",
   "topic_tag": "후기글쓰기",
-  "status": "pending_approval",
+  "status": "published",
   "created_at": "2026-06-21T11:26:50.416Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -50,5 +50,17 @@
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
   ],
   "approval_requested_at": "2026-06-21T11:26:51.608Z",
-  "telegram_approval_token": "03f17feef8119ff1"
+  "telegram_approval_token": "03f17feef8119ff1",
+  "approved_at": "2026-06-21T11:46:25.475Z",
+  "approval_source": "auto_publish_due:evening",
+  "published_reply_ids": [
+    "18027043142820741",
+    "18319927480279509",
+    "18377060662162087"
+  ],
+  "published_at": "2026-06-21T11:47:47.038Z",
+  "auto_publish": {
+    "slot": "evening",
+    "approved_at": "2026-06-21T11:46:25.475Z"
+  }
 }
