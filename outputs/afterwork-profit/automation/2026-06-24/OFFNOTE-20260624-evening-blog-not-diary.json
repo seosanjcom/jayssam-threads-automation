@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "일기형 블로그에서 정보형 블로그로 바꾸는 법",
   "topic_tag": "블로그운영",
-  "status": "pending_approval",
+  "status": "published",
   "created_at": "2026-06-24T11:20:43.437Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -50,5 +50,17 @@
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
   ],
   "approval_requested_at": "2026-06-24T11:20:44.981Z",
-  "telegram_approval_token": "b066144f3421b980"
+  "telegram_approval_token": "b066144f3421b980",
+  "approved_at": "2026-06-24T11:45:25.555Z",
+  "approval_source": "auto_publish_due:evening",
+  "published_reply_ids": [
+    "18434021722134225",
+    "17909858394243177",
+    "18094359215608033"
+  ],
+  "published_at": "2026-06-24T11:46:42.730Z",
+  "auto_publish": {
+    "slot": "evening",
+    "approved_at": "2026-06-24T11:45:25.555Z"
+  }
 }
