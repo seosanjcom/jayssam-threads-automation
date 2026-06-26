@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "체험단 신청 전에 블로그가 준비해야 할 것",
   "topic_tag": "체험단신청",
-  "status": "pending_approval",
+  "status": "published",
   "created_at": "2026-06-26T11:19:25.730Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -50,5 +50,17 @@
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
   ],
   "approval_requested_at": "2026-06-26T11:19:26.823Z",
-  "telegram_approval_token": "e42bf362d2222249"
+  "telegram_approval_token": "e42bf362d2222249",
+  "approved_at": "2026-06-26T11:44:43.878Z",
+  "approval_source": "auto_publish_due:evening",
+  "published_reply_ids": [
+    "17930821983339628",
+    "18138185029487077",
+    "18143874916519211"
+  ],
+  "published_at": "2026-06-26T11:46:10.376Z",
+  "auto_publish": {
+    "slot": "evening",
+    "approved_at": "2026-06-26T11:44:43.878Z"
+  }
 }
