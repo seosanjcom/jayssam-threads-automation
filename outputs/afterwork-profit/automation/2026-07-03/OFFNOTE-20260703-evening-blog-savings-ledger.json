@@ -5,7 +5,7 @@
   "project": "afterwork-profit",
   "topic": "블로그 체험단을 생활비 장부처럼 보는 법",
   "topic_tag": "생활비절약",
-  "status": "pending_approval",
+  "status": "published",
   "created_at": "2026-07-03T11:05:07.537Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "18:00 KST",
@@ -50,5 +50,17 @@
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
   ],
   "approval_requested_at": "2026-07-03T11:05:09.162Z",
-  "telegram_approval_token": "d766e57cb2956cac"
+  "telegram_approval_token": "d766e57cb2956cac",
+  "approved_at": "2026-07-03T11:32:35.315Z",
+  "approval_source": "auto_publish_due:evening",
+  "published_reply_ids": [
+    "17953633098190712",
+    "18120852607704498",
+    "17930871453346956"
+  ],
+  "published_at": "2026-07-03T11:33:59.438Z",
+  "auto_publish": {
+    "slot": "evening",
+    "approved_at": "2026-07-03T11:32:35.315Z"
+  }
 }
