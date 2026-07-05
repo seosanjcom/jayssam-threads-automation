@@ -1,0 +1,52 @@
+{
+  "id": "OFFNOTE-20260731-evening-local-review-blog",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "topic": "동네 후기 블로그가 초보에게 좋은 이유",
+  "topic_tag": "동네블로그",
+  "status": "approved",
+  "created_at": "2026-07-05T08:30:28.723Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "18:00 KST",
+  "experiment_hypothesis": "초보 블로그는 전국 단위 경쟁보다 동네 후기부터 시작하는 편이 쓰기 쉽고 체험단 연결도 빠르다.",
+  "threads_text": "블로그 처음 키울 때 전국 맛집, 전국 핫플부터 잡으면 너무 빡세요.\n\n오히려 내가 사는 동네 카페, 미용실, 네일샵, 병원 후기부터 쓰는 게 좋습니다. 사진도 직접 찍기 쉽고, 글도 내 생활에서 나오니까 덜 어색해요.\n\n동네 후기가 쌓이면 체험단 신청할 때도 말이 됩니다. 내 생활권을 기록하는 게 제일 쉬운 시작입니다.",
+  "thread_comments": [
+    "초보에게 좋은 동네 글감은 이런 것들입니다.\n\n역 근처 혼밥\n주차 되는 카페\n퇴근 후 갈 네일샵\n머리 상담 잘해주는 미용실\n아이랑 가기 좋은 식당\n조용한 작업 카페\n\n이건 검색하는 사람이 꽤 구체적입니다.",
+    "동네 후기 제목은 이렇게 쓰면 좋아요.\n\n상수역 혼밥 가능한 파스타집 후기\n부천 주차 되는 대형 카페 다녀옴\n강남 레이어드컷 상담 꼼꼼했던 미용실\n\n지역 + 상황 + 업종이 같이 들어가야 찾는 사람이 들어옵니다.",
+    "동네 글을 10개 정도 쌓으면 블로그가 훨씬 덜 비어 보입니다.\n\n체험단 신청할 때도 '이 사람은 우리 지역 글을 계속 쓰는구나'라는 신호가 됩니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "동네 블로그",
+      "title": "전국 핫플보다 동네 후기가 쉽습니다",
+      "body": "초보는 직접 가기 쉬운 곳부터 써야 사진과 문장이 자연스럽습니다.",
+      "footer": "@offnote.kr"
+    },
+    {
+      "kicker": "글감",
+      "title": "카페, 미용실, 네일샵, 음식점",
+      "body": "생활 동선 안에 있는 곳이 글감이 되면 블로그가 오래 갑니다.",
+      "footer": "초보 루틴"
+    },
+    {
+      "kicker": "제목",
+      "title": "지역 + 상황 + 업종",
+      "body": "상수역 혼밥, 부천 주차 카페처럼 찾는 말이 들어가야 유입됩니다.",
+      "footer": "검색형 제목"
+    },
+    {
+      "kicker": "체험단",
+      "title": "동네 글 10개가 포트폴리오가 됩니다",
+      "body": "지역 후기 기록이 쌓이면 신청할 때도 설득력이 생깁니다.",
+      "footer": "신뢰 신호"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews optional; use it only for high-density posts.",
+    "Auto-publish unless held.",
+    "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
+  ]
+}
