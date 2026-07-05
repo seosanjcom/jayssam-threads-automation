@@ -1,0 +1,49 @@
+{
+  "id": "GHA-20260712-night-math-mistake-note",
+  "date": "2026-07-12",
+  "slot": "night",
+  "account": "",
+  "status": "approved",
+  "pillar": "수학오답",
+  "keyword": "수학오답",
+  "title": "수학 오답노트는 틀린 문제를 붙이는 노트가 아닙니다 - 학교 자료를 읽는 기준 (자료 비교 7/12 밤)",
+  "topic": "수학 오답노트는 틀린 문제를 붙이는 노트가 아닙니다 - 학교 자료를 읽는 기준 (자료 비교 7/12 밤)",
+  "content_type": "must_know_practical_tip",
+  "expert_angle": {
+    "news_frame": "학습 코칭에서 오답은 점수가 아니라 사고 습관을 보여주는 자료입니다.",
+    "must_know": "오답노트는 틀린 이유를 분류해야 효과가 있습니다.",
+    "avoid": "예쁘게 정리하는 데 시간을 다 쓰면 실수 패턴이 남습니다.",
+    "check": "오답마다 원인을 한 단어로 적게 해보세요.",
+    "use_for": "수학 학습 상담, 오답 루틴 안내"
+  },
+  "threads_text": "오답노트를 열심히 쓰는데 성적이 그대로라면 방식이 문제일 수 있습니다.\n\n오늘 관점: 학교 자료를 읽는 기준 (자료 비교 7/12 밤)\n\n바로가기: ebsi.co.kr\n\n오답노트는 틀린 이유를 분류해야 효과가 있습니다.\n\n정확히는: 학습 자료\n\n이렇게 쓰세요: 오답 분류 루틴 만들기\n\n주의할 점: 문제 복사만 하지 않기\n\n#자녀교육 #초등맘 #진로교육 #미래교육",
+  "carousel_slides": [
+    "수학 오답\n문제보다 실수 유형을 봅니다.",
+    "유형\n개념 부족",
+    "유형\n조건 누락",
+    "유형\n계산 실수",
+    "유형\n전략 실패",
+    "핵심\n같은 실수를 줄이는 노트입니다."
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-07-12/night/math-mistake-note",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-07-12/night/math-mistake-note/card_01.png",
+    "outputs/cards/github-daily/2026-07-12/night/math-mistake-note/card_02.png",
+    "outputs/cards/github-daily/2026-07-12/night/math-mistake-note/card_03.png",
+    "outputs/cards/github-daily/2026-07-12/night/math-mistake-note/card_04.png",
+    "outputs/cards/github-daily/2026-07-12/night/math-mistake-note/card_05.png",
+    "outputs/cards/github-daily/2026-07-12/night/math-mistake-note/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.ebsi.co.kr/",
+    "https://news.google.com/rss/articles/CBMib0FVX3lxTFB6SkdFYVlnbjBZSUFYbGVkUEN6eElDZ1hTR0VJa25wTTN1cGt0QXZsLVg5T3RrakFaMll0cUhvdE4yS1VpTU8wQmlJVzNEVDBPUUFscXdhU0ttVnBlYk93S1YxYjBEaFpUQnh1TGVaTQ?oc=5"
+  ],
+  "source_note": "학습 코칭 노트",
+  "latest_signal": {
+    "title": "학생 문해력 키운다…교육부, 학교 독서교육 대대적 강화 - 경북일보",
+    "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFB6SkdFYVlnbjBZSUFYbGVkUEN6eElDZ1hTR0VJa25wTTN1cGt0QXZsLVg5T3RrakFaMll0cUhvdE4yS1VpTU8wQmlJVzNEVDBPUUFscXdhU0ttVnBlYk93S1YxYjBEaFpUQnh1TGVaTQ?oc=5",
+    "pub_date": "Thu, 02 Jul 2026 07:53:07 GMT",
+    "source": "Google News 교육 이슈 RSS"
+  },
+  "created_at": "2026-07-05T19:51:35+09:00"
+}

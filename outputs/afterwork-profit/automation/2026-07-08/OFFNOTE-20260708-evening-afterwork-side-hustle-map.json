@@ -1,0 +1,55 @@
+{
+  "id": "OFFNOTE-20260708-evening-afterwork-side-hustle-map",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "date": "2026-07-08",
+  "slot": "evening",
+  "topic": "퇴근 후 부업은 돈 되는 일보다 내가 계속 기록할 수 있는 일부터 골라야 합니다 - 처음 수익 경로 잡기 (신뢰 확보 7/8 저녁)",
+  "topic_tag": "퇴근후부업",
+  "status": "approved",
+  "created_at": "2026-07-05T10:45:24.027Z",
+  "source": "github-actions-offnote-generator",
+  "recommended_publish_time": "18:00 KST",
+  "experiment_hypothesis": "시간이 적은 직장인은 유행하는 부업보다 반복 가능한 루틴이 먼저입니다. 블로그, 제휴, 전자책, 템플릿, 지역 후기, 중고 거래 기록처럼 글로 남길 수 있는 부업이 블로그와 잘 이어집니다.",
+  "threads_text": "퇴근 후 부업은 돈 되는 일보다 내가 계속 기록할 수 있는 일부터 골라야 합니다 - 처음 수익 경로 잡기 (신뢰 확보 7/8 저녁)\n\n퇴근 후 부업은 돈 되는 일보다 내가 계속 기록할 수 있는 일부터 골라야 합니다\n\n시간이 적은 직장인은 유행하는 부업보다 반복 가능한 루틴이 먼저입니다.\n\n블로그, 제휴, 전자책, 템플릿, 지역 후기, 중고 거래 기록처럼 글로 남길 수 있는 부업이 블로그와 잘 이어집니다.\n\n평일 30분으로 가능한 부업 후보 5개를 적고, 글감이 20개 나오는지 먼저 확인해보세요.",
+  "thread_comments": [
+    "오늘 관점은 \"처음 수익 경로 잡기\"입니다. 같은 블로그 수익화라도 매번 보는 지점을 바꿔야 글이 반복되지 않습니다.",
+    "퇴근후부업 관점에서 먼저 볼 것은 결과보다 반복 가능한 구조입니다.\n\n어떤 글감이 돈이 되는지보다, 어떤 글감이 계속 쌓이는지부터 보면 블로그 운영이 훨씬 안정적입니다.",
+    "오늘 바로 할 일은 하나만 정해도 됩니다.\n\n글감 3개 적기\n제목 3개 바꿔보기\n수익이나 절약으로 이어질 지점 표시하기\n\n이렇게 작게 시작해야 오래 갑니다.",
+    "오프노트 글은 과장된 수익 인증보다 실제 운영 기록에 가까워야 합니다.\n\n작은 절약\n작은 문의\n작은 신청\n작은 개선\n\n이런 변화가 쌓이는 쪽으로 가겠습니다."
+  ],
+  "cardnews_slides": [
+    {
+      "kicker": "퇴근후부업",
+      "title": "퇴근 후 부업은 돈 되는 일보다 내가 계속 기록할 수 있는 일부터 골라야 합니다",
+      "body": "시간이 적은 직장인은 유행하는 부업보다 반복 가능한 루틴이 먼저입니다.",
+      "footer": "@offnote.kr"
+    },
+    {
+      "kicker": "핵심",
+      "title": "반복 가능한 구조를 먼저 봅니다",
+      "body": "블로그, 제휴, 전자책, 템플릿, 지역 후기, 중고 거래 기록처럼 글로 남길 수 있는 부업이 블로그와 잘 이어집니다.",
+      "footer": "블로그 수익화"
+    },
+    {
+      "kicker": "실행",
+      "title": "오늘 할 일은 작게 잡습니다",
+      "body": "평일 30분으로 가능한 부업 후보 5개를 적고, 글감이 20개 나오는지 먼저 확인해보세요.",
+      "footer": "운영 루틴"
+    },
+    {
+      "kicker": "주의",
+      "title": "수익 보장처럼 말하지 않습니다",
+      "body": "오프노트는 과장보다 기록, 인증보다 구조를 우선합니다.",
+      "footer": "안전한 톤"
+    }
+  ],
+  "safety_rules": [
+    "No income guarantee.",
+    "No account-mixing: publish only when Threads profile username is offnote.kr.",
+    "Cardnews optional; use it only for high-density posts.",
+    "Auto-publish unless held.",
+    "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
+  ]
+}

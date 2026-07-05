@@ -1,0 +1,49 @@
+{
+  "id": "GHA-20260715-afternoon-highschool-coding-subject-choice",
+  "date": "2026-07-15",
+  "slot": "afternoon",
+  "account": "",
+  "status": "approved",
+  "pillar": "고등코딩",
+  "keyword": "고등코딩",
+  "title": "고등 코딩은 대회보다 정보 과목 선택과 진로 연결을 먼저 봐야 합니다 - 학교 자료를 읽는 기준 (자료 해석 7/15 오후)",
+  "topic": "고등 코딩은 대회보다 정보 과목 선택과 진로 연결을 먼저 봐야 합니다 - 학교 자료를 읽는 기준 (자료 해석 7/15 오후)",
+  "content_type": "education_news_interpretation",
+  "expert_angle": {
+    "news_frame": "고등 코딩은 대회 실적보다 과목 선택, 탐구 주제, 진로 기록이 연결되는지가 중요합니다.",
+    "must_know": "코딩은 독립 스펙이 아니라 관심 분야의 문제를 설명하는 언어가 될 때 힘이 생깁니다.",
+    "avoid": "수상만 목표로 하면 학교 기록과 진로 방향이 분리될 수 있습니다.",
+    "check": "아이가 코딩으로 설명하고 싶은 문제 하나를 말할 수 있는지 보세요.",
+    "use_for": "고등 학부모 진로 상담, 정보 과목 선택 안내"
+  },
+  "threads_text": "고등학생 코딩을 이야기하면 대회나 포트폴리오부터 떠올리기 쉽습니다.\n하지만 먼저 볼 것은 학교 과목 선택과 진로 연결입니다.\n\n오늘 관점: 학교 자료를 읽는 기준 (자료 해석 7/15 오후)\n\n바로가기: moe.go.kr\n\n코딩은 독립 스펙이 아니라 관심 분야의 문제를 설명하는 언어가 될 때 힘이 생깁니다.\n\n정확히는: 고등 정보교과 교육과정\n\n이렇게 쓰세요: 고등학생 진로·과목 선택 상담\n\n주의할 점: 대회 실적만 목표로 삼지 않기\n\n#교육 #고등맘 #미래교육 #정보교육",
+  "carousel_slides": [
+    "고등 코딩\n대회보다 과목과 진로 연결입니다.",
+    "과목\n정보 과목 선택을 확인합니다.",
+    "탐구\n코딩으로 풀 문제를 정합니다.",
+    "기록\n수행평가와 동아리를 연결합니다.",
+    "주의\n스펙만 쌓으면 방향이 흐려집니다.",
+    "핵심\n코딩은 진로를 설명하는 도구입니다."
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-07-15/afternoon/highschool-coding-subject-choice",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-07-15/afternoon/highschool-coding-subject-choice/card_01.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/highschool-coding-subject-choice/card_02.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/highschool-coding-subject-choice/card_03.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/highschool-coding-subject-choice/card_04.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/highschool-coding-subject-choice/card_05.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/highschool-coding-subject-choice/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.moe.go.kr/",
+    "https://news.google.com/rss/articles/CBMib0FVX3lxTFB6SkdFYVlnbjBZSUFYbGVkUEN6eElDZ1hTR0VJa25wTTN1cGt0QXZsLVg5T3RrakFaMll0cUhvdE4yS1VpTU8wQmlJVzNEVDBPUUFscXdhU0ttVnBlYk93S1YxYjBEaFpUQnh1TGVaTQ?oc=5"
+  ],
+  "source_note": "고등 정보교과·진로 선택",
+  "latest_signal": {
+    "title": "학생 문해력 키운다…교육부, 학교 독서교육 대대적 강화 - 경북일보",
+    "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFB6SkdFYVlnbjBZSUFYbGVkUEN6eElDZ1hTR0VJa25wTTN1cGt0QXZsLVg5T3RrakFaMll0cUhvdE4yS1VpTU8wQmlJVzNEVDBPUUFscXdhU0ttVnBlYk93S1YxYjBEaFpUQnh1TGVaTQ?oc=5",
+    "pub_date": "Thu, 02 Jul 2026 07:53:07 GMT",
+    "source": "Google News 교육 이슈 RSS"
+  },
+  "created_at": "2026-07-05T19:51:41+09:00"
+}

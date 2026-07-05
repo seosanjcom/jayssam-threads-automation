@@ -1,0 +1,49 @@
+{
+  "id": "GHA-20260803-afternoon-school-record-reading",
+  "date": "2026-08-03",
+  "slot": "afternoon",
+  "account": "",
+  "status": "approved",
+  "pillar": "학교생활기록부",
+  "keyword": "학교생활기록부",
+  "title": "생활기록부는 문장보다 활동의 반복 패턴을 봐야 합니다 - AI 시대에 남는 공부 기준 (학습 전환 8/3 오후)",
+  "topic": "생활기록부는 문장보다 활동의 반복 패턴을 봐야 합니다 - AI 시대에 남는 공부 기준 (학습 전환 8/3 오후)",
+  "content_type": "education_news_interpretation",
+  "expert_angle": {
+    "news_frame": "학생부는 결과 나열보다 활동 과정과 성장 흐름을 보는 자료입니다.",
+    "must_know": "생활기록부의 힘은 멋진 표현보다 반복되는 관심과 역할에서 나옵니다.",
+    "avoid": "문장만 고치면 활동의 실제 방향이 비어 보일 수 있습니다.",
+    "check": "최근 활동 3개가 같은 관심으로 이어지는지 보세요.",
+    "use_for": "중고등 학부모 진로 상담"
+  },
+  "threads_text": "생활기록부를 볼 때 멋진 문장만 찾으면 방향을 놓칠 수 있습니다.\n반복되는 활동과 태도가 더 중요한 신호입니다.\n\n오늘 관점: AI 시대에 남는 공부 기준 (학습 전환 8/3 오후)\n\n바로가기: moe.go.kr\n\n생활기록부의 힘은 멋진 표현보다 반복되는 관심과 역할에서 나옵니다.\n\n정확히는: 생활기록부 안내 자료\n\n이렇게 쓰세요: 진로·활동 상담 기준\n\n주의할 점: 문장 꾸미기만 보지 않기\n\n#육아 #부모공감 #미래교육 #진로교육",
+  "carousel_slides": [
+    "생활기록부\n문장보다 반복 패턴을 봅니다.",
+    "질문\n무엇을 계속 궁금해하나요?",
+    "역할\n어떤 역할을 자주 맡나요?",
+    "결과물\n무엇을 만들어냈나요?",
+    "흐름\n활동이 서로 이어지나요?",
+    "핵심\n기록은 방향의 증거입니다."
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-08-03/afternoon/school-record-reading",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-08-03/afternoon/school-record-reading/card_01.png",
+    "outputs/cards/github-daily/2026-08-03/afternoon/school-record-reading/card_02.png",
+    "outputs/cards/github-daily/2026-08-03/afternoon/school-record-reading/card_03.png",
+    "outputs/cards/github-daily/2026-08-03/afternoon/school-record-reading/card_04.png",
+    "outputs/cards/github-daily/2026-08-03/afternoon/school-record-reading/card_05.png",
+    "outputs/cards/github-daily/2026-08-03/afternoon/school-record-reading/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.moe.go.kr/",
+    "https://news.google.com/rss/articles/CBMib0FVX3lxTFB6SkdFYVlnbjBZSUFYbGVkUEN6eElDZ1hTR0VJa25wTTN1cGt0QXZsLVg5T3RrakFaMll0cUhvdE4yS1VpTU8wQmlJVzNEVDBPUUFscXdhU0ttVnBlYk93S1YxYjBEaFpUQnh1TGVaTQ?oc=5"
+  ],
+  "source_note": "학교생활기록부 기재 흐름",
+  "latest_signal": {
+    "title": "학생 문해력 키운다…교육부, 학교 독서교육 대대적 강화 - 경북일보",
+    "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFB6SkdFYVlnbjBZSUFYbGVkUEN6eElDZ1hTR0VJa25wTTN1cGt0QXZsLVg5T3RrakFaMll0cUhvdE4yS1VpTU8wQmlJVzNEVDBPUUFscXdhU0ttVnBlYk93S1YxYjBEaFpUQnh1TGVaTQ?oc=5",
+    "pub_date": "Thu, 02 Jul 2026 07:53:07 GMT",
+    "source": "Google News 교육 이슈 RSS"
+  },
+  "created_at": "2026-07-05T19:52:31+09:00"
+}
