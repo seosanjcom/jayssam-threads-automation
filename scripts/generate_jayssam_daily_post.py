@@ -668,6 +668,238 @@ TOPICS = [
 ]
 
 
+TOPICS.extend([
+    {
+        "slug": "ai-study-feedback",
+        "keyword": "AI학습피드백",
+        "title": "AI 학습 피드백은 정답보다 질문을 어떻게 바꾸는지 봐야 합니다",
+        "source_name": "AI 교육 활용 가이드",
+        "source_urls": ["https://www.moe.go.kr/"],
+        "hook": "AI로 공부한다는 말이 많지만, 핵심은 답을 빨리 받는 것이 아닙니다.\n아이가 질문을 고치고 근거를 비교하는지가 더 중요합니다.",
+        "body": [
+            "AI 피드백은 채점기가 아니라 생각을 다시 보게 하는 거울에 가깝습니다.",
+            "좋은 사용은 답을 복사하는 것이 아니라 왜 틀렸는지, 어떤 조건을 놓쳤는지 다시 묻는 과정입니다.",
+            "부모가 볼 것은 사용 시간보다 질문-수정-재질문 기록입니다.",
+        ],
+        "slides": [
+            ("01", "AI 학습", "정답보다 질문이 어떻게 바뀌는지 봅니다."),
+            ("02", "좋은 신호", "질문을 다시 쓰고 근거를 비교합니다."),
+            ("03", "나쁜 신호", "답만 복사하고 설명을 건너뜁니다."),
+            ("04", "부모 체크", "아이에게 왜 그렇게 물었는지 물어보세요."),
+            ("05", "강사 체크", "AI 답을 검토하는 기준을 과제로 남기세요."),
+            ("06", "핵심", "AI 활용은 사고 과정 기록입니다."),
+        ],
+        "resource": {
+            "site": "교육부",
+            "url_label": "moe.go.kr",
+            "free": "AI 교육 정책 자료",
+            "menu": "교육부 정책 자료 확인",
+            "use": "AI 활용 수업과 가정 학습 기준 세우기",
+            "check": "질문을 수정한 흔적이 있는지 보기",
+            "caution": "AI 답을 정답지처럼 쓰지 않기",
+            "search": "AI 교육 피드백",
+        },
+        "expert": {
+            "news_frame": "AI 교육은 도구 도입보다 질문과 검토 기준을 어떻게 가르치는지가 핵심입니다.",
+            "must_know": "아이의 AI 활용을 볼 때는 결과보다 질문을 고친 흔적을 봐야 합니다.",
+            "avoid": "AI 답을 그대로 제출하게 두면 학습이 아니라 복사가 됩니다.",
+            "check": "답을 받은 뒤 아이가 어떤 조건을 추가했는지 확인하세요.",
+            "use_for": "부모 상담, AI 활용 학습 루틴 안내",
+        },
+    },
+    {
+        "slug": "reading-literacy-home",
+        "keyword": "문해력",
+        "title": "문해력은 책을 많이 읽는지만으로 해결되지 않습니다",
+        "source_name": "기초학력·문해력 교육 흐름",
+        "source_urls": ["https://www.moe.go.kr/"],
+        "hook": "문해력이 걱정될 때 책 권수만 세면 놓치는 것이 있습니다.\n아이가 글에서 조건과 근거를 찾는지가 더 중요합니다.",
+        "body": [
+            "문해력은 긴 글을 참는 힘만이 아니라 정보를 나누고 연결하는 힘입니다.",
+            "문제에서 조건, 예외, 근거를 표시하게 하면 읽기가 공부 전체와 연결됩니다.",
+            "가정에서는 줄거리 확인보다 왜 그렇게 생각했는지 묻는 대화가 도움이 됩니다.",
+        ],
+        "slides": [
+            ("01", "문해력", "책 권수보다 조건과 근거를 읽는 힘입니다."),
+            ("02", "체크 1", "조건을 표시하나요?"),
+            ("03", "체크 2", "근거 문장을 찾나요?"),
+            ("04", "체크 3", "예외를 놓치지 않나요?"),
+            ("05", "집에서", "왜 그렇게 생각했는지 물어보세요."),
+            ("06", "핵심", "읽기는 모든 과목의 기반입니다."),
+        ],
+        "resource": {
+            "site": "교육부",
+            "url_label": "moe.go.kr",
+            "free": "기초학력 정책 자료",
+            "menu": "정책 자료 검색",
+            "use": "학부모 문해력 상담 소재",
+            "check": "조건·근거·예외 표시 여부",
+            "caution": "독서량만으로 판단하지 않기",
+            "search": "문해력 기초학력",
+        },
+        "expert": {
+            "news_frame": "기초학력 논의에서 문해력은 모든 과목의 이해 기반으로 다뤄집니다.",
+            "must_know": "문해력은 읽은 양보다 조건과 근거를 처리하는 방식에서 드러납니다.",
+            "avoid": "책을 안 읽어서 그렇다는 말만 하면 실제 문제를 놓칩니다.",
+            "check": "아이에게 근거 문장을 직접 찾게 해보세요.",
+            "use_for": "초중등 학부모 상담, 학습 습관 안내",
+        },
+    },
+    {
+        "slug": "school-record-reading",
+        "keyword": "학교생활기록부",
+        "title": "생활기록부는 문장보다 활동의 반복 패턴을 봐야 합니다",
+        "source_name": "학교생활기록부 기재 흐름",
+        "source_urls": ["https://www.moe.go.kr/"],
+        "hook": "생활기록부를 볼 때 멋진 문장만 찾으면 방향을 놓칠 수 있습니다.\n반복되는 활동과 태도가 더 중요한 신호입니다.",
+        "body": [
+            "기록은 한 번의 성과보다 여러 활동에서 반복된 관심과 역할을 보여줄 때 힘이 생깁니다.",
+            "아이의 강점은 과목명보다 질문, 역할, 결과물, 협업 방식에서 드러납니다.",
+            "부모는 문장 첨삭보다 활동 선택의 흐름을 같이 봐야 합니다.",
+        ],
+        "slides": [
+            ("01", "생활기록부", "문장보다 반복 패턴을 봅니다."),
+            ("02", "질문", "무엇을 계속 궁금해하나요?"),
+            ("03", "역할", "어떤 역할을 자주 맡나요?"),
+            ("04", "결과물", "무엇을 만들어냈나요?"),
+            ("05", "흐름", "활동이 서로 이어지나요?"),
+            ("06", "핵심", "기록은 방향의 증거입니다."),
+        ],
+        "resource": {
+            "site": "교육부",
+            "url_label": "moe.go.kr",
+            "free": "생활기록부 안내 자료",
+            "menu": "학생부 기재요령 검색",
+            "use": "진로·활동 상담 기준",
+            "check": "반복되는 관심과 역할 확인",
+            "caution": "문장 꾸미기만 보지 않기",
+            "search": "학교생활기록부 기재요령",
+        },
+        "expert": {
+            "news_frame": "학생부는 결과 나열보다 활동 과정과 성장 흐름을 보는 자료입니다.",
+            "must_know": "생활기록부의 힘은 멋진 표현보다 반복되는 관심과 역할에서 나옵니다.",
+            "avoid": "문장만 고치면 활동의 실제 방향이 비어 보일 수 있습니다.",
+            "check": "최근 활동 3개가 같은 관심으로 이어지는지 보세요.",
+            "use_for": "중고등 학부모 진로 상담",
+        },
+    },
+    {
+        "slug": "middle-school-study-routine",
+        "keyword": "중학생공부습관",
+        "title": "중학생 공부습관은 시간표보다 복습 단위가 먼저입니다",
+        "source_name": "학습 습관 상담 노트",
+        "source_urls": ["https://www.ebsi.co.kr/"],
+        "hook": "공부 시간을 늘렸는데 성적이 안 오르면 시간표보다 복습 단위를 봐야 합니다.",
+        "body": [
+            "중학생은 오래 앉아 있는 것보다 오늘 배운 것을 어떤 크기로 다시 꺼내는지가 중요합니다.",
+            "복습 단위가 너무 크면 시작이 어렵고, 너무 작으면 연결이 안 됩니다.",
+            "한 단원보다 한 개념, 한 문제 유형, 한 실수 패턴으로 쪼개는 것이 현실적입니다.",
+        ],
+        "slides": [
+            ("01", "공부습관", "시간보다 복습 단위를 봅니다."),
+            ("02", "문제", "오래 앉아도 남는 게 없을 수 있습니다."),
+            ("03", "단위", "개념·유형·실수로 나누세요."),
+            ("04", "질문", "오늘 다시 꺼낼 한 가지는?"),
+            ("05", "부모", "시간보다 설명 가능 여부를 보세요."),
+            ("06", "핵심", "작은 복습이 지속됩니다."),
+        ],
+        "resource": {
+            "site": "EBSi",
+            "url_label": "ebsi.co.kr",
+            "free": "학습 자료와 진단 자료",
+            "menu": "학습 자료 검색",
+            "use": "중학생 학습 루틴 상담",
+            "check": "복습 단위가 작고 명확한지 확인",
+            "caution": "공부 시간만 늘리지 않기",
+            "search": "중학생 공부습관",
+        },
+        "expert": {
+            "news_frame": "학습 습관의 핵심은 시간 관리보다 다시 설명할 수 있는 단위 설계입니다.",
+            "must_know": "복습은 오래 하는 것보다 다시 꺼낼 수 있게 작게 나누는 것이 중요합니다.",
+            "avoid": "시간표만 촘촘하게 만들면 지속이 어렵습니다.",
+            "check": "오늘 배운 것 중 한 가지를 말로 설명하게 해보세요.",
+            "use_for": "중학생 학습 상담, 부모 안내",
+        },
+    },
+    {
+        "slug": "schoolinfo-data-check",
+        "keyword": "학교알리미",
+        "title": "학교를 볼 때 평판보다 먼저 확인할 공식 데이터가 있습니다",
+        "source_name": "학교알리미",
+        "source_urls": ["https://www.schoolinfo.go.kr/"],
+        "hook": "학교 선택 이야기를 들을 때 주변 평판만 보면 불안이 커집니다.\n학교알리미에서 먼저 볼 공식 항목이 있습니다.",
+        "body": [
+            "학교알리미는 학교 현황, 교육활동, 학생 수, 교원 현황 같은 기본 자료를 제공합니다.",
+            "평판은 참고 자료이고, 공식 데이터는 질문을 정리하는 출발점입니다.",
+            "부모는 수치 하나로 판단하기보다 우리 아이에게 중요한 조건을 먼저 정해야 합니다.",
+        ],
+        "slides": [
+            ("01", "학교알리미", "평판 전에 공식 데이터를 봅니다."),
+            ("02", "항목", "학생 수와 교원 현황"),
+            ("03", "항목", "교육활동과 시설"),
+            ("04", "질문", "우리 아이에게 중요한 조건은?"),
+            ("05", "주의", "수치 하나로 판단하지 않습니다."),
+            ("06", "핵심", "데이터는 질문의 출발점입니다."),
+        ],
+        "resource": {
+            "site": "학교알리미",
+            "url_label": "schoolinfo.go.kr",
+            "free": "학교 공시 정보",
+            "menu": "학교명 검색",
+            "use": "학교 비교 전 기본 자료 확인",
+            "check": "우리 아이에게 중요한 조건과 연결",
+            "caution": "순위처럼 해석하지 않기",
+            "search": "학교알리미",
+        },
+        "expert": {
+            "news_frame": "학교 정보는 평판보다 공식 데이터로 질문을 좁히는 과정이 필요합니다.",
+            "must_know": "학교알리미는 선택의 정답이 아니라 확인할 질문을 만드는 자료입니다.",
+            "avoid": "한 지표만 보고 학교를 단정하지 마세요.",
+            "check": "아이에게 중요한 조건 3개를 먼저 적고 데이터를 보세요.",
+            "use_for": "학교 선택 상담, 학부모 정보 안내",
+        },
+    },
+    {
+        "slug": "math-mistake-note",
+        "keyword": "수학오답",
+        "title": "수학 오답노트는 틀린 문제를 붙이는 노트가 아닙니다",
+        "source_name": "학습 코칭 노트",
+        "source_urls": ["https://www.ebsi.co.kr/"],
+        "hook": "오답노트를 열심히 쓰는데 성적이 그대로라면 방식이 문제일 수 있습니다.",
+        "body": [
+            "오답노트의 핵심은 문제를 다시 붙이는 것이 아니라 왜 틀렸는지 분류하는 것입니다.",
+            "개념 부족, 조건 누락, 계산 실수, 풀이 전략 실패를 나눠야 다음 행동이 보입니다.",
+            "부모는 노트 양보다 같은 실수가 줄었는지를 봐야 합니다.",
+        ],
+        "slides": [
+            ("01", "수학 오답", "문제보다 실수 유형을 봅니다."),
+            ("02", "유형", "개념 부족"),
+            ("03", "유형", "조건 누락"),
+            ("04", "유형", "계산 실수"),
+            ("05", "유형", "전략 실패"),
+            ("06", "핵심", "같은 실수를 줄이는 노트입니다."),
+        ],
+        "resource": {
+            "site": "EBSi",
+            "url_label": "ebsi.co.kr",
+            "free": "학습 자료",
+            "menu": "수학 자료 검색",
+            "use": "오답 분류 루틴 만들기",
+            "check": "같은 실수가 줄었는지 보기",
+            "caution": "문제 복사만 하지 않기",
+            "search": "수학 오답노트",
+        },
+        "expert": {
+            "news_frame": "학습 코칭에서 오답은 점수가 아니라 사고 습관을 보여주는 자료입니다.",
+            "must_know": "오답노트는 틀린 이유를 분류해야 효과가 있습니다.",
+            "avoid": "예쁘게 정리하는 데 시간을 다 쓰면 실수 패턴이 남습니다.",
+            "check": "오답마다 원인을 한 단어로 적게 해보세요.",
+            "use_for": "수학 학습 상담, 오답 루틴 안내",
+        },
+    },
+])
+
+
 def kst_today() -> str:
     return datetime.now(KST).date().isoformat()
 
@@ -722,15 +954,90 @@ def recent_published_slugs(date_text: str) -> set[str]:
     return recent
 
 
+def recent_scheduled_slugs(date_text: str, window_days: int = RECENT_DEDUPE_DAYS) -> set[str]:
+    try:
+        target_date = datetime.fromisoformat(date_text).date()
+    except ValueError:
+        target_date = datetime.now(KST).date()
+
+    topic_slugs = {topic["slug"] for topic in TOPICS}
+    recent: set[str] = set()
+    if not OUT_ROOT.exists():
+        return recent
+
+    for date_dir in OUT_ROOT.iterdir():
+        if not date_dir.is_dir():
+            continue
+        try:
+            scheduled_date = datetime.fromisoformat(date_dir.name).date()
+        except ValueError:
+            continue
+        if not (timedelta(days=0) < target_date - scheduled_date <= timedelta(days=window_days)):
+            continue
+        for draft_path in date_dir.glob("*.json"):
+            data = read_json(draft_path, {})
+            if not isinstance(data, dict):
+                continue
+            if str(data.get("status") or "").startswith("deleted_"):
+                continue
+            draft_id = str(data.get("id") or draft_path.stem)
+            slug = next((candidate for candidate in topic_slugs if candidate in draft_id), "")
+            if slug:
+                recent.add(slug)
+    return recent
+
+
 def pick_topic(date_text: str, slot: str) -> dict:
     seed_offsets = {"lunch": 0, "afternoon": 0, "evening": 1, "night": 1}
     seed = int(date_text.replace("-", "")) + seed_offsets.get(slot, 0)
-    recent_slugs = recent_published_slugs(date_text)
+    recent_slugs = recent_published_slugs(date_text) | recent_scheduled_slugs(date_text)
     for offset in range(len(TOPICS)):
         topic = TOPICS[(seed + offset) % len(TOPICS)]
         if topic["slug"] not in recent_slugs:
             return topic
     return TOPICS[seed % len(TOPICS)]
+
+
+def topic_variant_title(topic: dict, date_text: str, slot: str) -> str:
+    focuses = [
+        "부모가 먼저 볼 신호",
+        "강사가 수업에서 확인할 지점",
+        "아이와 대화로 연결하는 법",
+        "결과보다 과정 보는 법",
+        "가정에서 바로 해볼 질문",
+        "학교 자료를 읽는 기준",
+        "오해하기 쉬운 부분 정리",
+        "다음 선택으로 이어지는 기준",
+        "학습 습관으로 바꾸는 방법",
+        "진로보다 경험 데이터 보기",
+        "AI 시대에 남는 공부 기준",
+        "문해력과 사고력 연결하기",
+    ]
+    scenes = [
+        "상담 전 체크",
+        "이번 주 루틴",
+        "수업 후 복기",
+        "가정 대화",
+        "자료 해석",
+        "선택 기준",
+        "실수 줄이기",
+        "다음 행동",
+        "자료 비교",
+        "질문 만들기",
+        "기록 점검",
+        "부모 상담",
+        "아이 관찰",
+        "수업 설계",
+        "학습 전환",
+        "한 줄 정리",
+    ]
+    seed_text = f"{date_text}:{slot}:{topic.get('slug', '')}"
+    seed = sum((idx + 1) * ord(ch) for idx, ch in enumerate(seed_text))
+    focus = focuses[seed % len(focuses)]
+    day = int(date_text[-2:]) if len(date_text) >= 10 and date_text[-2:].isdigit() else 0
+    scene = scenes[((seed // len(focuses)) + day) % len(scenes)]
+    date_label = f"{int(date_text[5:7])}/{int(date_text[8:10])} {'밤' if slot == 'night' else '오후'}"
+    return f"{topic['title']} - {focus} ({scene} {date_label})"
 
 
 def fetch_latest_signal() -> dict | None:
@@ -1104,6 +1411,7 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
     content_type = content_type_for_slot(slot)
     text_parts = build_threads_text_parts(topic, latest_signal, content_type, date_text, slot)
     threads_text = "\n\n".join(text_parts)
+    variant_title = topic_variant_title(topic, date_text, slot)
 
     draft = {
         "id": draft_id,
@@ -1113,8 +1421,8 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
         "status": "approved",
         "pillar": topic["keyword"],
         "keyword": topic["keyword"],
-        "title": topic["title"],
-        "topic": topic["title"],
+        "title": variant_title,
+        "topic": variant_title,
         "content_type": content_type,
         "expert_angle": topic["expert"],
         "threads_text": threads_text,
@@ -1128,6 +1436,11 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
     }
 
     draft_path = out_dir / f"{draft_id}.json"
+    if draft_path.exists():
+        existing = read_json(draft_path, {})
+        if str(existing.get("status") or "") in {"approved", "pending_approval", "published", "held", "publish_failed", "ready_to_review"}:
+            (OUT_ROOT / "latest-draft-path.txt").write_text(str(draft_path).replace("\\", "/"), encoding="utf-8")
+            return draft_path
     draft_path.write_text(json.dumps(draft, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (OUT_ROOT / "latest-draft-path.txt").write_text(str(draft_path).replace("\\", "/"), encoding="utf-8")
     return draft_path

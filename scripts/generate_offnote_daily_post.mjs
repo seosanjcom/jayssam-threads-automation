@@ -157,23 +157,229 @@ function blogTopics() {
   ];
 }
 
+function makeEditorialTopic({ slug, topicTag, topic, angle, proof, action }) {
+  return {
+    slug,
+    topicTag,
+    topic,
+    hypothesis: `${angle} ${proof}`,
+    text:
+      `${topic}\n\n${angle}\n\n${proof}\n\n${action}`,
+    comments: [
+      `${topicTag} 관점에서 먼저 볼 것은 결과보다 반복 가능한 구조입니다.\n\n어떤 글감이 돈이 되는지보다, 어떤 글감이 계속 쌓이는지부터 보면 블로그 운영이 훨씬 안정적입니다.`,
+      `오늘 바로 할 일은 하나만 정해도 됩니다.\n\n글감 3개 적기\n제목 3개 바꿔보기\n수익이나 절약으로 이어질 지점 표시하기\n\n이렇게 작게 시작해야 오래 갑니다.`,
+      `오프노트 글은 과장된 수익 인증보다 실제 운영 기록에 가까워야 합니다.\n\n작은 절약\n작은 문의\n작은 신청\n작은 개선\n\n이런 변화가 쌓이는 쪽으로 가겠습니다.`,
+    ],
+    slides: [
+      { kicker: topicTag, title: topic, body: angle, footer: "@offnote.kr" },
+      { kicker: "핵심", title: "반복 가능한 구조를 먼저 봅니다", body: proof, footer: "블로그 수익화" },
+      { kicker: "실행", title: "오늘 할 일은 작게 잡습니다", body: action, footer: "운영 루틴" },
+      { kicker: "주의", title: "수익 보장처럼 말하지 않습니다", body: "오프노트는 과장보다 기록, 인증보다 구조를 우선합니다.", footer: "안전한 톤" },
+    ],
+  };
+}
+
+function editorialTopics() {
+  return [
+    makeEditorialTopic({
+      slug: "blog-profit-map",
+      topicTag: "블로그수익화",
+      topic: "블로그 수익화는 광고비보다 수익 경로 지도가 먼저입니다",
+      angle: "블로그로 돈을 벌겠다고 하면 대부분 애드포스트나 체험단부터 떠올리지만, 먼저 해야 할 일은 내 글이 어디서 돈이나 절약으로 이어지는지 지도를 그리는 것입니다.",
+      proof: "후기형 글은 체험단, 정보형 글은 제휴 링크, 지역 글은 문의와 방문, 경험 글은 강의나 상담으로 이어질 수 있습니다.",
+      action: "오늘 쓴 글 5개 옆에 체험단, 제휴, 문의, 저장용 정보 중 어디에 가까운지 표시해보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "adpost-before-traffic",
+      topicTag: "애드포스트",
+      topic: "애드포스트 수익이 적을 때 먼저 볼 것은 방문자 수만이 아닙니다",
+      angle: "방문자가 적어서 수익이 낮은 경우도 있지만, 클릭할 이유가 없는 글만 쌓여도 수익은 잘 늘지 않습니다.",
+      proof: "검색으로 들어온 사람이 다음 행동을 할 수 있게 가격, 비교, 위치, 준비물, 체크리스트 같은 정보가 있어야 광고도 자연스럽게 보입니다.",
+      action: "일기형 글 하나를 골라 가격, 대상, 다음 선택 기준을 한 줄씩 추가해보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "affiliate-without-salesy",
+      topicTag: "제휴수익",
+      topic: "제휴 링크 글은 팔려고 쓰면 오히려 약해집니다",
+      angle: "처음부터 구매를 밀면 글이 광고처럼 보입니다. 먼저 왜 필요했는지, 어떤 기준으로 골랐는지, 누구에게는 안 맞는지를 써야 합니다.",
+      proof: "비교 기준이 보이면 링크는 결론이 아니라 참고 자료가 됩니다.",
+      action: "추천 글에는 장점 2개와 함께 안 맞는 사람 1가지를 꼭 넣어보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "local-blog-income",
+      topicTag: "지역블로그",
+      topic: "동네 글은 조회수보다 문의 가능성이 더 중요할 때가 있습니다",
+      angle: "전국 키워드보다 내 생활권 키워드가 작아 보여도, 실제 가게와 사람을 연결하기에는 훨씬 구체적입니다.",
+      proof: "지역명, 상황, 업종이 같이 들어간 글은 체험단 신청이나 협업 제안에서 블로그 색깔을 보여주기 좋습니다.",
+      action: "이번 주 생활권 안에서 카페, 병원, 미용실, 운동, 수리 같은 글감 5개를 적어보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "review-template-income",
+      topicTag: "후기템플릿",
+      topic: "후기 글은 템플릿이 있어야 수익화까지 이어집니다",
+      angle: "매번 기분대로 쓰면 글은 자연스럽지만 쌓이지 않습니다. 같은 순서로 써야 나중에 체험단, 제휴, 지역 문의로 연결하기 쉽습니다.",
+      proof: "방문 이유, 선택 기준, 가격, 과정, 좋았던 점, 아쉬운 점, 맞는 사람 순서가 기본 뼈대가 됩니다.",
+      action: "최근 후기 하나를 이 순서로 다시 제목만 바꿔보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "content-ledger",
+      topicTag: "운영장부",
+      topic: "블로그 운영은 수익 인증보다 글 장부가 먼저입니다",
+      angle: "초보일수록 얼마 벌었는지보다 어떤 글이 어떤 기회를 만들었는지를 기록해야 합니다.",
+      proof: "글 제목, 키워드, 유입, 신청한 체험단, 받은 문의, 절약액을 같이 적으면 다음 글감이 보입니다.",
+      action: "엑셀이나 메모장에 글 10개만 운영 장부로 정리해보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "search-title-rewrite",
+      topicTag: "검색제목",
+      topic: "블로그 제목은 감정보다 검색 상황을 먼저 담아야 합니다",
+      angle: "좋았다, 만족했다 같은 제목은 내 감정은 보이지만 검색하는 사람의 상황은 잘 보이지 않습니다.",
+      proof: "지역, 대상, 문제, 결과 중 두 가지 이상이 제목에 들어가면 글이 정보처럼 읽힙니다.",
+      action: "기존 제목 3개를 지역+상황+업종 구조로 바꿔보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "experience-campaign-filter",
+      topicTag: "체험단선별",
+      topic: "체험단은 많이 신청하기보다 내 블로그 결에 맞게 골라야 합니다",
+      angle: "아무거나 받으면 당장은 글감이 생기지만 블로그 방향은 흐려집니다.",
+      proof: "내 생활권, 내가 실제로 쓸 서비스, 사진 찍기 쉬운 장소, 다시 갈 의향을 말할 수 있는 곳이 우선입니다.",
+      action: "신청 전에 내 블로그에 이미 있는 글 3개와 이어지는지 확인하세요.",
+    }),
+    makeEditorialTopic({
+      slug: "small-product-review",
+      topicTag: "상품후기",
+      topic: "작은 상품 후기도 블로그 수익화 연습이 됩니다",
+      angle: "고가 제품만 제휴 글감이 되는 것은 아닙니다. 자주 쓰는 작은 물건이 오히려 기준을 설명하기 쉽습니다.",
+      proof: "왜 샀는지, 전과 후가 어떻게 달라졌는지, 재구매할지까지 쓰면 단순 후기보다 정보성이 생깁니다.",
+      action: "집에서 매주 쓰는 물건 하나를 골라 재구매 기준을 써보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "blog-service-offer",
+      topicTag: "서비스문의",
+      topic: "블로그가 문의로 이어지려면 내가 도와줄 수 있는 일이 보여야 합니다",
+      angle: "글만 많아도 독자는 이 사람이 무엇을 도와줄 수 있는지 모를 수 있습니다.",
+      proof: "체험단 기록, 글쓰기 템플릿, 지역 후기 노하우, 제휴 글 구조처럼 내가 반복해서 해결한 문제가 보여야 문의가 생깁니다.",
+      action: "프로필과 고정 글에 내가 도와줄 수 있는 일 한 줄을 추가해보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "blog-routine-30min",
+      topicTag: "운영루틴",
+      topic: "블로그 수익화는 하루 30분 루틴부터 현실적입니다",
+      angle: "큰 계획보다 매일 반복 가능한 작은 시간이 더 오래 갑니다.",
+      proof: "10분은 글감 수집, 10분은 제목 수정, 10분은 문단 보강으로 나누면 글 하나를 매일 조금씩 앞으로 보낼 수 있습니다.",
+      action: "오늘은 새 글을 쓰기보다 기존 글 제목 3개만 고쳐보세요.",
+    }),
+    makeEditorialTopic({
+      slug: "blog-trust-before-money",
+      topicTag: "신뢰수익",
+      topic: "블로그 수익은 먼저 신뢰가 쌓인 뒤에 따라옵니다",
+      angle: "수익 글만 쌓이면 독자는 금방 알아차립니다. 실제 경험, 기준, 아쉬운 점이 같이 있어야 오래 갑니다.",
+      proof: "좋은 점만 쓰는 글보다 맞는 사람과 안 맞는 사람을 나눠주는 글이 저장되고 다시 읽힙니다.",
+      action: "다음 글에는 꼭 아쉬운 점 하나와 추천하지 않는 경우 하나를 넣어보세요.",
+    }),
+  ];
+}
+
+function draftFiles(rootDir) {
+  if (!fs.existsSync(rootDir)) return [];
+  return fs.readdirSync(rootDir, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) return draftFiles(fullPath);
+    return entry.isFile() && entry.name.endsWith(".json") ? [fullPath] : [];
+  });
+}
+
+function recentScheduledSlugs(date, windowDays = 21) {
+  const target = new Date(`${date}T00:00:00+09:00`);
+  const rootDir = path.join("outputs", "afterwork-profit", "automation");
+  const recent = new Set();
+  for (const file of draftFiles(rootDir)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
+      const draftDate = String(data.draft_date || data.date || path.basename(path.dirname(file)) || "").slice(0, 10);
+      const current = new Date(`${draftDate}T00:00:00+09:00`);
+      const days = Math.round((target - current) / 86400000);
+      if (days > 0 && days <= windowDays) {
+        const id = String(data.id || path.basename(file, ".json"));
+        const slug = id.replace(/^OFFNOTE-\d{8}-(?:evening|night)-/, "");
+        if (slug) recent.add(slug);
+      }
+    } catch {
+      // Ignore malformed drafts; the dashboard will surface them separately.
+    }
+  }
+  return recent;
+}
+
 function pickTopic(date, slot) {
   const seed = [...`${date}-${slot}`].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
-  const topics = blogTopics().filter((topic) => !isShoppingRouteTopic(topic));
+  const topics = [...blogTopics(), ...editorialTopics()].filter((topic) => !isShoppingRouteTopic(topic));
   if (topics.length === 0) {
     throw new Error("No offnote-safe topics available. Direct affiliate or celebrity-shopping topics must go to lifemagazine_.");
+  }
+  const used = recentScheduledSlugs(date);
+  for (let offset = 0; offset < topics.length; offset += 1) {
+    const topic = topics[(seed + offset) % topics.length];
+    if (!used.has(topic.slug)) return topic;
   }
   return topics[seed % topics.length];
 }
 
+function topicVariant(topic, date, slot) {
+  const focuses = [
+    "처음 수익 경로 잡기",
+    "검색 제목으로 바꾸기",
+    "저장되는 정보 만들기",
+    "문의로 이어지는 문장",
+    "체험단 선별 기준",
+    "제휴 글 신뢰도 높이기",
+    "운영 장부 만들기",
+    "지역 키워드 확장",
+    "프로필과 고정글 정리",
+    "30분 운영 루틴",
+    "후기 글 구조 점검",
+    "수익보다 신뢰 먼저 쌓기",
+  ];
+  const scenes = [
+    "오늘 실행",
+    "초보 기준",
+    "글감 정리",
+    "제목 점검",
+    "저장용 정보",
+    "문의 연결",
+    "수익 지도",
+    "신뢰 확보",
+    "운영 장부",
+    "다음 글감",
+    "프로필 정리",
+    "반복 루틴",
+  ];
+  const seedText = `${date}-${slot}-${topic.slug}`;
+  const seed = [...seedText].reduce((sum, ch, index) => sum + ((index + 1) * ch.charCodeAt(0)), 0);
+  const focus = focuses[seed % focuses.length];
+  const scene = scenes[(Math.floor(seed / focuses.length) + Number(date.slice(8, 10))) % scenes.length];
+  const dateLabel = `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))} ${slot === "night" ? "밤" : "저녁"}`;
+  return {
+    ...topic,
+    topic: `${topic.topic} - ${focus} (${scene} ${dateLabel})`,
+    text: `${topic.topic} - ${focus} (${scene} ${dateLabel})\n\n${topic.text}`,
+    comments: [
+      `오늘 관점은 "${focus}"입니다. 같은 블로그 수익화라도 매번 보는 지점을 바꿔야 글이 반복되지 않습니다.`,
+      ...(topic.comments || []),
+    ].slice(0, 4),
+  };
+}
+
 function makeDraft(date, slot) {
-  const picked = pickTopic(date, slot);
+  const picked = topicVariant(pickTopic(date, slot), date, slot);
   const id = `OFFNOTE-${dateKey(date)}-${slot}-${picked.slug}`;
   return {
     id,
     account: "offnote.kr",
     account_name: "오프노트",
     project: "afterwork-profit",
+    date,
+    slot,
     topic: picked.topic,
     topic_tag: picked.topicTag,
     status: "approved",
@@ -205,7 +411,7 @@ const createdFlagPath = path.join("outputs", "afterwork-profit", "preview-create
 
 if (fs.existsSync(outPath)) {
   const existing = JSON.parse(fs.readFileSync(outPath, "utf8").replace(/^\uFEFF/, ""));
-  const protectedStatuses = new Set(["pending_approval", "published", "held", "publish_failed"]);
+  const protectedStatuses = new Set(["approved", "pending_approval", "published", "held", "publish_failed", "ready_to_review"]);
   if (protectedStatuses.has(existing.status)) {
     fs.writeFileSync(path.join("outputs", "afterwork-profit", "latest-draft-path.txt"), `${portableOutPath}\n`, "utf8");
     fs.writeFileSync(createdFlagPath, "false\n", "utf8");

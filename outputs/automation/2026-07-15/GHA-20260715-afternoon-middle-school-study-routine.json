@@ -1,0 +1,49 @@
+{
+  "id": "GHA-20260715-afternoon-middle-school-study-routine",
+  "date": "2026-07-15",
+  "slot": "afternoon",
+  "account": "",
+  "status": "approved",
+  "pillar": "중학생공부습관",
+  "keyword": "중학생공부습관",
+  "title": "중학생 공부습관은 시간표보다 복습 단위가 먼저입니다 - 아이와 대화로 연결하는 법 (수업 후 복기 7/15 오후)",
+  "topic": "중학생 공부습관은 시간표보다 복습 단위가 먼저입니다 - 아이와 대화로 연결하는 법 (수업 후 복기 7/15 오후)",
+  "content_type": "education_news_interpretation",
+  "expert_angle": {
+    "news_frame": "학습 습관의 핵심은 시간 관리보다 다시 설명할 수 있는 단위 설계입니다.",
+    "must_know": "복습은 오래 하는 것보다 다시 꺼낼 수 있게 작게 나누는 것이 중요합니다.",
+    "avoid": "시간표만 촘촘하게 만들면 지속이 어렵습니다.",
+    "check": "오늘 배운 것 중 한 가지를 말로 설명하게 해보세요.",
+    "use_for": "중학생 학습 상담, 부모 안내"
+  },
+  "threads_text": "공부 시간을 늘렸는데 성적이 안 오르면 시간표보다 복습 단위를 봐야 합니다.\n\n바로가기: ebsi.co.kr\n\n복습은 오래 하는 것보다 다시 꺼낼 수 있게 작게 나누는 것이 중요합니다.\n\n정확히는: 학습 자료와 진단 자료\n\n이렇게 쓰세요: 중학생 학습 루틴 상담\n\n주의할 점: 공부 시간만 늘리지 않기\n\n#교육정보 #고등맘 #진로교육 #미래교육",
+  "carousel_slides": [
+    "공부습관\n시간보다 복습 단위를 봅니다.",
+    "문제\n오래 앉아도 남는 게 없을 수 있습니다.",
+    "단위\n개념·유형·실수로 나누세요.",
+    "질문\n오늘 다시 꺼낼 한 가지는?",
+    "부모\n시간보다 설명 가능 여부를 보세요.",
+    "핵심\n작은 복습이 지속됩니다."
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-07-15/afternoon/middle-school-study-routine",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-07-15/afternoon/middle-school-study-routine/card_01.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/middle-school-study-routine/card_02.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/middle-school-study-routine/card_03.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/middle-school-study-routine/card_04.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/middle-school-study-routine/card_05.png",
+    "outputs/cards/github-daily/2026-07-15/afternoon/middle-school-study-routine/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.ebsi.co.kr/",
+    "https://news.google.com/rss/articles/CBMib0FVX3lxTFB6SkdFYVlnbjBZSUFYbGVkUEN6eElDZ1hTR0VJa25wTTN1cGt0QXZsLVg5T3RrakFaMll0cUhvdE4yS1VpTU8wQmlJVzNEVDBPUUFscXdhU0ttVnBlYk93S1YxYjBEaFpUQnh1TGVaTQ?oc=5"
+  ],
+  "source_note": "학습 습관 상담 노트",
+  "latest_signal": {
+    "title": "학생 문해력 키운다…교육부, 학교 독서교육 대대적 강화 - 경북일보",
+    "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFB6SkdFYVlnbjBZSUFYbGVkUEN6eElDZ1hTR0VJa25wTTN1cGt0QXZsLVg5T3RrakFaMll0cUhvdE4yS1VpTU8wQmlJVzNEVDBPUUFscXdhU0ttVnBlYk93S1YxYjBEaFpUQnh1TGVaTQ?oc=5",
+    "pub_date": "Thu, 02 Jul 2026 07:53:07 GMT",
+    "source": "Google News 교육 이슈 RSS"
+  },
+  "created_at": "2026-07-05T18:20:10+09:00"
+}
