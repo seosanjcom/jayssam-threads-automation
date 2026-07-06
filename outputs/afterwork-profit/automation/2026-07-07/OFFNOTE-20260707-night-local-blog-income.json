@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "동네 글은 조회수보다 문의 가능성이 더 중요할 때가 있습니다 - 체험단 선별 기준 (신뢰 확보 7/7 밤)",
   "topic_tag": "지역블로그",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:21.413Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-06T15:40:57.162Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "18120281947755598",
+    "17936331690295105",
+    "18116209901485400",
+    "18130484824628592"
+  ],
+  "published_at": "2026-07-06T15:42:45.467Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-06T15:40:57.162Z"
+  }
 }
