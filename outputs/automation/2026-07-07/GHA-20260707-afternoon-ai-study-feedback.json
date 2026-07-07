@@ -45,5 +45,13 @@
     "pub_date": "Thu, 02 Jul 2026 07:53:07 GMT",
     "source": "Google News 교육 이슈 RSS"
   },
-  "created_at": "2026-07-05T19:51:21+09:00"
+  "created_at": "2026-07-05T19:51:21+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-07/afternoon/ai-study-feedback/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-07/afternoon/ai-study-feedback/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-07/afternoon/ai-study-feedback/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-07/afternoon/ai-study-feedback/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-07/afternoon/ai-study-feedback/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-07/afternoon/ai-study-feedback/card_06.png"
+  ]
 }
