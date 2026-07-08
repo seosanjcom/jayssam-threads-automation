@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-07-07/GHA-20260707-night-reading-literacy-home.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-07-08/GHA-20260708-afternoon-school-record-reading.json
