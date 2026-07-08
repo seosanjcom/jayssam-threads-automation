@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "후기 글은 템플릿이 있어야 수익화까지 이어집니다 - 프로필과 고정글 정리 (저장용 정보 7/8 밤)",
   "topic_tag": "후기템플릿",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:24.166Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-08T14:23:51.550Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "18139393471605354",
+    "17947970517216701",
+    "17865374115650828",
+    "18103489958162234"
+  ],
+  "published_at": "2026-07-08T14:25:28.224Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-08T14:23:51.550Z"
+  }
 }
