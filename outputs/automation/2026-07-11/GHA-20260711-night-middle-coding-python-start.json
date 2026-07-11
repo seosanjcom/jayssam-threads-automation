@@ -1,0 +1,57 @@
+{
+  "id": "GHA-20260711-night-middle-coding-python-start",
+  "date": "2026-07-11",
+  "slot": "night",
+  "account": "26746590168375878",
+  "status": "approved",
+  "pillar": "중등코딩",
+  "keyword": "중등코딩",
+  "title": "중학생 파이썬은 문법 진도보다 작은 문제를 끝까지 고치는 경험이 중요합니다 - 문해력과 사고력 연결하기 (수업 설계 7/11 밤)",
+  "topic": "중학생 파이썬은 문법 진도보다 작은 문제를 끝까지 고치는 경험이 중요합니다 - 문해력과 사고력 연결하기 (수업 설계 7/11 밤)",
+  "content_type": "must_know_practical_tip",
+  "expert_angle": {
+    "news_frame": "중등 정보교과는 코딩 문법 암기보다 문제해결 과정과 오류 수정 경험을 봐야 합니다.",
+    "must_know": "파이썬을 배울 때 중요한 것은 문법 개수보다 오류를 읽고 고치는 습관입니다.",
+    "avoid": "강사가 코드를 다 고쳐주면 아이의 문제해결 경험이 남지 않습니다.",
+    "check": "오늘 고친 오류 하나를 아이가 설명할 수 있는지 확인하세요.",
+    "use_for": "중등 코딩 수업 상담, 학부모 안내"
+  },
+  "threads_text": "중학생이 파이썬을 배울 때 진도를 빨리 나가는 것만 보면 놓치는 게 있습니다.\n작은 오류를 직접 찾고 고치는 경험이 더 오래 남습니다.\n\n오늘 관점: 문해력과 사고력 연결하기 (수업 설계 7/11 밤)\n\n바로가기: moe.go.kr\n\n파이썬을 배울 때 중요한 것은 문법 개수보다 오류를 읽고 고치는 습관입니다.\n\n정확히는: 중등 정보교과 자료\n\n이렇게 쓰세요: 중학생 코딩 학습 루틴 상담\n\n주의할 점: 문법 진도표만 보지 않기\n\n#중등맘 #부모공감 #코딩교육 #정보교육",
+  "carousel_slides": [
+    "중등 코딩\n문법 진도보다 디버깅 경험입니다.",
+    "핵심 1\n문제를 작게 나누나요?",
+    "핵심 2\n오류 메시지를 읽나요?",
+    "핵심 3\n변수 값을 확인하나요?",
+    "부모 체크\n완성보다 수정 과정을 물어보세요.",
+    "핵심\n코딩 실력은 고치는 과정에서 자랍니다."
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_01.png",
+    "outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_02.png",
+    "outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_03.png",
+    "outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_04.png",
+    "outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_05.png",
+    "outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.moe.go.kr/",
+    "https://news.google.com/rss/articles/CBMib0FVX3lxTE5vVC14MmZKcDAzeHV0MVVmOWxpOE91WkdQdHFYcUl1NzNIb0VRbkJkYzZoMU1qWFB1R3hyNEl4NFRnOG9iZlVDRFlwdXJqZGJmVy1UZmlvZHVwZ0lXRGU2TGVURHc4UmZUWWUwN2s5NA?oc=5"
+  ],
+  "source_note": "중등 정보교과·파이썬 입문",
+  "latest_signal": {
+    "title": "[창간 35주년] \"암기 말고 질문력 키워라\"… AI, 교육의 본질을 꿰뚫다 - 중부일보",
+    "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5vVC14MmZKcDAzeHV0MVVmOWxpOE91WkdQdHFYcUl1NzNIb0VRbkJkYzZoMU1qWFB1R3hyNEl4NFRnOG9iZlVDRFlwdXJqZGJmVy1UZmlvZHVwZ0lXRGU2TGVURHc4UmZUWWUwN2s5NA?oc=5",
+    "pub_date": "Mon, 06 Jul 2026 10:21:00 GMT",
+    "source": "Google News 교육 이슈 RSS"
+  },
+  "created_at": "2026-07-11T22:37:00+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-11/night/middle-coding-python-start/card_06.png"
+  ]
+}
