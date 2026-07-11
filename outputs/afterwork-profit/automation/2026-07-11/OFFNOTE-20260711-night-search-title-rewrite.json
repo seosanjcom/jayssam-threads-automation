@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "블로그 제목은 감정보다 검색 상황을 먼저 담아야 합니다 - 지역 키워드 확장 (오늘 실행 7/11 밤)",
   "topic_tag": "검색제목",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:32.682Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-11T13:27:35.186Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "17974930848063719",
+    "18086190803153033",
+    "18079574507690387",
+    "17866718274634500"
+  ],
+  "published_at": "2026-07-11T13:29:14.011Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-11T13:27:35.186Z"
+  }
 }

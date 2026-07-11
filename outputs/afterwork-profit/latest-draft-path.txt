@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-07-10/OFFNOTE-20260710-night-blog-digital-product-side.json
+outputs/afterwork-profit/automation/2026-07-11/OFFNOTE-20260711-night-search-title-rewrite.json
