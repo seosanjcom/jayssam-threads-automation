@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "체험단은 많이 신청하기보다 내 블로그 결에 맞게 골라야 합니다 - 지역 키워드 확장 (프로필 정리 7/12 밤)",
   "topic_tag": "체험단선별",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:35.656Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-12T13:36:57.273Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "18137694520497226",
+    "18000172685782207",
+    "18105255991857722",
+    "18115675349483424"
+  ],
+  "published_at": "2026-07-12T13:38:33.216Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-12T13:36:57.273Z"
+  }
 }
