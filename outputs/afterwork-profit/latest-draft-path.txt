@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-07-13/OFFNOTE-20260713-night-small-product-review.json
+outputs/afterwork-profit/automation/2026-07-14/OFFNOTE-20260714-night-blog-cashflow-mix.json

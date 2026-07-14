@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "블로그 수익화는 애드포스트 하나에 기대면 흔들리기 쉽습니다 - 운영 장부 만들기 (저장용 정보 7/14 밤)",
   "topic_tag": "수익믹스",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:41.526Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-14T13:52:47.972Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "18419550958198063",
+    "18148360837512163",
+    "17889051756595719",
+    "18021297467892652"
+  ],
+  "published_at": "2026-07-14T13:54:26.224Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-14T13:52:47.972Z"
+  }
 }
