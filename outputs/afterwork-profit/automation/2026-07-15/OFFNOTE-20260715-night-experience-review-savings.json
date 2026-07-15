@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "블로그를 일기장으로만 쓰는 사람에게 - 저장되는 정보 만들기 (문의 연결 7/15 밤)",
   "topic_tag": "블로그체험단",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:44.636Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-15T13:50:29.155Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "18103339022152870",
+    "18447243364185557",
+    "18230175355315631",
+    "18020295269901994"
+  ],
+  "published_at": "2026-07-15T13:52:01.322Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-15T13:50:29.155Z"
+  }
 }
