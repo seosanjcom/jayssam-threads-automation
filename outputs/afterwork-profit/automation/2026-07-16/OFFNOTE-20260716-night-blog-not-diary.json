@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "일기형 블로그에서 정보형 블로그로 바꾸는 법 - 지역 키워드 확장 (글감 정리 7/16 밤)",
   "topic_tag": "블로그운영",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:48.049Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-16T14:01:48.171Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "17915432958420255",
+    "18058163867765100",
+    "18102986567160406",
+    "18119324164798414"
+  ],
+  "published_at": "2026-07-16T14:03:25.936Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-16T14:01:48.171Z"
+  }
 }
