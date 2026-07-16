@@ -1,0 +1,57 @@
+{
+  "id": "GHA-20260716-night-ai-study-feedback",
+  "date": "2026-07-16",
+  "slot": "night",
+  "account": "26746590168375878",
+  "status": "approved",
+  "pillar": "AI학습피드백",
+  "keyword": "AI학습피드백",
+  "title": "AI 학습 피드백은 정답보다 질문을 어떻게 바꾸는지 봐야 합니다 - 아이와 대화로 연결하는 법 (실수 줄이기 7/16 밤)",
+  "topic": "AI 학습 피드백은 정답보다 질문을 어떻게 바꾸는지 봐야 합니다 - 아이와 대화로 연결하는 법 (실수 줄이기 7/16 밤)",
+  "content_type": "must_know_practical_tip",
+  "expert_angle": {
+    "news_frame": "AI 교육은 도구 도입보다 질문과 검토 기준을 어떻게 가르치는지가 핵심입니다.",
+    "must_know": "아이의 AI 활용을 볼 때는 결과보다 질문을 고친 흔적을 봐야 합니다.",
+    "avoid": "AI 답을 그대로 제출하게 두면 학습이 아니라 복사가 됩니다.",
+    "check": "답을 받은 뒤 아이가 어떤 조건을 추가했는지 확인하세요.",
+    "use_for": "부모 상담, AI 활용 학습 루틴 안내"
+  },
+  "threads_text": "AI로 공부한다는 말이 많지만, 핵심은 답을 빨리 받는 것이 아닙니다.\n아이가 질문을 고치고 근거를 비교하는지가 더 중요합니다.\n\n오늘 관점: 아이와 대화로 연결하는 법 (실수 줄이기 7/16 밤)\n\n바로가기: moe.go.kr\n\n아이의 AI 활용을 볼 때는 결과보다 질문을 고친 흔적을 봐야 합니다.\n\n정확히는: AI 교육 정책 자료\n\n이렇게 쓰세요: AI 활용 수업과 가정 학습 기준 세우기\n\n주의할 점: AI 답을 정답지처럼 쓰지 않기\n\n#교육 #교육정보 #AI교육 #디지털교육",
+  "carousel_slides": [
+    "AI 학습\n정답보다 질문이 어떻게 바뀌는지 봅니다.",
+    "좋은 신호\n질문을 다시 쓰고 근거를 비교합니다.",
+    "나쁜 신호\n답만 복사하고 설명을 건너뜁니다.",
+    "부모 체크\n아이에게 왜 그렇게 물었는지 물어보세요.",
+    "강사 체크\nAI 답을 검토하는 기준을 과제로 남기세요.",
+    "핵심\nAI 활용은 사고 과정 기록입니다."
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-07-16/night/ai-study-feedback",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_01.png",
+    "outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_02.png",
+    "outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_03.png",
+    "outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_04.png",
+    "outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_05.png",
+    "outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.moe.go.kr/",
+    "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9uSTZjVEVWUHVzd3lkOEVfNDlndnpRX0RrS0lndGJtR2V3MWVNcG95WHBpVUkwWFUwSTJUMVJjbVR3dVBPMEE4aW5xbW1iNjFUMm1JdkFBMXdQYms1WGludVlWVmdzUQ?oc=5"
+  ],
+  "source_note": "AI 교육 활용 가이드",
+  "latest_signal": {
+    "title": "교육부 ‘대학 AI 기본교육 사업’ 출범… 20개교 2년간 대학당 3억원 - 한국대학신문",
+    "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9uSTZjVEVWUHVzd3lkOEVfNDlndnpRX0RrS0lndGJtR2V3MWVNcG95WHBpVUkwWFUwSTJUMVJjbVR3dVBPMEE4aW5xbW1iNjFUMm1JdkFBMXdQYms1WGludVlWVmdzUQ?oc=5",
+    "pub_date": "Tue, 14 Jul 2026 06:22:32 GMT",
+    "source": "Google News 교육 이슈 RSS"
+  },
+  "created_at": "2026-07-16T23:03:09+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-07-16/night/ai-study-feedback/card_06.png"
+  ]
+}
