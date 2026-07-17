@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-07-16/OFFNOTE-20260716-night-blog-not-diary.json
+outputs/afterwork-profit/automation/2026-07-17/OFFNOTE-20260717-night-review-post-template.json

@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "체험단 글이 광고처럼 보이지 않게 쓰는 법 - 저장되는 정보 만들기 (문의 연결 7/17 밤)",
   "topic_tag": "후기글쓰기",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:51.151Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-17T13:46:25.309Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "17899025097508879",
+    "18448735231186690",
+    "18126545290645746",
+    "17939564139070953"
+  ],
+  "published_at": "2026-07-17T13:48:06.348Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-17T13:46:25.309Z"
+  }
 }
