@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "동네 후기 블로그가 초보에게 좋은 이유 - 제휴 글 신뢰도 높이기 (초보 기준 7/19 밤)",
   "topic_tag": "동네블로그",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:45:57.391Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-19T13:25:21.687Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "17902712457309201",
+    "18094518707215796",
+    "18021977396906817",
+    "17948598300215527"
+  ],
+  "published_at": "2026-07-19T13:27:02.389Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-19T13:25:21.687Z"
+  }
 }
