@@ -7,7 +7,7 @@
   "slot": "night",
   "topic": "퇴근 후 부업은 돈 되는 일보다 내가 계속 기록할 수 있는 일부터 골라야 합니다 - 검색 제목으로 바꾸기 (초보 기준 7/20 밤)",
   "topic_tag": "퇴근후부업",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-07-05T10:46:00.490Z",
   "source": "github-actions-offnote-generator",
   "recommended_publish_time": "21:00 KST",
@@ -51,5 +51,18 @@
     "Cardnews optional; use it only for high-density posts.",
     "Auto-publish unless held.",
     "For now, keep Offnote focused on approachable blog, review, experience-campaign, and living-cost content."
-  ]
+  ],
+  "approved_at": "2026-07-20T14:14:14.178Z",
+  "approval_source": "auto_publish_due:night",
+  "published_reply_ids": [
+    "17949332307212177",
+    "17897179593552122",
+    "18109968700802228",
+    "17915045295422320"
+  ],
+  "published_at": "2026-07-20T14:15:51.274Z",
+  "auto_publish": {
+    "slot": "night",
+    "approved_at": "2026-07-20T14:14:14.178Z"
+  }
 }
