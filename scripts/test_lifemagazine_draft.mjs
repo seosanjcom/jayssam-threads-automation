@@ -680,6 +680,26 @@ test("lifemagazine product queue parses manual Telegram reply and confirms saved
   assert.match(buildProductQueueConfirmation(queue), /2개 상품 확인했고 저장했어/);
 });
 
+test("lifemagazine product queue parses natural mixed numbering formats", () => {
+  const queue = parseTelegramProductQueueReply(`
+내일 상품
+1. 냉동아보카도
+링크 https://link.coupang.com/a/avocado
+하고싶은말 다이어터에게 완전추천
+
+2) 코코넛워터
+링크 https://link.coupang.com/a/coconut
+하고싶은말 집에서 코코콜드브루 해먹기
+
+- 그릭요거트
+링크 https://link.coupang.com/a/yogurt
+하고싶은말 아보카도 스무디랑 같이 먹기
+`, { date: "2026-08-03", collectedAt: "2026-08-02T12:00:00.000Z" });
+
+  assert.equal(queue.mode, "manual");
+  assert.deepEqual(queue.products.map((item) => item.product_name), ["냉동아보카도", "코코넛워터", "그릭요거트"]);
+});
+
 test("lifemagazine product queue saves and loads manual products", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-product-queue-"));
   const queue = parseTelegramProductQueueReply(`
