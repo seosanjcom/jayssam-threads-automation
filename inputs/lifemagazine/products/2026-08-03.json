@@ -1,0 +1,44 @@
+{
+  "date": "2026-08-03",
+  "mode": "manual",
+  "products": [
+    {
+      "source": "manual_queue",
+      "product_id": "",
+      "product_name": "냉동아보카도",
+      "category": "",
+      "price": 0,
+      "rating": 0,
+      "review_count": 0,
+      "product_url": "",
+      "affiliate_url": "https://link.coupang.com/a/fTixMPgvbo",
+      "image_url": "",
+      "collected_at": "2026-08-02T14:50:32.842Z",
+      "selection_reason": "생활 속 작은 불편이 반복되는 상황",
+      "operator_note": "다이어터에게 완전추천, 바나나아보카도스무디만들어먹기 딱 좋고, 가격도 제일 좋고 상품도 너무좋은게옴.",
+      "scene_hint": "생활 속 작은 불편이 반복되는 상황",
+      "usage_status": "not_confirmed",
+      "risk_level": "medium",
+      "score": 50
+    },
+    {
+      "source": "manual_queue",
+      "product_id": "",
+      "product_name": "코코넛워터",
+      "category": "",
+      "price": 0,
+      "rating": 0,
+      "review_count": 0,
+      "product_url": "",
+      "affiliate_url": "https://link.coupang.com/a/fTiDU4nefI",
+      "image_url": "",
+      "collected_at": "2026-08-02T14:50:32.843Z",
+      "selection_reason": "생활 속 작은 불편이 반복되는 상황",
+      "operator_note": "스벅에 코코콜드브루나왔던데 집에서 해먹자!!!",
+      "scene_hint": "생활 속 작은 불편이 반복되는 상황",
+      "usage_status": "not_confirmed",
+      "risk_level": "medium",
+      "score": 50
+    }
+  ]
+}
