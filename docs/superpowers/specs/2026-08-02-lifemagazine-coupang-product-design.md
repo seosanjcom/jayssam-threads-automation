@@ -15,7 +15,7 @@ The system must:
 - Use a natural Korean first-person tone calibrated from the operator's edits.
 - Keep the main post readable and non-ad-like.
 - Put the Coupang Partners disclosure in a comment/reply whenever a Coupang affiliate link is included.
-- Prefer product images from API-provided image URLs; avoid raw webpage image scraping as the default.
+- Prefer casual phone-camera-style lifestyle images generated from safe product references; avoid raw webpage image scraping as the default.
 
 ## Current project context
 
@@ -120,11 +120,84 @@ https://...
 
 ## Image policy
 
-Preferred image source:
+Preferred visual strategy:
 
-1. Coupang API-provided product image URL.
-2. Generated simple card image when no safe product image URL is available.
-3. Text-only post if neither image path is safe.
+1. Casual phone-camera-style lifestyle image generated from a safe product reference.
+2. Coupang API-provided product image URL used directly when visual fidelity matters.
+3. Simple text-free fallback card only when a lifestyle image cannot be generated safely.
+4. Text-only post if no safe image path is available.
+
+The default visual should look like the operator placed the item on a real desk, vanity, shelf, or kitchen counter and quickly took a phone photo. It should not look like a designed cardnews asset, studio product shoot, influencer flat lay, or ad banner.
+
+### Phone-camera lifestyle image direction
+
+The image generation prompt should build a realistic everyday scene:
+
+- Ordinary Korean home surface such as a desk, vanity, drawer, bathroom shelf, kitchen counter, or bedside table.
+- Slightly imperfect phone-camera framing.
+- Natural side light, mild grain, normal shadows, and small real-life clutter.
+- Product placed casually, not perfectly centered.
+- No text overlays and no promotional visual language.
+
+The image should be used to make the post feel like a personal note, not to make a formal product advertisement.
+
+### AI-looking artifact prevention
+
+Generated lifestyle images must avoid elements that commonly reveal AI generation:
+
+- No hands, fingers, arms, faces, or body parts.
+- No paper, receipts, books, notebooks, sticky notes, labels, shipping boxes, or screens with readable text.
+- No Korean text, English text, numbers, QR codes, price tags, discount badges, logos, or brand marks.
+- No mirrors or reflective surfaces that may create distorted duplicates.
+- No complex transparent glassware unless it is necessary and manually approved.
+- No product packaging with readable writing.
+- No messy piles where object boundaries become confusing.
+- No fake app UI, phone screen content, or browser content.
+
+Safe background clutter examples:
+
+- Plain charging cable.
+- Unbranded lip balm with no readable text.
+- Simple hair clip.
+- Plain pouch.
+- Neutral tray.
+- Small ceramic cup with no logo.
+- Folded cloth with no pattern text.
+
+Every generated image must be reviewed before publishing during the initial phase. If the image has distorted objects, fake text, brand-like marks, or an inaccurate product appearance, the draft must be held or regenerated.
+
+### Product image fidelity rules
+
+The lifestyle image may be AI-generated when the product is generic and shape/brand fidelity is not critical:
+
+- Hair ties.
+- Storage bins.
+- Pouches.
+- Cable organizers.
+- Cleaning cloths.
+- Basic household consumables.
+- Simple beauty tools without brand-specific packaging.
+
+Use the Coupang API product image directly, or hold for manual review, when exact appearance matters:
+
+- Cosmetics with specific packaging.
+- Electronics.
+- Branded appliances.
+- Character goods.
+- Products where color, size, shape, or included components are the key reason to buy.
+
+The system must not imply the AI lifestyle image is a photo of the exact purchased item when the generated image only approximates the product. Draft metadata should record `visual_mode`, such as `ai_lifestyle_reference`, `api_product_image`, `manual_photo`, or `text_only`.
+
+### Generated card fallback
+
+Cardnews-style images are no longer the preferred visual. They should only be used when a lifestyle image is unsafe or unavailable.
+
+If a fallback card is generated:
+
+- It must be text-free by default, or use code-rendered text only.
+- It must not ask the image model to render Korean text.
+- It must not include prices, discount badges, logos, URLs, or disclosure text.
+- It should look like a quiet background asset, not a promotion banner.
 
 Raw webpage image scraping:
 
@@ -138,6 +211,7 @@ Threads media requirements:
 - Drafts should populate `media_urls` with public image URLs.
 - Local images must be uploaded/converted to public `media_urls` before publishing.
 - Existing `verify_media_urls.mjs` and publish safety checks should continue blocking invalid image URLs.
+- Generated lifestyle images and fallback cards must be uploaded to public `media_urls` before publishing.
 
 ## Scheduling
 
@@ -190,6 +264,10 @@ Draft fields:
 - `target_reader`
 - `product_links`
 - `media_urls`
+- `visual_mode`: `ai_lifestyle_reference`, `api_product_image`, `manual_photo`, `fallback_card`, or `text_only`
+- `visual_prompt`
+- `visual_avoid_list`
+- `visual_review_status`: `pending`, `approved`, `rejected`, or `regenerate`
 - `replies`
 - `affiliate_disclosure_required`
 - `affiliate_disclosure_location`: `reply`
@@ -200,7 +278,8 @@ Draft fields:
 
 - If Coupang API credentials are missing, skip automatic product collection and send a clear Telegram/GitHub Actions log message.
 - If no suitable product candidates exist, do not publish filler affiliate posts.
-- If an image URL fails verification, either fall back to card image/text-only or hold the draft for approval.
+- If an image URL fails verification, either fall back to generated lifestyle image/text-only or hold the draft for approval.
+- If a generated image contains hands, text-like artifacts, logos, distorted product details, or other AI-looking errors, hold or regenerate the draft.
 - If comment/reply publishing fails, mark the draft failed; do not publish a main post with an affiliate link but no disclosure path.
 - If a product appears unsafe or claim-heavy, hold it for manual review.
 - If generated copy repeats recent hooks or endings too closely, regenerate the draft.
@@ -219,6 +298,8 @@ The implementation plan should include:
   - false personal-use claims fail.
 - Draft generation tests for three daily Lifemagazine slots.
 - Media URL verification tests using safe mocked URLs.
+- Image prompt safety tests that reject hands, visible text, logos, price tags, brand marks, and receipt/paper/screen elements.
+- Draft metadata tests for `visual_mode` and product-image fidelity rules.
 - Workflow dry-run or script-level checks before enabling scheduled publishing.
 
 ## Out of scope for first implementation
