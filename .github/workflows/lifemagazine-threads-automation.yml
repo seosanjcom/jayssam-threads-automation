@@ -2,6 +2,8 @@ name: Lifemagazine Threads Automation
 
 on:
   schedule:
+    - cron: "0 11 * * *"
+    - cron: "30 13 * * *"
     - cron: "*/10 * * * *"
     - cron: "30 2,7,12 * * *"
   workflow_dispatch:
@@ -96,12 +98,17 @@ jobs:
         run: node scripts/telegram_check_lifemagazine_approvals.mjs
 
       - name: Send product queue reminder
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'product_queue'
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'product_queue') || (github.event_name == 'schedule' && github.event.schedule == '0 11 * * *')
         run: node scripts/lifemagazine_telegram_product_queue.mjs
 
       - name: Generate product drafts
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'product_drafts'
-        run: node scripts/generate_lifemagazine_product_daily.mjs --send-preview
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'product_drafts') || (github.event_name == 'schedule' && github.event.schedule == '30 13 * * *')
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            node scripts/generate_lifemagazine_product_daily.mjs --tomorrow --send-preview
+          else
+            node scripts/generate_lifemagazine_product_daily.mjs --send-preview
+          fi
 
       - name: Publish latest approved
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '30 2,7,12 * * *')
