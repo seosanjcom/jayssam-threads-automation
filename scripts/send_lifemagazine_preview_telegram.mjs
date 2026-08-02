@@ -63,6 +63,15 @@ export function buildLifemagazineTelegramMessage(draft, options = {}) {
     "[본문]",
     draft.threads_text || "",
     "",
+    "[이미지/비주얼]",
+    `방식: ${draft.visual_mode || (Array.isArray(draft.media_urls) && draft.media_urls.length ? "media_url" : "none")}`,
+    draft.visual_review_status ? `검수상태: ${draft.visual_review_status}` : "",
+    draft.visual_prompt ? `프롬프트: ${draft.visual_prompt}` : "",
+    Array.isArray(draft.visual_avoid_list) && draft.visual_avoid_list.length
+      ? `금지요소: ${draft.visual_avoid_list.slice(0, 12).join(", ")}${draft.visual_avoid_list.length > 12 ? "..." : ""}`
+      : "",
+    Array.isArray(draft.media_urls) && draft.media_urls.length ? `이미지 URL: ${draft.media_urls.join("\n")}` : "",
+    "",
     "[댓글 초안]",
     commentsPreview(draft),
   ].filter(Boolean).join("\n"));
