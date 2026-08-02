@@ -66,9 +66,13 @@ const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process
 if (isDirectRun) {
   loadEnv();
   const args = new Set(process.argv.slice(2));
+  const tomorrow = args.has("--tomorrow");
   const dateArg = process.argv.slice(2).find((arg) => /^\d{4}-\d{2}-\d{2}$/.test(arg));
+  const targetDate = dateArg || (tomorrow
+    ? new Date(Date.now() + 33 * 60 * 60 * 1000).toISOString().slice(0, 10)
+    : undefined);
   const drafts = await generateDailyProductDraftsAndPreview({
-    date: dateArg,
+    date: targetDate,
     sendPreview: args.has("--send-preview"),
   });
   console.log(JSON.stringify({ ok: true, count: drafts.length, ids: drafts.map((draft) => draft.id) }, null, 2));
