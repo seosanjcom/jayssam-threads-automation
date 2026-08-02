@@ -11,6 +11,7 @@ Automate `lifemagazine_` Threads posts for Coupang affiliate products, three pos
 The system must:
 
 - Select product candidates from Coupang Partners/Open API where possible.
+- Prefer operator-selected products from a day-before manual queue when available.
 - Generate three daily product-led Threads drafts.
 - Use a natural Korean first-person tone calibrated from the operator's edits.
 - Keep the main post readable and non-ad-like.
@@ -35,19 +36,30 @@ This design extends the existing Lifemagazine path rather than creating a separa
 
 Use a product-candidate pipeline plus a tone/scene drafting layer.
 
-1. Coupang product candidate collection
+1. Day-before Telegram product queue
+   - The system sends a Telegram reminder the day before asking whether the operator wants to choose tomorrow's products.
+   - The operator can reply in Telegram with product names, Coupang links, image links, and optional personal notes.
+   - If the manual queue has products for the target date, those products are used before automatic Coupang discovery.
+   - Each manual item can include product name, Coupang affiliate URL, image URL, scene hint, target reader, usage status, and optional memo.
+   - If the operator gives a memo about why the product matters, the generated copy must use that memo before inventing a scene.
+   - If the operator provides no memo, the system creates a scene-first draft from the product type.
+   - This is the recommended initial operating mode because it keeps product choice under human control while the system learns tone and visual preferences.
+
+2. Coupang product candidate collection
    - Query Coupang product APIs using configured category/search terms.
    - Store normalized candidates with product name, price if available, product URL, affiliate URL, image URL, ranking fields, and source timestamp.
    - Use API-provided image URLs when available.
    - Do not use raw Coupang HTML image scraping by default.
 
-2. Product selection
+3. Product selection
+   - First use approved manual queue items for the date.
+   - If fewer than three manual products are available, fill remaining slots with safe automatic candidates.
    - Pick products that are easy to explain through a real-life situation.
    - Favor practical, low-friction products: storage, household consumables, hair/accessory items, beauty basics, small convenience items, seasonal daily-use products.
    - Avoid products that require medical, safety, financial, or strong performance claims.
    - Avoid repeating the same product type too often.
 
-3. Scene-first copy generation
+4. Scene-first copy generation
    - Before writing, generate a concrete "생활 장면" and target reader.
    - The copy should answer:
      - Who is this for?
@@ -56,7 +68,7 @@ Use a product-candidate pipeline plus a tone/scene drafting layer.
      - What is the honest tradeoff or limit?
    - The product should appear because the scene needs it, not because the post is trying to sell it.
 
-4. Approval-first publishing
+5. Approval-first publishing
    - Start with Telegram preview/approval for generated drafts.
    - Publish only approved drafts at first.
    - After enough user-edited samples are collected and validation is stable, the system can be switched to fuller automation.
@@ -225,6 +237,72 @@ Initial recommended slots in Korea time:
 
 Implementation should update existing Lifemagazine configuration and workflow behavior from the current lower daily limit to three product slots per day.
 
+## Telegram manual product queue
+
+The first implementation should support a simple Telegram-first manual product queue.
+
+Daily flow:
+
+1. The evening before publishing day, the bot sends a Telegram reminder:
+   - "내일 라이프매거진 상품 3개 직접 정할래?"
+   - "있으면 상품명/쿠팡링크/하고싶은말을 보내줘."
+   - "없으면 자동 후보로 초안 만들게."
+2. The operator can reply with one to three product blocks.
+3. The system parses Telegram replies into a date-based queue file.
+4. The next draft generation uses the queued products first.
+5. Draft previews return to Telegram for approval before publishing.
+
+Recommended path:
+
+`inputs/lifemagazine/products/YYYY-MM-DD.json`
+
+Example:
+
+```json
+{
+  "date": "2026-08-03",
+  "products": [
+    {
+      "product_name": "대용량 머리끈 100개",
+      "affiliate_url": "https://link.coupang.com/a/example",
+      "image_url": "https://image.coupangcdn.com/example.jpg",
+      "scene_hint": "머리끈 맨날 잃어버리는 사람",
+      "target_reader": "머리 자주 묶고 머리끈 자주 잃어버리는 사람",
+      "usage_status": "not_confirmed",
+      "operator_note": "대용량 쟁여템 느낌. 직접 써봤다고 쓰지 말 것."
+    }
+  ]
+}
+```
+
+Telegram reply format should be forgiving. Supported examples:
+
+```text
+내일 상품
+1. 대용량 머리끈
+링크 https://link.coupang.com/a/example
+하고싶은말 머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌
+
+2. 케이블 정리 클립
+링크 https://link.coupang.com/a/example2
+하고싶은말 책상 위 충전선 굴러다니는 거 싫은 사람용
+```
+
+```text
+내일은 자동으로 해줘
+```
+
+Rules:
+
+- Manual queue items are used before automatic API candidates.
+- Three valid manual products should fill the whole next-day schedule.
+- If only one or two manual products exist, the system may fill the remaining slots with safe automatic candidates.
+- If a manual item lacks an affiliate URL, hold it instead of publishing.
+- If the operator replies "자동으로 해줘" or provides no valid product by the cutoff time, use automatic safe candidates.
+- `operator_note` is higher priority than generated scene hints.
+- If `usage_status` is not `actual_used`, the copy must avoid direct-use claims.
+- Manual queue input should be included in Telegram previews so the operator can confirm the selected products.
+
 ## Validation changes
 
 Current validation requires affiliate disclosure at the beginning of `threads_text` when `product_links` exist. That conflicts with the desired non-ad-like main post.
@@ -242,7 +320,7 @@ New validation should require:
 
 Candidate product fields:
 
-- `source`: `coupang_api`
+- `source`: `coupang_api` or `manual_queue`
 - `product_id`
 - `product_name`
 - `category`
@@ -254,6 +332,7 @@ Candidate product fields:
 - `image_url`
 - `collected_at`
 - `selection_reason`
+- `operator_note`
 
 Draft fields:
 

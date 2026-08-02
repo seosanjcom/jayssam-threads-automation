@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build approval-first `lifemagazine_` Threads automation that collects Coupang product candidates, generates natural product drafts, prepares phone-camera-style visual metadata, validates comment-based affiliate disclosure, and schedules three daily posts.
+**Goal:** Build approval-first `lifemagazine_` Threads automation that asks for day-before product choices in Telegram, falls back to safe Coupang candidates when needed, generates natural product drafts, prepares phone-camera-style visual metadata, validates comment-based affiliate disclosure, and schedules three daily posts.
 
 **Architecture:** Extend the existing Lifemagazine route instead of creating a parallel automation. Add focused modules for product candidates, visual policy, and product-daily draft generation, then wire them into the existing draft generator, validator, tests, and GitHub workflow.
 
@@ -12,6 +12,9 @@
 
 - Account is exactly `lifemagazine_`.
 - Product links must put the Coupang Partners disclosure in `thread_comments`, not at the top of `threads_text`.
+- Day-before Telegram product choices are preferred over automatic product discovery.
+- Operator product notes must be used before generated scene hints.
+- If the operator replies `자동으로 해줘` or provides no valid products by cutoff, use safe automatic candidates.
 - Required disclosure text is exactly: `이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.`
 - Main post must not contain raw affiliate links.
 - Do not falsely claim direct usage unless `usage_status` is `actual_used`.
@@ -26,6 +29,7 @@
 ## File structure
 
 - Create `scripts/lifemagazine_product_candidates.mjs`: normalizes Coupang/API/manual product candidates, ranks safe practical items, and provides deterministic fixture candidates when credentials are missing.
+- Create `scripts/lifemagazine_telegram_product_queue.mjs`: builds the day-before Telegram prompt, parses operator product replies, and stores date-based manual product queues.
 - Create `scripts/lifemagazine_visual_policy.mjs`: builds phone-camera-style visual prompts and validates generated visual metadata against AI-artifact guardrails.
 - Create `scripts/generate_lifemagazine_product_daily.mjs`: selects three product candidates for a date/slots and saves approval-ready Lifemagazine drafts.
 - Modify `scripts/generate_lifemagazine_draft.mjs`: add product-scene copy path, exact comment disclosure, visual metadata fields, `usage_status`, and no top-of-body disclosure for product drafts.
@@ -46,6 +50,7 @@
 **Interfaces:**
 - Produces: `COUPANG_DISCLOSURE: string`
 - Produces: `normalizeProductCandidate(input: object, options?: object): object`
+- Produces: normalized manual products with `source: "manual_queue"` and `operator_note`.
 - Produces: `rankProductCandidates(candidates: object[]): object[]`
 - Produces: `fixtureProductCandidates(date?: string): object[]`
 - Produces: `selectDailyProductCandidates(candidates: object[], count?: number): object[]`
@@ -87,6 +92,20 @@ test("lifemagazine product candidates normalize Coupang API fields", () => {
   assert.equal(candidate.image_url, "https://image.coupangcdn.com/image/vendor_inventory/hair.jpg");
   assert.equal(candidate.usage_status, "not_confirmed");
   assert.equal(candidate.collected_at, "2026-08-02T00:00:00.000Z");
+});
+
+test("lifemagazine product candidates preserve operator notes from manual queue", () => {
+  const candidate = normalizeProductCandidate({
+    source: "manual_queue",
+    product_name: "케이블 정리 클립",
+    affiliate_url: "https://link.coupang.com/a/cable",
+    image_url: "https://example.com/cable.jpg",
+    operator_note: "책상 위 충전선 굴러다니는 거 싫은 사람용",
+  }, { collectedAt: "2026-08-02T00:00:00.000Z" });
+
+  assert.equal(candidate.source, "manual_queue");
+  assert.equal(candidate.operator_note, "책상 위 충전선 굴러다니는 거 싫은 사람용");
+  assert.equal(candidate.scene_hint, "책상 위 충전선이 자꾸 굴러다니는 사람");
 });
 
 test("lifemagazine candidate ranking favors practical low-risk products", () => {
@@ -177,6 +196,7 @@ export function normalizeProductCandidate(input = {}, options = {}) {
     image_url: firstText(input.image_url, input.productImage, input.imageUrl, input.thumbnail),
     collected_at: options.collectedAt || input.collected_at || new Date().toISOString(),
     selection_reason: firstText(input.selection_reason, sceneHintFor(text)),
+    operator_note: firstText(input.operator_note, input.memo, input.note),
     scene_hint: firstText(input.scene_hint, sceneHintFor(text)),
     usage_status: input.usage_status === "actual_used" ? "actual_used" : "not_confirmed",
     risk_level: riskLevel,
@@ -229,7 +249,193 @@ git commit -m "feat: add lifemagazine product candidates"
 
 ---
 
-### Task 2: Lifestyle visual policy metadata
+### Task 2: Telegram day-before product queue
+
+**Files:**
+- Create: `scripts/lifemagazine_telegram_product_queue.mjs`
+- Modify: `scripts/test_lifemagazine_draft.mjs`
+
+**Interfaces:**
+- Consumes: `normalizeProductCandidate(input, options)` from Task 1.
+- Produces: `buildProductQueueReminder(targetDate: string): string`
+- Produces: `parseTelegramProductQueueReply(text: string, options?: object): { mode: "manual" | "auto", products: object[] }`
+- Produces: `saveManualProductQueue(queue: object, options?: object): string`
+- Produces: `loadManualProductQueue(date: string, options?: object): object[]`
+
+- [ ] **Step 1: Add failing Telegram queue tests**
+
+Append imports:
+
+```js
+import {
+  buildProductQueueReminder,
+  loadManualProductQueue,
+  parseTelegramProductQueueReply,
+  saveManualProductQueue,
+} from "./lifemagazine_telegram_product_queue.mjs";
+```
+
+Append tests:
+
+```js
+test("lifemagazine Telegram reminder asks for tomorrow product choices", () => {
+  const message = buildProductQueueReminder("2026-08-03");
+
+  assert.match(message, /내일 라이프매거진 상품 3개/);
+  assert.match(message, /상품명/);
+  assert.match(message, /쿠팡링크/);
+  assert.match(message, /하고싶은말/);
+  assert.match(message, /자동 후보/);
+});
+
+test("lifemagazine Telegram product reply parses product notes", () => {
+  const parsed = parseTelegramProductQueueReply(`
+내일 상품
+1. 대용량 머리끈
+링크 https://link.coupang.com/a/hair
+하고싶은말 머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌
+
+2. 케이블 정리 클립
+링크 https://link.coupang.com/a/cable
+하고싶은말 책상 위 충전선 굴러다니는 거 싫은 사람용
+`, { date: "2026-08-03" });
+
+  assert.equal(parsed.mode, "manual");
+  assert.equal(parsed.products.length, 2);
+  assert.equal(parsed.products[0].product_name, "대용량 머리끈");
+  assert.equal(parsed.products[0].operator_note, "머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌");
+  assert.equal(parsed.products[1].affiliate_url, "https://link.coupang.com/a/cable");
+});
+
+test("lifemagazine Telegram product reply supports auto mode", () => {
+  const parsed = parseTelegramProductQueueReply("내일은 자동으로 해줘", { date: "2026-08-03" });
+
+  assert.equal(parsed.mode, "auto");
+  assert.deepEqual(parsed.products, []);
+});
+
+test("lifemagazine manual product queue saves and loads by date", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-product-queue-"));
+  const queue = parseTelegramProductQueueReply(`
+내일 상품
+1. 대용량 머리끈
+링크 https://link.coupang.com/a/hair
+하고싶은말 쟁여템 느낌
+`, { date: "2026-08-03" });
+
+  const saved = saveManualProductQueue(queue, { root: tmp });
+  const loaded = loadManualProductQueue("2026-08-03", { root: tmp });
+
+  assert.equal(path.relative(tmp, saved), path.join("inputs", "lifemagazine", "products", "2026-08-03.json"));
+  assert.equal(loaded.length, 1);
+  assert.equal(loaded[0].source, "manual_queue");
+  assert.equal(loaded[0].operator_note, "쟁여템 느낌");
+});
+```
+
+- [ ] **Step 2: Run tests to verify failure**
+
+Run: `node --test scripts/test_lifemagazine_draft.mjs`
+
+Expected: FAIL because `scripts/lifemagazine_telegram_product_queue.mjs` does not exist.
+
+- [ ] **Step 3: Implement Telegram product queue module**
+
+Create `scripts/lifemagazine_telegram_product_queue.mjs`:
+
+```js
+import fs from "node:fs";
+import path from "node:path";
+
+import { normalizeProductCandidate } from "./lifemagazine_product_candidates.mjs";
+
+export function buildProductQueueReminder(targetDate) {
+  return [
+    `[라이프매거진 상품 지정] ${targetDate}`,
+    "내일 라이프매거진 상품 3개 직접 정할래?",
+    "있으면 상품명 / 쿠팡링크 / 하고싶은말을 보내줘.",
+    "하고싶은말이 있으면 그걸 본문에 먼저 녹이고, 없으면 내가 생활 장면 잡아서 쓸게.",
+    "",
+    "예시:",
+    "1. 대용량 머리끈",
+    "링크 https://link.coupang.com/a/example",
+    "하고싶은말 머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌",
+    "",
+    "직접 고를 상품 없으면: 내일은 자동으로 해줘",
+  ].join("\n");
+}
+
+function isAutoReply(text) {
+  return /자동으로\s*해줘|자동\s*후보|알아서\s*해줘/.test(String(text || ""));
+}
+
+function splitBlocks(text) {
+  return String(text || "")
+    .split(/\n(?=\s*\d+\.\s+)/)
+    .map((block) => block.trim())
+    .filter((block) => /\d+\.\s+/.test(block));
+}
+
+function parseBlock(block, options = {}) {
+  const lines = block.split(/\n/).map((line) => line.trim()).filter(Boolean);
+  const first = lines[0] || "";
+  const productName = first.replace(/^\d+\.\s*/, "").trim();
+  const linkLine = lines.find((line) => /https?:\/\/\S+/.test(line)) || "";
+  const affiliateUrl = (linkLine.match(/https?:\/\/\S+/) || [""])[0];
+  const noteLine = lines.find((line) => /^하고싶은말|^메모|^내말/.test(line)) || "";
+  const operatorNote = noteLine.replace(/^(하고싶은말|메모|내말)\s*/g, "").trim();
+  return normalizeProductCandidate({
+    source: "manual_queue",
+    product_name: productName,
+    affiliate_url: affiliateUrl,
+    operator_note: operatorNote,
+    usage_status: "not_confirmed",
+  }, { collectedAt: options.collectedAt || new Date().toISOString() });
+}
+
+export function parseTelegramProductQueueReply(text, options = {}) {
+  if (isAutoReply(text)) return { date: options.date, mode: "auto", products: [] };
+  const products = splitBlocks(text).map((block) => parseBlock(block, options)).filter((item) => item.product_name);
+  return { date: options.date, mode: products.length ? "manual" : "auto", products };
+}
+
+export function saveManualProductQueue(queue, options = {}) {
+  const root = options.root || process.cwd();
+  const date = queue.date || options.date;
+  if (!date) throw new Error("date is required to save manual product queue.");
+  const outDir = path.join(root, "inputs", "lifemagazine", "products");
+  fs.mkdirSync(outDir, { recursive: true });
+  const outPath = path.join(outDir, `${date}.json`);
+  fs.writeFileSync(outPath, `${JSON.stringify({ date, mode: queue.mode, products: queue.products || [] }, null, 2)}\n`, "utf8");
+  return outPath;
+}
+
+export function loadManualProductQueue(date, options = {}) {
+  const root = options.root || process.cwd();
+  const queuePath = path.join(root, "inputs", "lifemagazine", "products", `${date}.json`);
+  if (!fs.existsSync(queuePath)) return [];
+  const queue = JSON.parse(fs.readFileSync(queuePath, "utf8").replace(/^\uFEFF/, ""));
+  if (queue.mode === "auto") return [];
+  return Array.isArray(queue.products) ? queue.products.map((item) => normalizeProductCandidate(item)) : [];
+}
+```
+
+- [ ] **Step 4: Run tests to verify pass**
+
+Run: `node --test scripts/test_lifemagazine_draft.mjs`
+
+Expected: Telegram queue tests pass.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add scripts/lifemagazine_telegram_product_queue.mjs scripts/test_lifemagazine_draft.mjs
+git commit -m "feat: add lifemagazine telegram product queue"
+```
+
+---
+
+### Task 3: Lifestyle visual policy metadata
 
 **Files:**
 - Create: `scripts/lifemagazine_visual_policy.mjs`
@@ -417,7 +623,7 @@ git commit -m "feat: add lifemagazine lifestyle visual policy"
 
 ---
 
-### Task 3: Product-scene draft generation and validation
+### Task 4: Product-scene draft generation and validation
 
 **Files:**
 - Modify: `scripts/generate_lifemagazine_draft.mjs`
@@ -426,7 +632,7 @@ git commit -m "feat: add lifemagazine lifestyle visual policy"
 
 **Interfaces:**
 - Consumes: `COUPANG_DISCLOSURE` from Task 1.
-- Consumes: `buildLifestyleVisualPlan(candidate)` and `validateVisualPlan(plan)` from Task 2.
+- Consumes: `buildLifestyleVisualPlan(candidate)` and `validateVisualPlan(plan)` from Task 3.
 - Produces: Product drafts with `content_mode`, `scene_brief`, `target_reader`, `usage_status`, `visual_mode`, `visual_prompt`, `visual_avoid_list`, `visual_review_status`, comment disclosure, and no disclosure prefix in `threads_text`.
 
 - [ ] **Step 1: Add failing product draft tests**
@@ -528,7 +734,16 @@ Add helper functions before `buildThreadsText`:
 function productSceneLines(input) {
   const candidate = input.product_candidate || {};
   const name = String(input.product_name || candidate.product_name || input.topic || "이거").trim();
-  const scene = String(input.scene_brief || candidate.scene_hint || candidate.selection_reason || "").trim();
+  const operatorNote = String(input.operator_note || candidate.operator_note || "").trim();
+  const scene = String(operatorNote || input.scene_brief || candidate.scene_hint || candidate.selection_reason || "").trim();
+  if (operatorNote) {
+    return [
+      operatorNote,
+      "이런 건 내 생활패턴이랑 맞는지가 더 중요한 것 같아.",
+      "광고처럼 거창한 템이라기보다, 매일 거슬리는 부분 줄여주는 쪽이면 충분히 괜찮더라.",
+      "직접 써봤다고 단정하진 않고, 필요했던 사람은 한 번 볼 만한 정도로 남겨둘게.",
+    ];
+  }
   if (/머리끈/.test(name + scene)) {
     return [
       "머리끈 맨날 잃어버리는 사람 나와봐..",
@@ -684,7 +899,7 @@ git commit -m "feat: generate lifemagazine product scene drafts"
 
 ---
 
-### Task 4: Three daily product draft generator and schedule config
+### Task 5: Three daily product draft generator and schedule config
 
 **Files:**
 - Create: `scripts/generate_lifemagazine_product_daily.mjs`
@@ -694,6 +909,7 @@ git commit -m "feat: generate lifemagazine product scene drafts"
 
 **Interfaces:**
 - Consumes: `fixtureProductCandidates`, `selectDailyProductCandidates`.
+- Consumes: `loadManualProductQueue(date, options)` from Task 2.
 - Consumes: `generateLifemagazineDraft`, `saveLifemagazineDraft`.
 - Produces: `generateDailyProductDrafts(options?: object): object[]`
 
@@ -718,6 +934,30 @@ test("lifemagazine daily product generator creates three approval drafts", async
   assert.ok(drafts.every((draft) => draft.status === "ready_to_review"));
   assert.ok(drafts.every((draft) => validateLifemagazineDraft(draft).ok));
   assert.equal(fs.readdirSync(path.join(tmp, "outputs", "lifemagazine", "automation", "2026-08-02")).length, 3);
+});
+
+test("lifemagazine daily product generator prefers Telegram manual queue", async () => {
+  const { generateDailyProductDrafts } = await import("./generate_lifemagazine_product_daily.mjs");
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-manual-products-"));
+  saveManualProductQueue({
+    date: "2026-08-03",
+    mode: "manual",
+    products: [
+      normalizeProductCandidate({ source: "manual_queue", product_name: "대용량 머리끈", affiliate_url: "https://link.coupang.com/a/hair", operator_note: "머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌" }),
+      normalizeProductCandidate({ source: "manual_queue", product_name: "케이블 정리 클립", affiliate_url: "https://link.coupang.com/a/cable", operator_note: "책상 위 충전선 굴러다니는 거 싫은 사람용" }),
+      normalizeProductCandidate({ source: "manual_queue", product_name: "소지품 파우치", affiliate_url: "https://link.coupang.com/a/pouch", operator_note: "가방 안 립밤 사라지는 사람용" }),
+    ],
+  }, { root: tmp });
+
+  const drafts = generateDailyProductDrafts({
+    root: tmp,
+    date: "2026-08-03",
+    now: "2026-08-02T12:00:00.000Z",
+    candidates: fixtureProductCandidates("2026-08-03"),
+  });
+
+  assert.deepEqual(drafts.map((draft) => draft.product_name), ["대용량 머리끈", "케이블 정리 클립", "소지품 파우치"]);
+  assert.match(drafts[0].threads_text, /머리끈 맨날 잃어버리는 사람/);
 });
 ```
 
@@ -750,6 +990,7 @@ import { pathToFileURL } from "node:url";
 
 import { fixtureProductCandidates, selectDailyProductCandidates } from "./lifemagazine_product_candidates.mjs";
 import { generateLifemagazineDraft, saveLifemagazineDraft } from "./generate_lifemagazine_draft.mjs";
+import { loadManualProductQueue } from "./lifemagazine_telegram_product_queue.mjs";
 
 export const DAILY_PRODUCT_SLOTS = [
   { slot: "morning", time: "11:30", label: "오전 생활템" },
@@ -760,8 +1001,9 @@ export const DAILY_PRODUCT_SLOTS = [
 export function generateDailyProductDrafts(options = {}) {
   const root = options.root || process.cwd();
   const date = options.date || new Date().toISOString().slice(0, 10);
-  const candidates = options.candidates || fixtureProductCandidates(date);
-  const selected = selectDailyProductCandidates(candidates, 3);
+  const manualCandidates = options.manualCandidates || loadManualProductQueue(date, { root });
+  const automaticCandidates = options.candidates || fixtureProductCandidates(date);
+  const selected = selectDailyProductCandidates([...manualCandidates, ...automaticCandidates], 3);
   if (selected.length < 3) {
     throw new Error(`Need 3 safe Lifemagazine product candidates, got ${selected.length}.`);
   }
@@ -776,6 +1018,7 @@ export function generateDailyProductDrafts(options = {}) {
       content_mode: "found_product",
       product_candidate: candidate,
       product_name: candidate.product_name,
+      operator_note: candidate.operator_note,
       scene_brief: candidate.scene_hint,
       target_reader: candidate.scene_hint,
       product_links: [{ label: "제품 링크", url: candidate.affiliate_url, platform: "coupang" }],
@@ -843,7 +1086,7 @@ git commit -m "feat: schedule lifemagazine product drafts three times daily"
 
 ---
 
-### Task 5: Verification, dry run, and operator handoff
+### Task 6: Verification, dry run, and operator handoff
 
 **Files:**
 - Modify: `docs/superpowers/specs/2026-08-02-lifemagazine-coupang-product-design.md` only if implementation reveals a necessary correction.
