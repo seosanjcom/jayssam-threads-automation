@@ -7,6 +7,7 @@ import {
   saveManualProductQueue,
   tomorrowKst,
 } from "./lifemagazine_telegram_product_queue.mjs";
+import { generateDailyProductDraftsAndPreview } from "./generate_lifemagazine_product_daily.mjs";
 
 const root = process.cwd();
 const automationRoot = path.join(root, "outputs", "lifemagazine", "automation");
@@ -116,6 +117,12 @@ async function handleMessage(message) {
   if (queue.mode === "unknown") return;
   const savedPath = saveManualProductQueue(queue, { root });
   await sendMessage(`${buildProductQueueConfirmation(queue)}\n\n저장 위치: ${path.relative(root, savedPath)}`);
+  try {
+    const drafts = await generateDailyProductDraftsAndPreview({ root, date, sendPreview: true });
+    await sendMessage(`[라이프매거진 내일 초안 생성 완료]\n${date} 초안 ${drafts.length}개를 만들고 미리보기를 보냈어.\n각 미리보기에서 승인/보류 눌러주면 돼.`);
+  } catch (error) {
+    await sendMessage(`[라이프매거진 내일 초안 생성 실패]\n상품 큐는 저장했는데 초안 생성 중 문제가 났어.\n${error.message}`);
+  }
 }
 
 const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
