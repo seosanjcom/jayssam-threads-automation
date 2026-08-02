@@ -47,9 +47,9 @@
       "expectedUsername": "lifemagazine_",
       "requiresMedia": false,
       "carouselEnabled": false,
-      "dailyPostLimit": 1,
-      "minIntervalHours": 8,
-      "defaultSlots": ["15:00 KST", "18:00 KST", "21:00 KST"],
+      "dailyPostLimit": 3,
+      "minIntervalHours": 3,
+      "defaultSlots": ["11:30 KST", "16:30 KST", "21:30 KST"],
       "telegramEnvPrefix": "LIFEMAGAZINE_TELEGRAM",
       "workflowName": "lifemagazine-threads-automation.yml",
       "editorialRulesPath": "docs/threads-studio-prd.md"

@@ -23,12 +23,18 @@ import { buildLifemagazineTelegramMessage, prepareLifemagazinePreviewDraft } fro
 import { latestApprovedLifemagazineDraft } from "./publish_lifemagazine_latest_approved.mjs";
 import { applyLifemagazineApprovalAction } from "./telegram_check_lifemagazine_approvals.mjs";
 import {
+  fixtureProductCandidates,
+  normalizeProductCandidate,
+  COUPANG_DISCLOSURE,
+} from "./lifemagazine_product_candidates.mjs";
+import {
   buildProductQueueConfirmation,
   buildProductQueueReminder,
   loadManualProductQueue,
   parseTelegramProductQueueReply,
   saveManualProductQueue,
 } from "./lifemagazine_telegram_product_queue.mjs";
+import { generateDailyProductDrafts } from "./generate_lifemagazine_product_daily.mjs";
 
 const sampleAccounts = [
   { accountKey: "jayssam", threadsUsername: "jayssam_edu", displayName: "제이쌤", project: "jayssam", automationRoot: "outputs/automation", defaultSlots: ["15:00 KST", "21:00 KST"], dailyPostLimit: 2, minIntervalHours: 6 },
@@ -690,4 +696,58 @@ test("lifemagazine product queue saves and loads manual products", () => {
   assert.equal(loaded.length, 1);
   assert.equal(loaded[0].source, "manual_queue");
   assert.equal(loaded[0].operator_note, "쟁여템 느낌");
+});
+
+test("product-scene lifemagazine draft keeps disclosure in comment, not body", () => {
+  const candidate = normalizeProductCandidate({
+    productName: "대용량 머리끈 100개",
+    categoryName: "헤어소품",
+    affiliateUrl: "https://link.coupang.com/a/hair",
+    productImage: "https://example.com/hair.jpg",
+    reviewCount: 812,
+  });
+  const draft = generateLifemagazineDraft({
+    date: "2026-08-02",
+    slot: "morning",
+    topic: "머리끈 쟁여템",
+    content_mode: "found_product",
+    product_candidate: candidate,
+    product_links: [{ label: "제품 링크", url: candidate.affiliate_url, platform: "coupang" }],
+  }, { now: "2026-08-02T00:00:00.000Z" });
+
+  assert.equal(draft.content_mode, "found_product");
+  assert.equal(draft.usage_status, "not_confirmed");
+  assert.doesNotMatch(draft.threads_text, /^\[제휴 링크 포함\]/);
+  assert.doesNotMatch(draft.threads_text, /https?:\/\//);
+  assert.match(draft.threads_text, /머리끈|잃어버리는|쟁여/);
+  assert.match(draft.thread_comments.join("\n"), /https:\/\/link\.coupang\.com\/a\/hair/);
+  assert.match(draft.thread_comments.join("\n"), new RegExp(COUPANG_DISCLOSURE.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  assert.equal(draft.visual_mode, "ai_lifestyle_reference");
+  assert.equal(validateLifemagazineDraft(draft).ok, true);
+});
+
+test("lifemagazine daily product generator prefers Telegram manual queue", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-manual-products-"));
+  saveManualProductQueue({
+    date: "2026-08-03",
+    mode: "manual",
+    products: [
+      normalizeProductCandidate({ source: "manual_queue", product_name: "대용량 머리끈", affiliate_url: "https://link.coupang.com/a/hair", operator_note: "머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌" }),
+      normalizeProductCandidate({ source: "manual_queue", product_name: "케이블 정리 클립", affiliate_url: "https://link.coupang.com/a/cable", operator_note: "책상 위 충전선 굴러다니는 거 싫은 사람용" }),
+      normalizeProductCandidate({ source: "manual_queue", product_name: "소지품 파우치", affiliate_url: "https://link.coupang.com/a/pouch", operator_note: "가방 안 립밤 사라지는 사람용" }),
+    ],
+  }, { root: tmp });
+
+  const drafts = generateDailyProductDrafts({
+    root: tmp,
+    date: "2026-08-03",
+    now: "2026-08-02T12:00:00.000Z",
+    candidates: fixtureProductCandidates("2026-08-03"),
+  });
+
+  assert.equal(drafts.length, 3);
+  assert.deepEqual(drafts.map((draft) => draft.product_name), ["대용량 머리끈", "케이블 정리 클립", "소지품 파우치"]);
+  assert.deepEqual(drafts.map((draft) => draft.recommended_publish_time), ["11:30 KST", "16:30 KST", "21:30 KST"]);
+  assert.match(drafts[0].threads_text, /머리끈 맨날 잃어버리는 사람/);
+  assert.ok(drafts.every((draft) => validateLifemagazineDraft(draft).ok));
 });

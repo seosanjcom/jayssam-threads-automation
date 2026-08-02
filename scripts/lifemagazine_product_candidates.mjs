@@ -106,7 +106,10 @@ export function fixtureProductCandidates(date = new Date().toISOString().slice(0
 export function selectDailyProductCandidates(candidates = [], count = 3) {
   const selected = [];
   const seenNames = new Set();
-  for (const candidate of rankProductCandidates(candidates)) {
+  const normalized = candidates.map((candidate) => normalizeProductCandidate(candidate));
+  const manual = normalized.filter((candidate) => candidate.source === "manual_queue");
+  const automatic = normalized.filter((candidate) => candidate.source !== "manual_queue");
+  for (const candidate of [...manual, ...rankProductCandidates(automatic)]) {
     if (candidate.risk_level === "hold") continue;
     if (seenNames.has(candidate.product_name)) continue;
     selected.push(candidate);

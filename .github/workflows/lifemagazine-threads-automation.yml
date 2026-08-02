@@ -3,7 +3,7 @@ name: Lifemagazine Threads Automation
 on:
   schedule:
     - cron: "*/10 * * * *"
-    - cron: "0 9,12 * * *"
+    - cron: "30 2,7,12 * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -16,6 +16,7 @@ on:
           - approval_check
           - publish
           - product_queue
+          - product_drafts
           - health
       draft_path:
         description: "Draft JSON path for preview mode"
@@ -42,8 +43,8 @@ jobs:
       THREADS_ACCOUNT_HANDLE: "@lifemagazine_"
       THREADS_AUTO_PUBLISH: "true"
       THREADS_SAFETY_MODE: "true"
-      THREADS_DAILY_POST_LIMIT: "1"
-      THREADS_MIN_INTERVAL_HOURS: "8"
+      THREADS_DAILY_POST_LIMIT: "3"
+      THREADS_MIN_INTERVAL_HOURS: "3"
       THREADS_PUBLISH_WAIT_MS: "30000"
       THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true"
       THREADS_EXPECTED_USERNAME: "lifemagazine_"
@@ -74,6 +75,8 @@ jobs:
           node --check scripts/telegram_check_lifemagazine_approvals.mjs
           node --check scripts/lifemagazine_product_candidates.mjs
           node --check scripts/lifemagazine_telegram_product_queue.mjs
+          node --check scripts/lifemagazine_visual_policy.mjs
+          node --check scripts/generate_lifemagazine_product_daily.mjs
           node --check scripts/publish_lifemagazine_latest_approved.mjs
           node --check scripts/threads_publish.mjs
           node --test scripts/test_lifemagazine_draft.mjs
@@ -96,8 +99,12 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'product_queue'
         run: node scripts/lifemagazine_telegram_product_queue.mjs
 
+      - name: Generate product drafts
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'product_drafts'
+        run: node scripts/generate_lifemagazine_product_daily.mjs --send-preview
+
       - name: Publish latest approved
-        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '0 9,12 * * *')
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '30 2,7,12 * * *')
         run: node scripts/publish_lifemagazine_latest_approved.mjs
 
       - name: Health
@@ -107,7 +114,7 @@ jobs:
           echo "lifemagazine health ok"
 
       - name: Commit lifemagazine results
-        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish')) || github.event_name == 'schedule'
+        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish' || inputs.mode == 'product_drafts')) || github.event_name == 'schedule'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
