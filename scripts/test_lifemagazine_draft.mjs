@@ -22,6 +22,13 @@ import {
 import { buildLifemagazineTelegramMessage, prepareLifemagazinePreviewDraft } from "./send_lifemagazine_preview_telegram.mjs";
 import { latestApprovedLifemagazineDraft } from "./publish_lifemagazine_latest_approved.mjs";
 import { applyLifemagazineApprovalAction } from "./telegram_check_lifemagazine_approvals.mjs";
+import {
+  buildProductQueueConfirmation,
+  buildProductQueueReminder,
+  loadManualProductQueue,
+  parseTelegramProductQueueReply,
+  saveManualProductQueue,
+} from "./lifemagazine_telegram_product_queue.mjs";
 
 const sampleAccounts = [
   { accountKey: "jayssam", threadsUsername: "jayssam_edu", displayName: "제이쌤", project: "jayssam", automationRoot: "outputs/automation", defaultSlots: ["15:00 KST", "21:00 KST"], dailyPostLimit: 2, minIntervalHours: 6 },
@@ -637,4 +644,50 @@ test("lifemagazine publish refuses mojibake-looking Korean text", () => {
 
   assert.notEqual(result.status, 0);
   assert.match(`${result.stdout}\n${result.stderr}`, /mojibake|broken Korean|\?\?\?/i);
+});
+
+test("lifemagazine product queue reminder includes reply examples", () => {
+  const message = buildProductQueueReminder("2026-08-03");
+
+  assert.match(message, /내일 라이프매거진 상품 3개/);
+  assert.match(message, /답변 예시/);
+  assert.match(message, /상품명 \/ 쿠팡링크 \/ 하고싶은말/);
+  assert.match(message, /내일은 자동으로 해줘/);
+});
+
+test("lifemagazine product queue parses manual Telegram reply and confirms saved products", () => {
+  const queue = parseTelegramProductQueueReply(`
+내일 상품
+1. 대용량 머리끈
+링크 https://link.coupang.com/a/hair
+하고싶은말 머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌
+
+2. 케이블 정리 클립
+링크 https://link.coupang.com/a/cable
+하고싶은말 책상 위 충전선 굴러다니는 거 싫은 사람용
+`, { date: "2026-08-03", collectedAt: "2026-08-02T12:00:00.000Z" });
+
+  assert.equal(queue.mode, "manual");
+  assert.equal(queue.products.length, 2);
+  assert.equal(queue.products[0].product_name, "대용량 머리끈");
+  assert.equal(queue.products[0].operator_note, "머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌");
+  assert.match(buildProductQueueConfirmation(queue), /2개 상품 확인했고 저장했어/);
+});
+
+test("lifemagazine product queue saves and loads manual products", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-product-queue-"));
+  const queue = parseTelegramProductQueueReply(`
+내일 상품
+1. 대용량 머리끈
+링크 https://link.coupang.com/a/hair
+하고싶은말 쟁여템 느낌
+`, { date: "2026-08-03", collectedAt: "2026-08-02T12:00:00.000Z" });
+
+  const saved = saveManualProductQueue(queue, { root: tmp });
+  const loaded = loadManualProductQueue("2026-08-03", { root: tmp });
+
+  assert.equal(path.relative(tmp, saved), path.join("inputs", "lifemagazine", "products", "2026-08-03.json"));
+  assert.equal(loaded.length, 1);
+  assert.equal(loaded[0].source, "manual_queue");
+  assert.equal(loaded[0].operator_note, "쟁여템 느낌");
 });

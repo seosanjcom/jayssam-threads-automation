@@ -15,6 +15,7 @@ on:
           - preview
           - approval_check
           - publish
+          - product_queue
           - health
       draft_path:
         description: "Draft JSON path for preview mode"
@@ -71,6 +72,8 @@ jobs:
           node --check scripts/threads_studio_server.mjs
           node --check scripts/send_lifemagazine_preview_telegram.mjs
           node --check scripts/telegram_check_lifemagazine_approvals.mjs
+          node --check scripts/lifemagazine_product_candidates.mjs
+          node --check scripts/lifemagazine_telegram_product_queue.mjs
           node --check scripts/publish_lifemagazine_latest_approved.mjs
           node --check scripts/threads_publish.mjs
           node --test scripts/test_lifemagazine_draft.mjs
@@ -89,6 +92,10 @@ jobs:
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'approval_check') || (github.event_name == 'schedule' && github.event.schedule == '*/10 * * * *')
         run: node scripts/telegram_check_lifemagazine_approvals.mjs
 
+      - name: Send product queue reminder
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'product_queue'
+        run: node scripts/lifemagazine_telegram_product_queue.mjs
+
       - name: Publish latest approved
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '0 9,12 * * *')
         run: node scripts/publish_lifemagazine_latest_approved.mjs
@@ -104,7 +111,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f outputs/lifemagazine
+          git add -f outputs/lifemagazine inputs/lifemagazine
           git commit -m "Record Lifemagazine automation result $(TZ=Asia/Seoul date +%F-%H%M)" || true
           git pull --rebase
           git push
