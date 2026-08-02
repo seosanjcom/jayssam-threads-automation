@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -683,7 +683,7 @@ test("lifemagazine product queue parses manual Telegram reply and confirms saved
 test("lifemagazine product queue parses natural mixed numbering formats", () => {
   const queue = parseTelegramProductQueueReply(`
 내일 상품
-1. 냉동아보카도
+1.냉동아보카도
 링크 https://link.coupang.com/a/avocado
 하고싶은말 다이어터에게 완전추천
 
@@ -771,3 +771,4 @@ test("lifemagazine daily product generator prefers Telegram manual queue", () =>
   assert.match(drafts[0].threads_text, /머리끈 맨날 잃어버리는 사람/);
   assert.ok(drafts.every((draft) => validateLifemagazineDraft(draft).ok));
 });
+
