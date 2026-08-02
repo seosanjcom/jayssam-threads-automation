@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -54,11 +54,11 @@ function isAutoReply(text) {
 }
 
 function splitBlocks(text) {
-  const normalized = String(text || "").replace(/\n\s*(?=(?:\d+[\.)]|[-•])\s+)/g, "\n@@PRODUCT@@");
+  const normalized = String(text || "").replace(/\n\s*(?=(?:\d+[\.)]|[-•])\s*)/g, "\n@@PRODUCT@@");
   return normalized
     .split("\n@@PRODUCT@@")
     .map((block) => block.trim())
-    .filter((block) => /^(?:\d+[\.)]|[-•])\s+/m.test(block));
+    .filter((block) => /^(?:\d+[\.)]|[-•])\s*/m.test(block));
 }
 
 function parseBlock(block, options = {}) {
@@ -168,3 +168,4 @@ if (isDirectRun) {
   const result = await sendProductQueueReminder({ date });
   console.log(`Sent Lifemagazine product queue reminder for ${result.targetDate}`);
 }
+
