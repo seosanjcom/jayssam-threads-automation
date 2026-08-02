@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { COUPANG_DISCLOSURE } from "./lifemagazine_product_candidates.mjs";
+import { buildLifestyleVisualPlan } from "./lifemagazine_visual_policy.mjs";
 
 const DEFAULT_ACCOUNT = "lifemagazine_";
 const DEFAULT_PROJECT = "lifemagazine";
@@ -95,7 +97,10 @@ function kstDateTimeToIso(date, clockTime) {
   return new Date(Date.UTC(year, month - 1, day, hour - 9, minute, 0, 0)).toISOString();
 }
 
-function disclosureFor(productLinks) {
+function disclosureFor(productLinks, input = {}) {
+  if (input.content_mode === "found_product" || input.content_mode === "recommendation" || input.affiliate_disclosure_location === "reply") {
+    return "";
+  }
   return productLinks.length ? "[제휴 링크 포함]\n\n" : "";
 }
 
@@ -202,9 +207,58 @@ function toneOpening(input) {
   ];
 }
 
+function productSceneLines(input) {
+  const candidate = input.product_candidate || {};
+  const name = String(input.product_name || candidate.product_name || input.topic || "이거").trim();
+  const operatorNote = String(input.operator_note || candidate.operator_note || "").trim();
+  const scene = String(operatorNote || input.scene_brief || candidate.scene_hint || candidate.selection_reason || "").trim();
+
+  if (operatorNote) {
+    return [
+      operatorNote,
+      "이런 건 내 생활패턴이랑 맞는지가 더 중요한 것 같아.",
+      "광고처럼 거창한 템이라기보다, 매일 거슬리는 부분 줄여주는 쪽이면 충분히 괜찮더라.",
+      "필요했던 사람은 한 번 볼 만한 정도로 남겨둘게.",
+    ];
+  }
+  if (/머리끈/.test(name + scene)) {
+    return [
+      "머리끈 맨날 잃어버리는 사람 나와봐..",
+      "분명 어제 손목에 있었는데 아침엔 또 없음ㅋㅋ",
+      "이런 건 예쁜 거 하나보다 그냥 대용량으로 집에 두는 쪽이 마음 편하더라.",
+      "자주 묶는 사람은 이런 소모템 떨어지는 순간이 제일 귀찮아서, 쟁여두기용으로 볼 만함.",
+    ];
+  }
+  if (/케이블|충전/.test(name + scene)) {
+    return [
+      "책상 위 충전선 자꾸 굴러다니는 사람 있지..",
+      "나도 작은 거 하나만 늘어도 갑자기 정신없어 보여서 이런 정리템 먼저 보게 됨.",
+      "대단한 물건은 아닌데 매일 보이는 자리에는 이런 게 은근 차이 나더라.",
+      "깔끔한 척하고 싶을 때보다 찾기 쉽게 두고 싶을 때 더 괜찮은 쪽.",
+    ];
+  }
+  if (/파우치|가방/.test(name + scene)) {
+    return [
+      "가방 안에서 립밤이랑 머리끈 맨날 사라지는 사람 나만 그런 거 아니지..",
+      "작은 거 찾느라 가방 뒤지는 시간이 제일 별거 아닌데 제일 귀찮음ㅋㅋ",
+      "이런 건 예쁜 것보다 손이 자주 가는지가 더 중요한 것 같아.",
+      "자주 들고 다니는 사람은 가방 정리용으로 한 번 볼 만함.",
+    ];
+  }
+  return [
+    `${scene || "생활 속에서 은근 자주 쓰는 거"} 찾는 사람은 이거 한 번 볼 만해.`,
+    "엄청 대단한 제품이라기보다, 없으면 계속 불편한 쪽에 가까움.",
+    "예쁜데 손 안 가는 것보다 매일 쓰면 그게 진짜 잘 산 템이지.",
+    "나는 이런 건 생활패턴이랑 맞는지가 제일 중요하다고 봄.",
+  ];
+}
+
 function buildThreadsText(input, productLinks) {
+  if (input.content_mode === "found_product" || input.content_mode === "recommendation") {
+    return productSceneLines(input).join("\n");
+  }
   const lines = [
-    disclosureFor(productLinks).trimEnd(),
+    disclosureFor(productLinks, input).trimEnd(),
     ...toneOpening(input),
     relationshipNote(input),
     input.product_relationship === "official_confirmed" ? "정보는 댓글에 남겨둘게!!" : "정보는 댓글에 남겨둘게.",
@@ -236,6 +290,15 @@ function buildComments(input, productLinks) {
   }
 
   if (productLinks.length) {
+    if (input.content_mode === "found_product" || input.content_mode === "recommendation") {
+      comments.push([
+        "제품 링크는 여기 둘게!",
+        ...productLinks.map((item) => `${item.label || "제품 링크"}: ${item.url || item}`),
+        "",
+        COUPANG_DISCLOSURE,
+      ].join("\n"));
+      return comments;
+    }
     if (relationship === "official_confirmed") {
       comments.push([
         exactUseLine || "",
@@ -278,6 +341,11 @@ export function generateLifemagazineDraft(input = {}, options = {}) {
   const customPublishTime = normalizeClockTime(input.custom_publish_time);
   const clockTime = customPublishTime || normalizeClockTime(input.recommended_publish_time) || slotPublishTime(slot);
   const publishTimeSource = customPublishTime ? "custom" : "recommended";
+  const productCandidate = input.product_candidate || {};
+  const visualPlan = input.visual_plan || buildLifestyleVisualPlan(productCandidate);
+  const mediaUrls = Array.isArray(input.media_urls) && input.media_urls.length
+    ? input.media_urls
+    : Array.isArray(visualPlan.media_urls) ? visualPlan.media_urls : [];
 
   return {
     id,
@@ -286,6 +354,10 @@ export function generateLifemagazineDraft(input = {}, options = {}) {
     project: DEFAULT_PROJECT,
     topic,
     product_name: input.product_name || "",
+    content_mode: input.content_mode || "",
+    scene_brief: input.scene_brief || productCandidate.scene_hint || productCandidate.selection_reason || "",
+    target_reader: input.target_reader || productCandidate.scene_hint || "",
+    usage_status: input.usage_status || productCandidate.usage_status || "not_confirmed",
     status: input.status || "ready_to_review",
     draft_date: date,
     created_at: options.now || new Date().toISOString(),
@@ -296,8 +368,12 @@ export function generateLifemagazineDraft(input = {}, options = {}) {
     tone_label: toneStyleByKey(toneStyle).label,
     threads_text: buildThreadsText({ ...input, tone_style: toneStyle }, productLinks),
     thread_comments: buildComments(input, productLinks),
-    media_urls: Array.isArray(input.media_urls) ? input.media_urls : [],
+    media_urls: mediaUrls,
     local_media_paths: Array.isArray(input.local_media_paths) ? input.local_media_paths : [],
+    visual_mode: input.visual_mode || visualPlan.visual_mode || "text_only",
+    visual_prompt: input.visual_prompt || visualPlan.visual_prompt || "",
+    visual_avoid_list: input.visual_avoid_list || visualPlan.visual_avoid_list || [],
+    visual_review_status: input.visual_review_status || visualPlan.visual_review_status || "pending",
     source_urls: Array.isArray(input.source_urls) ? input.source_urls.filter(Boolean) : [],
     safety_rules: [
       "Publish only when Threads profile username is lifemagazine_.",

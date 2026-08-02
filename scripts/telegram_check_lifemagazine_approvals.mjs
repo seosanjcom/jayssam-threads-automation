@@ -1,6 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import {
+  buildProductQueueConfirmation,
+  parseTelegramProductQueueReply,
+  saveManualProductQueue,
+  tomorrowKst,
+} from "./lifemagazine_telegram_product_queue.mjs";
 
 const root = process.cwd();
 const automationRoot = path.join(root, "outputs", "lifemagazine", "automation");
@@ -101,6 +107,17 @@ async function handleCallback(callback) {
   await sendMessage(`lifemagazine_ ${updated.status}: ${id}\n${suffix}`);
 }
 
+async function handleMessage(message) {
+  const text = String(message?.text || "").trim();
+  if (!text) return;
+  if (!/내일|상품|자동으로\s*해줘|링크|하고싶은말/.test(text)) return;
+  const date = tomorrowKst();
+  const queue = parseTelegramProductQueueReply(text, { date });
+  if (queue.mode === "unknown") return;
+  const savedPath = saveManualProductQueue(queue, { root });
+  await sendMessage(`${buildProductQueueConfirmation(queue)}\n\n저장 위치: ${path.relative(root, savedPath)}`);
+}
+
 const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isDirectRun) {
@@ -121,6 +138,7 @@ if (isDirectRun) {
   for (const update of updates.result || []) {
     maxOffset = Math.max(maxOffset, update.update_id);
     await handleCallback(update.callback_query);
+    await handleMessage(update.message);
   }
   writeJson(statePath, { offset: maxOffset, checked_at: new Date().toISOString() });
 }

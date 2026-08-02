@@ -1,5 +1,7 @@
 import fs from "node:fs";
 import { pathToFileURL } from "node:url";
+import { COUPANG_DISCLOSURE } from "./lifemagazine_product_candidates.mjs";
+import { validateVisualPlan } from "./lifemagazine_visual_policy.mjs";
 
 const SAME_PRODUCT_PATTERNS = [
   /착용한 제품입니다/,
@@ -19,6 +21,22 @@ function hasDisclosure(draft) {
   return /제휴 링크|광고|수수료/.test(text);
 }
 
+function commentsText(draft) {
+  return (draft.thread_comments || []).join("\n");
+}
+
+function hasExactCoupangDisclosureInComments(draft) {
+  return commentsText(draft).includes(COUPANG_DISCLOSURE);
+}
+
+function bodyHasUrl(draft) {
+  return /https?:\/\//.test(String(draft.threads_text || ""));
+}
+
+function claimsDirectUse(draft) {
+  return /직접\s*써봤|써봤는데|사용해봤|내가\s*써보니|내돈내산/.test(String(draft.threads_text || ""));
+}
+
 function bodyStartsWithDisclosure(draft) {
   return /^\s*(?:\[제휴 링크 포함\]|\[광고\/제휴 링크 포함\]|제휴 링크 포함)/.test(String(draft.threads_text || ""));
 }
@@ -35,8 +53,28 @@ export function validateLifemagazineDraft(draft) {
     errors.push("threads_text is too short.");
   }
 
-  if (hasProductLinks(draft) && (!hasDisclosure(draft) || !bodyStartsWithDisclosure(draft))) {
+  if (hasProductLinks(draft) && draft.content_mode === "found_product") {
+    if (!hasExactCoupangDisclosureInComments(draft)) {
+      errors.push("exact Coupang affiliate disclosure is required in thread_comments when product_links exist.");
+    }
+    if (bodyHasUrl(draft)) {
+      errors.push("main body must not contain affiliate or raw URLs.");
+    }
+  } else if (hasProductLinks(draft) && (!hasDisclosure(draft) || !bodyStartsWithDisclosure(draft))) {
     errors.push("affiliate disclosure is required at the beginning of threads_text when product_links exist.");
+  }
+
+  if (claimsDirectUse(draft) && draft.usage_status !== "actual_used") {
+    errors.push("direct-use claims require usage_status actual_used.");
+  }
+
+  const visualResult = validateVisualPlan({
+    visual_mode: draft.visual_mode,
+    visual_prompt: draft.visual_prompt,
+    visual_avoid_list: draft.visual_avoid_list,
+  });
+  if (!visualResult.ok && draft.visual_mode === "ai_lifestyle_reference") {
+    errors.push(...visualResult.errors);
   }
 
   if (draft.product_relationship === "official_confirmed") {
