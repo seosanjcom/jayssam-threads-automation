@@ -29,6 +29,21 @@ function runNode(args, extra = {}) {
   });
 }
 
+function assertOffnoteMaterialsDraft(draft) {
+  if (draft.status !== "pending_approval") {
+    throw new Error(`Expected generated offnote draft to require approval, got ${draft.status}`);
+  }
+  if (!/자료/.test(draft.threads_text) || !/인스타 같은 글에 댓글/.test(draft.threads_text) || !/카톡방/.test(draft.threads_text)) {
+    throw new Error(`Offnote draft does not match materials CTA tone:\n${draft.threads_text}`);
+  }
+  if (/기준\s*(?:알려|정리|공유|풀)|나처럼|성공담|망한\s*것|배운\s*것|수정한\s*것/.test(draft.threads_text)) {
+    throw new Error(`Offnote draft contains banned framing:\n${draft.threads_text}`);
+  }
+  if ((draft.thread_comments || []).length > 1) {
+    throw new Error("Offnote materials drafts should not use repetitive comment expansion.");
+  }
+}
+
 try {
   copyScript("generate_offnote_daily_post.mjs");
   copyScript("publish_offnote_due.mjs");
@@ -55,8 +70,16 @@ try {
 
   const generated = JSON.parse(firstGenerate.stdout);
   const draftPath = path.join(tmp, generated.draft);
+  const firstDraft = readJson(draftPath);
+  assertOffnoteMaterialsDraft(firstDraft);
+
+  const valid = runNode(["scripts/validate_offnote_draft.mjs", draftPath]);
+  if (valid.status !== 0) {
+    throw new Error(`Expected generated offnote draft to validate:\n${valid.stderr}\n${valid.stdout}`);
+  }
+
   const publishedDraft = {
-    ...readJson(draftPath),
+    ...firstDraft,
     status: "published",
     media_urls: ["https://example.com/card.png"],
     published_at: "2026-05-23T08:29:48.793Z",
@@ -78,50 +101,48 @@ try {
     throw new Error(`Expected preview-created=false for existing published draft, got ${flag}`);
   }
 
-  const blogDates = ["2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30"];
-  const generatedBlogDrafts = blogDates.map((date) => {
+  const sampleDates = ["2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30"];
+  for (const date of sampleDates) {
     const result = runNode(["scripts/generate_offnote_daily_post.mjs", date, "evening"]);
     if (result.status !== 0) {
-      throw new Error(`blog-focused generate failed for ${date}:\n${result.stderr}\n${result.stdout}`);
+      throw new Error(`materials generate failed for ${date}:\n${result.stderr}\n${result.stdout}`);
     }
-    return readJson(path.join(tmp, JSON.parse(result.stdout).draft));
+    assertOffnoteMaterialsDraft(readJson(path.join(tmp, JSON.parse(result.stdout).draft)));
+  }
+
+  const badTonePath = path.join(tmp, "outputs", "afterwork-profit", "automation", "2026-05-24", "OFFNOTE-20260524-evening-bad-tone.json");
+  writeJson(badTonePath, {
+    id: "OFFNOTE-20260524-evening-bad-tone",
+    account: "offnote.kr",
+    topic: "블로그 수익화 기준",
+    status: "pending_approval",
+    threads_text: "블로그 수익화 기준 알려줄게. 나처럼 해. 성공담도 풀어볼게.",
+    thread_comments: [],
+    cardnews_slides: [
+      { title: "블로그", body: "자료" },
+      { title: "인스타", body: "댓글" },
+      { title: "카톡방", body: "공지" },
+      { title: "자료", body: "챌린지" },
+    ],
   });
-
-  const generatedText = JSON.stringify(generatedBlogDrafts);
-  if (!/체험단|블로그|생활비|네일샵|미용실|카페/.test(generatedText)) {
-    throw new Error("Offnote generator should focus on approachable blog and experience-review content.");
-  }
-  if (/이번 주엔 이 키워드 미리 선점하세요/.test(generatedText)) {
-    throw new Error("Offnote generator is still stuck on the old keyword-preemption template.");
-  }
-  if (/제휴 링크|구매링크|민경님|소유님|유튜브에 나온 제품/.test(generatedText)) {
-    throw new Error("Offnote generator produced lifemagazine-style affiliate or celebrity-shopping content.");
+  const badToneValidate = runNode(["scripts/validate_offnote_draft.mjs", badTonePath]);
+  if (badToneValidate.status === 0 || !badToneValidate.stderr.includes("banned positioning")) {
+    throw new Error(`Expected bad tone validation failure, got:\n${badToneValidate.stderr}\n${badToneValidate.stdout}`);
   }
 
-  const badDraftPath = path.join(
-    tmp,
-    "outputs",
-    "afterwork-profit",
-    "automation",
-    "2026-05-24",
-    "OFFNOTE-20260524-evening-shopping-route.json",
-  );
+  const badDraftPath = path.join(tmp, "outputs", "afterwork-profit", "automation", "2026-05-24", "OFFNOTE-20260524-evening-shopping-route.json");
   writeJson(badDraftPath, {
     id: "OFFNOTE-20260524-evening-shopping-route",
     account: "offnote.kr",
-    topic: "민경님 유튜브 컨실러 추천템",
+    topic: "쿠팡 상품 추천",
     status: "approved",
-    threads_text:
-      "[제휴 링크 포함]\n\n민경님이 유튜브에서 언급한 컨실러가 궁금해서 찾아봤습니다. 정보는 댓글에 정리했고 구매링크도 함께 남겨둘게요.",
-    thread_comments: [
-      "1. 구매링크: https://example.com/item",
-      "2. 이 댓글에는 제휴 링크가 포함되어 있습니다.",
-    ],
+    threads_text: "쿠팡 상품 추천 링크와 구매 링크를 정리했어. 인스타 같은 글에 댓글 남겨줘. 카톡방 자료도 있어.",
+    thread_comments: [],
     cardnews_slides: [
-      { title: "민경님 컨실러", body: "유튜브에 나온 제품" },
-      { title: "상품 링크", body: "댓글에 정리" },
-      { title: "제휴 링크", body: "공정위 문구 필요" },
-      { title: "라이프매거진", body: "연예인 라이프 소재" },
+      { title: "상품 링크", body: "쿠팡 상품 추천" },
+      { title: "구매 링크", body: "상품 링크" },
+      { title: "자료", body: "인스타 같은 글에 댓글" },
+      { title: "카톡방", body: "자료 공지" },
     ],
   });
   const badValidate = runNode(["scripts/validate_offnote_draft.mjs", badDraftPath]);
@@ -158,7 +179,7 @@ try {
     throw new Error(`Expected already-published skip message, got:\n${publish.stdout}`);
   }
 
-  console.log(JSON.stringify({ ok: true, guard: "offnote blog focus and publish guards pass" }, null, 2));
+  console.log(JSON.stringify({ ok: true, guard: "offnote materials tone and publish guards pass" }, null, 2));
 } finally {
   fs.rmSync(tmp, { recursive: true, force: true });
 }

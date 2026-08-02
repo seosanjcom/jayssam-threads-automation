@@ -30,11 +30,11 @@ on:
   schedule:
     # KST 17:30 - daily preview for week 1.
     - cron: "30 8 * * *"
-    # KST 18:00 - auto-publish the daily preview unless it was held.
+    # KST 18:00 - approval checker only. Offnote scheduled publishing is approval-gated.
     - cron: "0 9 * * *"
     # KST 20:30 - second daily preview from week 2, gated in the route step.
     - cron: "30 11 * * *"
-    # KST 21:00 - second auto-publish from week 2, gated in the route step.
+    # KST 21:00 - approval checker only. Offnote scheduled publishing is approval-gated.
     - cron: "0 12 * * *"
     # Approval checker. GitHub may delay scheduled jobs, so publishing remains approval-gated.
     - cron: "*/5 * * * *"
@@ -96,7 +96,7 @@ jobs:
 
           case "${{ github.event.schedule }}" in
             "30 8 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "0 9 * * *") echo "mode=auto_publish" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+            "0 9 * * *") echo "mode=approval_check" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             "30 11 * * *")
               TODAY=$(TZ=Asia/Seoul date +%F)
               if [[ "$TODAY" < "2026-05-30" ]]; then
@@ -112,11 +112,11 @@ jobs:
             "0 12 * * *")
               TODAY=$(TZ=Asia/Seoul date +%F)
               if [[ "$TODAY" < "2026-05-30" ]]; then
-                echo "mode=auto_publish" >> "$GITHUB_OUTPUT"
+                echo "mode=approval_check" >> "$GITHUB_OUTPUT"
                 echo "slot=night" >> "$GITHUB_OUTPUT"
                 echo "run=false" >> "$GITHUB_OUTPUT"
               else
-                echo "mode=auto_publish" >> "$GITHUB_OUTPUT"
+                echo "mode=approval_check" >> "$GITHUB_OUTPUT"
                 echo "slot=night" >> "$GITHUB_OUTPUT"
                 echo "run=true" >> "$GITHUB_OUTPUT"
               fi
