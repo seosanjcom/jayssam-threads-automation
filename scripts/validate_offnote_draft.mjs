@@ -27,42 +27,62 @@ const hangul = (text.match(/[\uAC00-\uD7A3]/g) || []).length;
 const han = (text.match(/[\u4E00-\u9FFF]/g) || []).length;
 const replacement = (text.match(/\uFFFD/g) || []).length;
 const questionMarks = (text.match(/\?/g) || []).length;
-const suspiciousFragments = ["Ã", "Â", "ì", "ë", "揶", "媛", "留", "寃"].filter((item) => text.includes(item));
+const suspiciousFragments = ["횄", "횂", "챙", "챘", "揶", "筌", "野"].filter((item) => text.includes(item));
 const shoppingRouteTerms = [
-  /제휴\s*링크/,
-  /구매\s*링크/,
+  /제휴\s*링크.*구매\s*링크/s,
   /상품\s*링크/,
-  /댓글에.*(?:링크|정보)/,
-  /DM.*링크/,
-  /연예인.*(?:제품|착용|사용|추천|템)/,
-  /(?:유튜브|인스타|릴스).*나온.*(?:제품|템)/,
-  /(?:민경|소유|환연|아이돌|배우|셀럽).*님/,
-  /추천템/,
+  /쿠팡\s*상품\s*추천/,
+  /유튜브에\s*나온\s*제품/,
+  /연예인.*제품/,
+];
+const bannedPositioning = [
+  /나처럼\s*해/,
+  /나처럼\s*수익화/,
+  /성공담/,
+  /망한\s*것/,
+  /배운\s*것/,
+  /수정한\s*것/,
+  /기준\s*(?:알려|정리|공유|풀)/,
 ];
 
 const errors = [];
 if (draft.account !== "offnote.kr") errors.push(`account must be offnote.kr, got ${draft.account}`);
-if (!draft.threads_text || draft.threads_text.length < 180) {
-  errors.push("threads_text is too short for a real offnote preview");
+if (!["pending_approval", "approved", "published", "held", "publish_failed", "ready_to_review"].includes(String(draft.status || ""))) {
+  errors.push(`unsupported offnote status: ${draft.status}`);
+}
+if (!draft.threads_text || draft.threads_text.length < 120) {
+  errors.push("threads_text is too short for a real offnote materials preview");
 }
 if (draft.threads_text && draft.threads_text.length > 500) {
   errors.push(`threads_text is too long for Threads API (${draft.threads_text.length}/500)`);
 }
-if (hangul < 120) errors.push(`too little Hangul text detected (${hangul})`);
-if (han > hangul * 0.25) errors.push(`possible mojibake: too many Han characters (${han}) vs Hangul (${hangul})`);
+if (hangul < 80) errors.push(`too little Hangul text detected (${hangul})`);
+if (han > hangul * 0.1) errors.push(`possible mojibake: too many Han characters (${han}) vs Hangul (${hangul})`);
 if (replacement > 0) errors.push(`replacement characters detected (${replacement})`);
-if (questionMarks > 5) errors.push(`possible mojibake: too many question marks (${questionMarks})`);
+if (questionMarks > 2) errors.push(`possible mojibake: too many question marks (${questionMarks})`);
 if (suspiciousFragments.length > 0) {
   errors.push(`suspicious mojibake fragments: ${suspiciousFragments.join(", ")}`);
 }
 if (shoppingRouteTerms.some((pattern) => pattern.test(text))) {
   errors.push("shopping/product-route content belongs to lifemagazine_, not offnote.kr");
 }
-if (!Array.isArray(draft.thread_comments) || draft.thread_comments.length < 2) {
-  errors.push("thread_comments must include at least 2 information-expansion comments");
+if (!/자료/.test(text)) {
+  errors.push("offnote materials draft must mention 자료.");
+}
+if (!/인스타 같은 글에 댓글/.test(text)) {
+  errors.push("offnote materials draft must route requests to Instagram same-post comments.");
+}
+if (!/카톡방/.test(text)) {
+  errors.push("offnote materials draft must mention KakaoTalk room notices.");
+}
+if (bannedPositioning.some((pattern) => pattern.test(text))) {
+  errors.push("offnote draft contains banned positioning language.");
+}
+if (Array.isArray(draft.thread_comments) && draft.thread_comments.length > 1) {
+  errors.push("offnote materials draft should not use repetitive comment expansion.");
 }
 if (!Array.isArray(draft.cardnews_slides) || draft.cardnews_slides.length < 4) {
-  errors.push("cardnews_slides must include at least 4 slides");
+  errors.push("cardnews_slides must include at least 4 simple material summary slides");
 }
 
 if (errors.length) {
@@ -71,4 +91,3 @@ if (errors.length) {
 }
 
 console.log(JSON.stringify({ ok: true, file, hangul, han }, null, 2));
-
