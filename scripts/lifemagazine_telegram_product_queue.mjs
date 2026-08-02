@@ -54,16 +54,17 @@ function isAutoReply(text) {
 }
 
 function splitBlocks(text) {
-  return String(text || "")
-    .split(/\n(?=\s*\d+\.\s+)/)
+  const normalized = String(text || "").replace(/\n\s*(?=(?:\d+[\.)]|[-•])\s+)/g, "\n@@PRODUCT@@");
+  return normalized
+    .split("\n@@PRODUCT@@")
     .map((block) => block.trim())
-    .filter((block) => /^\d+\.\s+/m.test(block));
+    .filter((block) => /^(?:\d+[\.)]|[-•])\s+/m.test(block));
 }
 
 function parseBlock(block, options = {}) {
   const lines = block.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const first = lines[0] || "";
-  const productName = first.replace(/^\d+\.\s*/, "").trim();
+  const productName = first.replace(/^(?:\d+[\.)]|[-•])\s*/, "").trim();
   const linkLine = lines.find((line) => /https?:\/\/\S+/.test(line)) || "";
   const affiliateUrl = (linkLine.match(/https?:\/\/\S+/) || [""])[0].replace(/[),.]+$/, "");
   const imageLine = lines.find((line) => /^이미지|^사진/.test(line) && /https?:\/\/\S+/.test(line)) || "";
