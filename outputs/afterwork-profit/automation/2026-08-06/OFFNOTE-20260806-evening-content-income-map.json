@@ -1,0 +1,52 @@
+{
+  "id": "OFFNOTE-20260806-evening-content-income-map",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "date": "2026-08-06",
+  "slot": "evening",
+  "topic": "콘텐츠 수익화 구조 자료",
+  "topic_tag": "콘텐츠 수익화 구조",
+  "status": "pending_approval",
+  "created_at": "2026-08-06T10:57:52.968Z",
+  "source": "github-actions-offnote-materials-generator",
+  "recommended_publish_time": "18:00 KST",
+  "content_mode": "offnote_materials",
+  "threads_text": "콘텐츠 수익화는 한 방에 돈 버는 방법부터 보면 더 헷갈려서\n처음엔 뭘 배워야 하는지도 헷갈릴 수밖에 없어.\n검색 유입, 제휴, 자료 배포, 챌린지/강의 연결\n관련 자료 계속 풀어둘 거라 필요하면 팔로우해둬 :)\n자료 필요한 사람은 인스타 같은 글에 댓글로 남겨줘\n+자료, 챌린지, 강의 공지는 카톡방에서만 올리고 있어. 필요하면 프로필 링크로 들어와 :)",
+  "thread_comments": [],
+  "cardnews_slides": [
+    {
+      "title": "콘텐츠 수익화 구조",
+      "body": "처음 시작하는 사람이 먼저 보면 좋은 자료"
+    },
+    {
+      "title": "자료",
+      "body": "검색 유입 / 제휴"
+    },
+    {
+      "title": "추가 자료",
+      "body": "자료 배포 / 챌린지/강의 연결"
+    },
+    {
+      "title": "공지",
+      "body": "자료, 챌린지, 강의 공지는 카톡방에서만"
+    }
+  ],
+  "offnote_tone_profile": {
+    "voice": "짧고 일상적인 자료 공유",
+    "instagram_cta": true,
+    "kakao_notice": true,
+    "banned_framing": [
+      "기준",
+      "나처럼 해",
+      "성공담",
+      "망한 것/배운 것/수정한 것"
+    ]
+  },
+  "safety_rules": [
+    "Generated Offnote drafts require approval before publishing.",
+    "Threads CTA routes material requests to Instagram same-post comments.",
+    "KakaoTalk room is positioned as the only place for materials, challenges, and class notices.",
+    "Do not use follow-my-success framing."
+  ]
+}
