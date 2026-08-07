@@ -48,5 +48,6 @@
     "Threads CTA routes material requests to Instagram same-post comments.",
     "KakaoTalk room is positioned as the only place for materials, challenges, and class notices.",
     "Do not use follow-my-success framing."
-  ]
+  ],
+  "telegram_approval_token": "6245d1e29167dc6e"
 }
