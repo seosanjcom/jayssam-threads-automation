@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-06/GHA-20260806-afternoon-coding-ai-data-literacy.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-07/GHA-20260807-afternoon-careernet-holland-interest.json
