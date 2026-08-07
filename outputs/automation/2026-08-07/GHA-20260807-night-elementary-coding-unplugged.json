@@ -1,0 +1,57 @@
+{
+  "id": "GHA-20260807-night-elementary-coding-unplugged",
+  "date": "2026-08-07",
+  "slot": "night",
+  "account": "27960473083547672",
+  "status": "approved",
+  "pillar": "초등코딩",
+  "keyword": "초등코딩",
+  "title": "초등 코딩은 컴퓨터 앞에 오래 앉는 것보다 순서를 말로 설명하는 힘이 먼저입니다 - 결과보다 과정 보는 법 (상담 전 체크 8/7 밤)",
+  "topic": "초등 코딩은 컴퓨터 앞에 오래 앉는 것보다 순서를 말로 설명하는 힘이 먼저입니다 - 결과보다 과정 보는 법 (상담 전 체크 8/7 밤)",
+  "content_type": "must_know_practical_tip",
+  "expert_angle": {
+    "news_frame": "초등 정보교육은 코딩 언어보다 디지털 기초소양과 컴퓨팅 사고를 넓히는 방향으로 봐야 합니다.",
+    "must_know": "초등 코딩의 출발점은 순서, 조건, 반복을 자기 말로 설명하는 힘입니다.",
+    "avoid": "너무 이른 문법 학습은 아이가 코딩을 외우는 과목으로 느끼게 할 수 있습니다.",
+    "check": "아이에게 왜 그 순서로 해결했는지 물어보세요.",
+    "use_for": "초등 학부모 코딩 상담, 첫 수업 안내"
+  },
+  "threads_text": "초등 코딩을 시작한다고 바로 어려운 언어부터 볼 필요는 없습니다.\n먼저 아이가 순서, 조건, 반복을 말로 설명할 수 있는지가 중요합니다.\n\n오늘 관점: 결과보다 과정 보는 법 (상담 전 체크 8/7 밤)\n\n바로가기: moe.go.kr\n\n초등 코딩의 출발점은 순서, 조건, 반복을 자기 말로 설명하는 힘입니다.\n\n정확히는: 디지털 기초소양 정책 자료\n\n이렇게 쓰세요: 초등 코딩 시작 전 부모 상담\n\n주의할 점: 코딩 문법 암기부터 시작하지 않기\n\n#중등맘 #초등맘 #정보교육 #코딩교육",
+  "carousel_slides": [
+    "초등 코딩\n문법보다 순서 설명이 먼저입니다.",
+    "조건\n만약 이렇게 되면 어떻게 할까요?",
+    "반복\n같은 일을 몇 번 반복하나요?",
+    "오류\n어디서 막혔는지 말할 수 있나요?",
+    "집에서\n길 찾기나 요리 순서를 말로 풀어보세요.",
+    "핵심\n초등 코딩은 사고 언어입니다."
+  ],
+  "local_card_dir": "outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged",
+  "local_media_paths": [
+    "outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_01.png",
+    "outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_02.png",
+    "outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_03.png",
+    "outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_04.png",
+    "outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_05.png",
+    "outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_06.png"
+  ],
+  "source_urls": [
+    "https://www.moe.go.kr/",
+    "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBzLUtEYkFiSHllYWI0ams4dGJkcHRtNkFiVnc5bUVmWTJuOXM3ZWk3NVE1OHp3OWs3SXl3Uy0xVVBFaW01T1labDZKdUZQWmVZZV9JanNQUFBxRHRF?oc=5"
+  ],
+  "source_note": "초등 정보교육·디지털 기초소양",
+  "latest_signal": {
+    "title": "서울 교사 3명 '대한민국 정보교육상'…전국 시도 중 최다 수상 - 뉴스핌",
+    "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBzLUtEYkFiSHllYWI0ams4dGJkcHRtNkFiVnc5bUVmWTJuOXM3ZWk3NVE1OHp3OWs3SXl3Uy0xVVBFaW01T1labDZKdUZQWmVZZV9JanNQUFBxRHRF?oc=5",
+    "pub_date": "Thu, 30 Jul 2026 03:00:00 GMT",
+    "source": "Google News 교육 이슈 RSS"
+  },
+  "created_at": "2026-08-07T22:13:16+09:00",
+  "media_urls": [
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_01.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_02.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_03.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_04.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_05.png",
+    "https://raw.githubusercontent.com/seosanjcom/jayssam-threads-automation/master/outputs/cards/github-daily/2026-08-07/night/elementary-coding-unplugged/card_06.png"
+  ]
+}
