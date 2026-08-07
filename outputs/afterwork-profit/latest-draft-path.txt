@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-08-06/OFFNOTE-20260806-night-blog-monetization-start.json
+outputs/afterwork-profit/automation/2026-08-07/OFFNOTE-20260807-evening-blog-title-search.json
