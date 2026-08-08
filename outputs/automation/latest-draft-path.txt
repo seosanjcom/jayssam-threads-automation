@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-07/GHA-20260807-night-elementary-coding-unplugged.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-08/GHA-20260808-afternoon-careernet-vocation-aptitude.json
