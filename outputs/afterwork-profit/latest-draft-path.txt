@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-08-10/OFFNOTE-20260810-night-experience-campaign.json
+outputs/afterwork-profit/automation/2026-08-11/OFFNOTE-20260811-evening-beginner-roadmap.json
