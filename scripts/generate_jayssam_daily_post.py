@@ -1143,15 +1143,152 @@ def recent_scheduled_slugs(date_text: str, window_days: int = RECENT_DEDUPE_DAYS
     return recent
 
 
+CONSULTING_TOPICS = [
+    {
+        "slug": "consulting-coding-before-math-score",
+        "keyword": "코딩교육",
+        "title": "수학 약한데 코딩 시켜도 돼요?",
+        "source_name": "제이쌤 코딩 수업·상담 메모",
+        "source_urls": [],
+        "hook": "수학 약한데 코딩 시켜도 되냐고?",
+        "body": [
+            "컴퓨터가 안 돼도 ‘왜 안 되지?’ 하고 다시 만져보는 아이가 있습니다.",
+            "게임 규칙이 이상하면 꼭 한마디 하고, 친구가 만든 걸 보면 어떻게 했는지 묻는 아이도 있습니다.",
+            "그런 질문과 끈기가 코딩 시작 전 더 먼저 볼 신호입니다.",
+        ],
+        "expert": {
+            "news_frame": "점수보다 막힌 장면을 다시 보는 습관을 먼저 봅니다.",
+            "must_know": "수학 점수는 나중에도 올릴 수 있지만, 막힌 걸 다시 보는 습관은 누가 대신 만들어주기 어렵습니다.",
+            "avoid": "성적표 한 장으로 코딩 적성을 먼저 닫아버리지는 마세요.",
+            "check": "아이에게 요즘 안 되는데도 계속 붙잡고 있던 게 뭐였는지 물어보세요.",
+            "use_for": "코딩 시작 전에는 점수보다 질문·관찰·재시도 장면을 적어보면 됩니다.",
+        },
+        "slides": [
+            ("01", "수학 약한데 코딩 시켜도 돼요?", "응. 해도 돼. 대신 점수 말고 이 신호를 봐."),
+            ("02", "막혀도 다시 보는 아이", "컴퓨터가 안 돼도 ‘왜 안 되지?’ 하고 몇 번 더 만져본다."),
+            ("03", "규칙을 그냥 넘기지 않는 아이", "게임하다 규칙이 이상하면 꼭 한마디 한다."),
+            ("04", "오늘 집에서 물어볼 질문", "요즘 안 되는데도 계속 붙잡고 있던 거 뭐야?"),
+        ],
+        "consulting_text_parts": [
+            "수학 약한데 코딩 시켜도 되냐고?\n응. 해도 돼.",
+            "대신 컴퓨터가 안 되는데도 ‘왜 안 되지?’ 하고 몇 번 더 만져보는 애면 더 좋아.",
+            "게임 규칙 이상하면 꼭 한마디 하고, 친구가 만든 거 보면 ‘이건 어떻게 했어?’ 묻는 애도.",
+            "수학 점수는 나중에도 올릴 수 있어.\n근데 막힌 걸 다시 보는 습관은 누가 대신 만들어주기 어렵거든.",
+            "아이한테 물어봐.\n요즘 안 되는데도 계속 붙잡고 있던 거 뭐냐고.",
+        ],
+        "thread_comments": ["코딩 시작 전에 집에서 볼 만한 신호들, 댓글에 더 적어둘게."],
+    },
+    {
+        "slug": "consulting-career-no-dream",
+        "keyword": "진로상담",
+        "title": "우리 애 꿈이 없어요",
+        "source_name": "제이쌤 진로 상담 메모",
+        "source_urls": [],
+        "hook": "우리 애 꿈이 없어요.",
+        "body": [
+            "영상 편집, 레고 설명서, 게임 규칙, 친구 발표자료처럼 아이가 오래 붙잡는 장면에 진로 단서가 있습니다.",
+            "장래희망이 아직 없어도 아이가 무엇에 시간을 쓰는지는 볼 수 있습니다.",
+        ],
+        "expert": {
+            "news_frame": "직업명보다 아이가 반복해서 붙잡는 장면을 먼저 봅니다.",
+            "must_know": "장래희망은 아직 없어도 되지만 아이가 무엇을 오래 붙잡는지는 부모가 알아야 합니다.",
+            "avoid": "‘너 뭐 될 거야?’라는 질문으로 대화를 끝내지 마세요.",
+            "check": "‘그거 하니까 시간 빨리 갔어?’라고 물어보세요.",
+            "use_for": "일주일 동안 아이가 조용해지는 장면을 한 번 적어보세요.",
+        },
+        "slides": [
+            ("01", "우리 애 꿈이 없어요", "이 말 들으면 나는 먼저 다른 걸 물어봐."),
+            ("02", "아이의 힌트", "영상 편집·레고·게임 규칙·친구 발표자료."),
+            ("03", "꿈보다 먼저 볼 것", "아이가 뭘 붙잡고 있는지."),
+            ("04", "오늘 질문", "그거 하니까 시간 빨리 갔어?"),
+        ],
+        "consulting_text_parts": [
+            "‘우리 애 꿈이 없어요.’\n이 말 들으면 나는 먼저 묻는 게 있어.",
+            "요즘 뭐 할 때 제일 조용해져요?\n영상 편집할 때, 레고 설명서 볼 때, 게임 규칙 따질 때, 친구 발표자료 고쳐줄 때.",
+            "장래희망은 아직 없어도 돼.\n근데 애가 뭘 붙잡고 있는지는 부모가 알아야 해.",
+            "‘너 뭐 될 거야?’ 말고\n‘그거 하니까 시간 빨리 갔어?’ 이렇게 물어봐줘.",
+            "애들이 이 질문엔 의외로 말 많이 해.",
+        ],
+        "thread_comments": ["진로 얘기 시작할 때 덜 부담스러운 질문들, 댓글에 적어둘게."],
+    },
+    {
+        "slug": "consulting-ai-not-copy-paste",
+        "keyword": "AI교육",
+        "title": "ChatGPT 썼다고 바로 혼내진 마",
+        "source_name": "제이쌤 AI 활용 수업 메모",
+        "source_urls": [],
+        "hook": "ChatGPT 썼다고 바로 혼내진 마.",
+        "body": [
+            "AI 답을 받아도 아이가 바꾼 이유를 말할 수 있으면 학습 과정이 남습니다.",
+            "복붙인지 도움을 받은 것인지는 ‘네가 바꾼 건 뭐야?’라는 질문에서 드러납니다.",
+        ],
+        "expert": {
+            "news_frame": "AI를 썼는지보다 자기 생각이 남았는지를 봅니다.",
+            "must_know": "AI는 못 쓰게 막는 것보다 자기 머리 안 쓰고 넘기는 걸 막는 편이 중요합니다.",
+            "avoid": "AI 사용 여부만으로 아이를 혼내지 마세요.",
+            "check": "‘네가 바꾼 건 뭐야?’라고 물어보세요.",
+            "use_for": "과제 확인 때 아이가 고친 문장 하나를 설명하게 해보세요.",
+        },
+        "slides": [
+            ("01", "ChatGPT 썼다고 바로 혼내진 마", "대신 이 질문은 꼭 해봐."),
+            ("02", "네가 바꾼 건 뭐야?", "대답이 나오면 도움을 받아서 만든 거야."),
+            ("03", "멈칫하면", "그냥 복붙했을 가능성이 커."),
+            ("04", "AI 시대의 기준", "못 쓰게 막는 게 아니라, 생각 없이 넘기는 걸 막기."),
+        ],
+        "consulting_text_parts": [
+            "ChatGPT 썼다고 바로 혼내진 마.",
+            "대신 이건 물어봐야 해.\n‘네가 바꾼 건 뭐야?’",
+            "대답이 술술 나오면 도움 받아서 만든 거고.\n멈칫하면 그냥 복붙한 거야.",
+            "수업 때도 ‘선생님, 여기 왜 안 돼요?’ 하고 오는 애가 빨리 늘어.",
+            "AI는 이제 못 쓰게 막는 게 답이 아니야.\n자기 머리 안 쓰고 넘기는 걸 막아야지.",
+        ],
+        "thread_comments": ["AI 쓸 때 부모님이 꼭 봐야 할 것만 댓글에 적어둘게."],
+    },
+    {
+        "slug": "consulting-coding-academy-question",
+        "keyword": "코딩학원",
+        "title": "코딩학원 상담 가면 이 말부터 해보세요",
+        "source_name": "제이쌤 코딩 교육 운영 메모",
+        "source_urls": [],
+        "hook": "코딩학원 상담 가면 커리큘럼부터 보지 마세요.",
+        "body": [
+            "이번 달 아이들이 집에 들고 가는 결과물이 무엇인지 물어보면 수업의 실제를 보기 쉬워집니다.",
+            "아이 손으로 만든 게임·퀴즈·작은 프로그램이 남는지 봐야 합니다.",
+        ],
+        "expert": {
+            "news_frame": "언어 이름보다 아이 손으로 만든 결과물이 남는 수업을 봅니다.",
+            "must_know": "코딩은 오래 앉아 있었다고 남는 게 아니라 만들어본 게 남습니다.",
+            "avoid": "언어 이름만 많이 나열하는 설명으로 수업을 판단하지 마세요.",
+            "check": "‘이번 달 애들이 집에 들고 가는 결과물 뭐예요?’라고 물어보세요.",
+            "use_for": "상담 때 결과물·수정 과정·설명 시간을 함께 물어보세요.",
+        },
+        "slides": [
+            ("01", "코딩학원 상담 가면", "커리큘럼부터 보지 말고 이 말부터 해봐."),
+            ("02", "이번 달 결과물 뭐예요?", "아이들이 집에 들고 가는 걸 물어봐."),
+            ("03", "언어 이름보다", "아이 손으로 만든 게 남는 곳."),
+            ("04", "코딩 수업의 기준", "오래 앉은 시간보다 만들어본 것."),
+        ],
+        "consulting_text_parts": [
+            "코딩학원 상담 가면\n커리큘럼부터 보지 말고 이 말부터 해봐.",
+            "‘이번 달 애들이 집에 들고 가는 결과물 뭐예요?’",
+            "언어 이름 많이 나열하는 곳보다, 아이 손으로 만든 게 남는 곳이 좋아.",
+            "게임 하나라도 좋고 퀴즈 하나라도 좋아.\n집에 와서 ‘이건 내가 이렇게 만들었어’ 말할 수 있으면 돼.",
+            "코딩은 오래 앉아 있었다고 남는 게 아니야.\n만들어본 게 남아.",
+        ],
+        "thread_comments": ["상담 갈 때 그대로 읽을 질문들, 댓글에 둘게."],
+    },
+]
+
+
 def pick_topic(date_text: str, slot: str) -> dict:
     seed_offsets = {"lunch": 0, "afternoon": 0, "evening": 1, "night": 1}
     seed = int(date_text.replace("-", "")) + seed_offsets.get(slot, 0)
     recent_slugs = recent_published_slugs(date_text) | recent_scheduled_slugs(date_text)
-    for offset in range(len(TOPICS)):
-        topic = TOPICS[(seed + offset) % len(TOPICS)]
+    for offset in range(len(CONSULTING_TOPICS)):
+        topic = CONSULTING_TOPICS[(seed + offset) % len(CONSULTING_TOPICS)]
         if topic["slug"] not in recent_slugs:
             return topic
-    return TOPICS[seed % len(TOPICS)]
+    return CONSULTING_TOPICS[seed % len(CONSULTING_TOPICS)]
 
 
 def topic_variant_title(topic: dict, date_text: str, slot: str) -> str:
@@ -1568,7 +1705,7 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
     content_type = content_type_for_slot(slot)
     text_parts = build_threads_text_parts(topic, latest_signal, content_type, date_text, slot)
     threads_text = "\n\n".join(text_parts)
-    variant_title = topic_variant_title(topic, date_text, slot)
+    variant_title = topic["title"] if topic.get("consulting_text_parts") else topic_variant_title(topic, date_text, slot)
 
     draft = {
         "id": draft_id,
@@ -1583,6 +1720,7 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
         "content_type": content_type,
         "expert_angle": topic["expert"],
         "threads_text": threads_text,
+        "thread_comments": topic.get("thread_comments", []),
         "carousel_slides": [f"{h}\n{b}" for _, h, b in topic["slides"]],
         "local_card_dir": str(card_dir.relative_to(ROOT)).replace("\\", "/"),
         "local_media_paths": media_paths,
@@ -1859,6 +1997,9 @@ def hashtags_for_topic(topic: dict, date_text: str = "", slot: str = "") -> str:
 def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_type: str, date_text: str = "", slot: str = "") -> list[str]:
     """Build a concise, evidence-first Threads post that stays inside the API text limit."""
     expert = topic["expert"]
+    consulting_parts = [str(item).strip() for item in topic.get("consulting_text_parts", []) if str(item).strip()]
+    if consulting_parts:
+        return consulting_parts
     resource = topic.get("resource", {})
     body = [str(item).strip() for item in topic.get("body", []) if str(item).strip()]
     is_resource_post = bool(resource.get("url_label"))

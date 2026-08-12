@@ -21,6 +21,17 @@ def test_resource_post_is_evidence_first_and_within_threads_limit() -> None:
     assert "공식 확인:" in text
 
 
+def test_consulting_posts_use_parent_voice_without_explanatory_filler() -> None:
+    topic = next(item for item in MODULE.CONSULTING_TOPICS if item["slug"] == "consulting-coding-before-math-score")
+    text = "\n\n".join(MODULE.build_threads_text_parts(topic, None, "must_know_practical_tip", "2026-08-12", "night"))
+    assert len(text) <= 500, len(text)
+    assert text.startswith("수학 약한데 코딩 시켜도 되냐고?")
+    for banned in ("다음과 같아", "이걸 확인해보자", "핵심은", "결국", "첫째", "둘째"):
+        assert banned not in text
+    assert "아이한테 물어봐" in text
+    assert topic["thread_comments"]
+
+
 def test_news_post_has_parent_action_and_source() -> None:
     topic = {
         "slug": "test-news",
@@ -44,5 +55,6 @@ def test_news_post_has_parent_action_and_source() -> None:
 
 if __name__ == "__main__":
     test_resource_post_is_evidence_first_and_within_threads_limit()
+    test_consulting_posts_use_parent_voice_without_explanatory_filler()
     test_news_post_has_parent_action_and_source()
     print('{"ok": true, "guard": "jayssam evidence-first content quality passes"}')
