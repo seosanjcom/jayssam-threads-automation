@@ -20,6 +20,11 @@ on:
           - product_queue
           - product_drafts
           - health
+          - product_lookup_test
+      product_keyword:
+        description: "Product keyword for a safe Coupang Partners API lookup test"
+        required: false
+        type: string
       draft_path:
         description: "Draft JSON path for preview mode"
         required: false
@@ -79,6 +84,7 @@ jobs:
           node --check scripts/telegram_check_lifemagazine_approvals.mjs
           node --check scripts/lifemagazine_product_candidates.mjs
           node --check scripts/coupang_partners_api.mjs
+          node --check scripts/test_coupang_partners_lookup.mjs
           node --check scripts/product_link_resolver.mjs
           node --check scripts/lifemagazine_telegram_product_queue.mjs
           node --check scripts/lifemagazine_visual_policy.mjs
@@ -117,6 +123,15 @@ jobs:
       - name: Publish latest approved
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '30 2,7,12 * * *')
         run: node scripts/publish_lifemagazine_latest_approved.mjs
+
+      - name: Test Coupang Partners product lookup
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'product_lookup_test'
+        run: |
+          if [[ -z "${{ inputs.product_keyword }}" ]]; then
+            echo "product_keyword is required for product_lookup_test mode"
+            exit 1
+          fi
+          node scripts/test_coupang_partners_lookup.mjs "${{ inputs.product_keyword }}"
 
       - name: Health
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'health'
