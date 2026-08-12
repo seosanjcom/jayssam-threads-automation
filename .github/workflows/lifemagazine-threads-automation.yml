@@ -7,7 +7,8 @@ on:
     - cron: "30 13 * * *"
     - cron: "*/10 * * * *"
     # KST 11:30, 18:00 - publish only safe pre-approved daily drafts.
-    - cron: "30 2,9 * * *"
+    - cron: "30 2 * * *"
+    - cron: "0 9 * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -139,7 +140,7 @@ jobs:
         run: node scripts/generate_lifemagazine_product_daily.mjs --remaining-today --auto-approve --send-preview
 
       - name: Publish latest approved
-        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '30 2,9 * * *')
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && (github.event.schedule == '30 2 * * *' || github.event.schedule == '0 9 * * *'))
         run: node scripts/publish_lifemagazine_latest_approved.mjs
 
       - name: Delete corrected Lifemagazine posts
