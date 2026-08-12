@@ -168,6 +168,7 @@ export async function runReplyAutoreply({ accountKey, dryRun = false } = {}) {
   const userId = process.env.THREADS_USER_ID || "me";
   if (!token) throw new Error("THREADS_ACCESS_TOKEN is missing");
 
+  const replyQuota = await graphGet(`/${userId}/threads_publishing_limit?fields=reply_quota_usage,reply_config`, token);
   const state = readJson(config.stateFile, { processed_reply_ids: [], events: [] });
   const processed = new Set(Array.isArray(state.processed_reply_ids) ? state.processed_reply_ids : []);
   const events = [];
@@ -211,7 +212,7 @@ export async function runReplyAutoreply({ accountKey, dryRun = false } = {}) {
     timezone: KST,
   };
   writeJson(config.stateFile, nextState);
-  return { account: accountKey, post_ids: activePostIds(config), events, auto_replies: autoReplies, dry_run: dryRun };
+  return { account: accountKey, post_ids: activePostIds(config), events, auto_replies: autoReplies, dry_run: dryRun, reply_quota: replyQuota.data?.[0] || null };
 }
 
 const directRun = process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href;
