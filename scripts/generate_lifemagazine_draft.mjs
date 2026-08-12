@@ -214,12 +214,20 @@ function productSceneLines(input) {
   const scene = String(input.scene_brief || candidate.scene_hint || candidate.selection_reason || "매일 반복되는 작은 불편").trim();
   const combined = `${name} ${scene}`;
 
-  if (/링티|아이\s*전용|어린이용\s*(?:음료|식품)/.test(combined)) {
+  if (/링티/.test(combined)) {
     return [
-      "아이와 나갈 때 물병은 챙겼는데, 정작 손이 잘 안 가는 날이 있더라.",
-      `${name}은(는) 아이가 먹는 제품인 만큼 ‘좋다’는 말보다 원재료·알레르기 정보·권장 섭취 방법을 먼저 확인하는 쪽이 맞아 보여.`,
-      "외출 가방에 넣기 전에는 아이 연령과 평소 먹는 음료를 기준으로, 우리 집 루틴에 맞는지만 한 번 더 살펴보면 돼.",
-      "제품 정보·표시 가격·제휴 링크는 댓글에 정리해둘게. 필요한 경우에만 상세 정보를 확인해봐.",
+      "더위 진짜 장난 아니지… 아이가 뛰어놀고 온 날엔 물만으로는 괜히 마음이 쓰이더라 🥵",
+      "약국에서 ‘마시는 수액’으로 익숙한 링티의 어린이 버전이라, 여름 외출·물놀이·체육 있는 날 가방에 한 포 넣어두기 좋아.",
+      "물 250mL에 1포 타서 먹는 제품이니까, 활동량 많은 날 미리 챙겨두면 진짜 든든해!!",
+      "그냥 매일 마시는 음료라기보다, 땀 많이 흘린 날 수분이랑 전해질을 신경 쓰고 싶을 때 꺼내는 쪽으로 봐줘~",
+      "제품 정보랑 링크는 댓글에 꼼꼼히 둘게. 여름 외출 가방에 하나 넣어둘 사람은 확인해봐!!",
+    ];
+  }
+  if (/아이\s*전용|어린이용\s*(?:음료|식품)/.test(combined)) {
+    return [
+      "아이랑 나갈 때 물은 챙기는데, 정작 물병이 그대로 돌아오는 날 있지…",
+      `${name}은(는) 아이가 먹는 제품인 만큼 우리 집에 필요한 상황인지, 원재료와 권장 섭취 방법이 맞는지부터 보면 돼.`,
+      "제품 정보랑 링크는 댓글에 꼼꼼히 둘게. 필요할 때 편하게 확인해봐!",
     ];
   }
   if (operatorNote) {
@@ -316,7 +324,7 @@ function buildComments(input, productLinks) {
       ].filter(Boolean);
       const usesCoupangLink = productLinks.some((item) => /coupang\.com/i.test(String(item.url || item)));
       comments.push([
-        "제품 정보는 여기 정리해둘게.",
+        "제품 정보는 여기 정리해둘게!!",
         ...verifiedDetails,
         ...productLinks.map((item) => `${item.label || "제품 링크"}: ${item.url || item}`),
         "",

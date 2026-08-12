@@ -844,7 +844,8 @@ test("child-focused Lingtea draft uses child product checks instead of unrelated
     product_links: [{ label: "제품 링크", url: "https://link.coupang.com/a/example", platform: "affiliate" }],
     product_metadata: { price: 21000 },
   });
-  assert.match(draft.threads_text, /원재료·알레르기 정보·권장 섭취 방법/);
+  assert.match(draft.threads_text, /마시는 수액/);
+  assert.match(draft.threads_text, /물 250mL에 1포/);
   assert.doesNotMatch(draft.threads_text, /충전선|의학적 효능/);
   assert.match(draft.thread_comments.join("\n"), /쿠팡 파트너스 활동/);
 });

@@ -16,6 +16,12 @@ const LOW_RISK_KEYWORDS = [
   "트레이",
 ];
 
+export const PRODUCT_SELECTION_RULES = {
+  mustHave: ["product_name", "affiliate_url", "recommendation_reason", "when_to_use"],
+  reject: ["성분·사용법을 확인할 수 없는 건강·영양 카테고리", "사용 상황이 없는 단순 최저가 상품", "과장된 효능·치료 표현이 필요한 상품"],
+  editorialOrder: ["왜 지금 추천하는지", "언제 꺼내면 좋은지", "어떻게 쓰거나 섭취하는지", "구매 전 확인할 점", "공정위 고지 댓글"],
+};
+
 const HOLD_KEYWORDS = [
   "영양제",
   "비타민",
@@ -51,6 +57,7 @@ function riskLevelFor(text) {
 }
 
 function sceneHintFor(text) {
+  if (/링티|수분\s*보충|전해질|어린이용\s*(?:음료|식품)/.test(text)) return "더운 날 야외활동 뒤 아이가 땀을 많이 흘렸을 때";
   if (text.includes("머리끈")) return "머리끈 맨날 잃어버리는 사람";
   if (text.includes("케이블") || text.includes("충전")) return "책상 위 충전선이 자꾸 굴러다니는 사람";
   if (text.includes("수납") || text.includes("정리")) return "잔물건이 계속 굴러다니는 공간";
@@ -65,6 +72,12 @@ export function normalizeProductCandidate(input = {}, options = {}) {
   const text = `${productName} ${category}`;
   const riskLevel = riskLevelFor(text);
   const reviewCount = firstNumber(input.review_count, input.reviewCount, input.review_count_text);
+
+  const isHealthSensitive = /링티|수분\s*보충|전해질|영양제|비타민|의료|건강/.test(text);
+  const whenToUse = firstText(input.when_to_use, input.whenToUse, input.scene_hint, sceneHintFor(text));
+  const recommendationReason = firstText(input.recommendation_reason, input.recommendationReason, input.selection_reason, whenToUse);
+  const usageGuidance = firstText(input.usage_guidance, input.usageGuidance, input.how_to_use, input.howToUse);
+  const officialSources = Array.isArray(input.official_sources) ? input.official_sources.filter(Boolean) : [];
 
   return {
     source: firstText(input.source, "coupang_api"),
@@ -82,9 +95,15 @@ export function normalizeProductCandidate(input = {}, options = {}) {
     metadata_status: firstText(input.metadata_status, input.metadataStatus),
     metadata_error: firstText(input.metadata_error, input.metadataError),
     collected_at: options.collectedAt || input.collected_at || new Date().toISOString(),
-    selection_reason: firstText(input.selection_reason, input.scene_hint, sceneHintFor(text)),
+    selection_reason: recommendationReason,
+    recommendation_reason: recommendationReason,
+    when_to_use: whenToUse,
+    usage_guidance: usageGuidance,
+    official_sources: officialSources,
+    requires_manual_claim_review: isHealthSensitive,
+    selection_status: isHealthSensitive ? "manual_review_required" : "brief_required",
     operator_note: firstText(input.operator_note, input.memo, input.note),
-    scene_hint: firstText(input.scene_hint, sceneHintFor(text)),
+    scene_hint: whenToUse,
     usage_status: input.usage_status === "actual_used" ? "actual_used" : "not_confirmed",
     risk_level: riskLevel,
     score: (riskLevel === "low" ? 100 : riskLevel === "medium" ? 50 : -100) + Math.min(reviewCount / 20, 30),
@@ -111,10 +130,11 @@ export function selectDailyProductCandidates(candidates = [], count = 3) {
   const selected = [];
   const seenNames = new Set();
   const normalized = candidates.map((candidate) => normalizeProductCandidate(candidate));
-  const manual = normalized.filter((candidate) => candidate.source === "manual_queue" && candidate.product_name && candidate.affiliate_url);
-  const automatic = normalized.filter((candidate) => candidate.source !== "manual_queue" && candidate.product_name && candidate.affiliate_url);
+  const completeBrief = (candidate) => candidate.recommendation_reason && candidate.when_to_use;
+  const manual = normalized.filter((candidate) => candidate.source === "manual_queue" && candidate.product_name && candidate.affiliate_url && completeBrief(candidate));
+  const automatic = normalized.filter((candidate) => candidate.source !== "manual_queue" && candidate.product_name && candidate.affiliate_url && completeBrief(candidate));
   for (const candidate of [...manual, ...rankProductCandidates(automatic)]) {
-    if (candidate.risk_level === "hold") continue;
+    if (candidate.risk_level === "hold" || candidate.requires_manual_claim_review) continue;
     if (seenNames.has(candidate.product_name)) continue;
     selected.push(candidate);
     seenNames.add(candidate.product_name);
