@@ -833,6 +833,22 @@ test("lifemagazine product queue saves and loads manual products", () => {
   assert.equal(loaded[0].operator_note, "쟁여템 느낌");
 });
 
+test("child-focused Lingtea draft uses child product checks instead of unrelated lifestyle scenes", () => {
+  const draft = generateLifemagazineDraft({
+    date: "2026-08-12",
+    slot: "manual",
+    content_mode: "found_product",
+    product_name: "링티 아이 아이전용",
+    operator_note: "의학적 효능은 말하지 않는다.",
+    product_candidate: { product_name: "링티 아이 아이전용", scene_hint: "아이와 외출할 때" },
+    product_links: [{ label: "제품 링크", url: "https://link.coupang.com/a/example", platform: "affiliate" }],
+    product_metadata: { price: 21000 },
+  });
+  assert.match(draft.threads_text, /원재료·알레르기 정보·권장 섭취 방법/);
+  assert.doesNotMatch(draft.threads_text, /충전선|의학적 효능/);
+  assert.match(draft.thread_comments.join("\n"), /쿠팡 파트너스 활동/);
+});
+
 test("product-scene lifemagazine draft keeps disclosure in comment, not body", () => {
   const candidate = normalizeProductCandidate({
     productName: "대용량 머리끈 100개",
