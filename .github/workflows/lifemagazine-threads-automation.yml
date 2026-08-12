@@ -21,6 +21,11 @@ on:
           - product_drafts
           - health
           - product_lookup_test
+          - delete_posts
+      threads_media_ids:
+        description: "Comma-separated Threads post/reply IDs to delete"
+        required: false
+        type: string
       product_keyword:
         description: "Product keyword for a safe Coupang Partners API lookup test"
         required: false
@@ -91,6 +96,7 @@ jobs:
           node --check scripts/generate_lifemagazine_product_daily.mjs
           node --check scripts/publish_lifemagazine_latest_approved.mjs
           node --check scripts/threads_publish.mjs
+          node --check scripts/delete_threads_posts.mjs
           node --test scripts/test_lifemagazine_draft.mjs
 
       - name: Send Telegram preview
@@ -124,6 +130,19 @@ jobs:
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '30 2,7,12 * * *')
         run: node scripts/publish_lifemagazine_latest_approved.mjs
 
+      - name: Delete corrected Lifemagazine posts
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'delete_posts'
+        env:
+          THREADS_ACCESS_TOKEN: ${{ secrets.LIFEMAGAZINE_THREADS_ACCESS_TOKEN }}
+          THREADS_EXPECTED_USERNAME: "lifemagazine_"
+          THREADS_DELETE_REASON: "operator requested correction: unverified product details"
+        run: |
+          if [[ -z "${{ inputs.threads_media_ids }}" ]]; then
+            echo "threads_media_ids is required for delete_posts mode"
+            exit 1
+          fi
+          node scripts/delete_threads_posts.mjs "${{ inputs.threads_media_ids }}"
+
       - name: Test Coupang Partners product lookup
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'product_lookup_test'
         run: |
@@ -140,7 +159,7 @@ jobs:
           echo "lifemagazine health ok"
 
       - name: Commit lifemagazine results
-        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish' || inputs.mode == 'product_drafts')) || github.event_name == 'schedule'
+        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish' || inputs.mode == 'product_drafts' || inputs.mode == 'delete_posts')) || github.event_name == 'schedule'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -54,8 +54,9 @@ if (ids.length === 0) {
   process.exit(1);
 }
 
-const token = process.env.THREADS_ACCESS_TOKEN;
-const expectedUsername = process.env.THREADS_EXPECTED_USERNAME || "";
+const token = process.env.THREADS_ACCESS_TOKEN || process.env.LIFEMAGAZINE_THREADS_ACCESS_TOKEN || "";
+const expectedUsername = process.env.THREADS_EXPECTED_USERNAME || process.env.LIFEMAGAZINE_THREADS_EXPECTED_USERNAME || "";
+const deleteReason = process.env.THREADS_DELETE_REASON || "operator requested correction";
 if (!token) throw new Error("THREADS_ACCESS_TOKEN is missing.");
 if (!expectedUsername) throw new Error("THREADS_EXPECTED_USERNAME is required before deletion.");
 
@@ -84,9 +85,9 @@ for (const item of log) {
     ...(Array.isArray(item.published_reply_ids) ? item.published_reply_ids : []),
   ].filter(Boolean);
   if (relatedIds.some((id) => idSet.has(String(id)))) {
-    item.status = "deleted_wrong_account_route";
+    item.status = "deleted";
     item.deleted_at = new Date().toISOString();
-    item.delete_reason = "shopping/product-route content belongs to lifemagazine_, not offnote.kr";
+    item.delete_reason = deleteReason;
     item.deleted_threads_ids = ids;
   }
 }
