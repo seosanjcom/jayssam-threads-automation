@@ -81,5 +81,8 @@
   "approval_source": "user_confirmed_correction",
   "publish_on_approve": true,
   "correction_of": "18058535468608754",
-  "correction_reason": "Prior post removed; reissued with verified context and corrected product positioning."
+  "correction_reason": "Prior post removed; reissued with verified context and corrected product positioning.",
+  "published_reply_ids": [
+    "18115690142485910"
+  ]
 }
