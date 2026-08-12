@@ -30,8 +30,8 @@ function runNode(args, extra = {}) {
 }
 
 function assertOffnoteMaterialsDraft(draft) {
-  if (draft.status !== "pending_approval") {
-    throw new Error(`Expected generated offnote draft to require approval, got ${draft.status}`);
+  if (draft.status !== "approved") {
+    throw new Error(`Expected generated offnote draft to be ready for automatic publishing, got ${draft.status}`);
   }
   if (!/자료/.test(draft.threads_text) || !/인스타 같은 글에 댓글/.test(draft.threads_text) || !/카톡방/.test(draft.threads_text)) {
     throw new Error(`Offnote draft does not match materials CTA tone:\n${draft.threads_text}`);
@@ -48,21 +48,6 @@ try {
   copyScript("generate_offnote_daily_post.mjs");
   copyScript("publish_offnote_due.mjs");
   copyScript("validate_offnote_draft.mjs");
-  copyScript("send_offnote_preview_telegram.mjs");
-  copyScript("telegram_check_offnote_approvals.mjs");
-
-  const previewScript = fs.readFileSync(path.join(tmp, "scripts", "send_offnote_preview_telegram.mjs"), "utf8");
-  const checkerScript = fs.readFileSync(path.join(tmp, "scripts", "telegram_check_offnote_approvals.mjs"), "utf8");
-  if (!previewScript.includes("telegram_approval_token")) {
-    throw new Error("Offnote preview must use a short telegram_approval_token for callback buttons.");
-  }
-  if (/callback_data:\s*`offnote:[^`]*\$\{draft\.id/.test(previewScript)) {
-    throw new Error("Offnote preview callback_data must not use the long draft id directly.");
-  }
-  if (!checkerScript.includes("telegram_approval_token")) {
-    throw new Error("Offnote approval checker must resolve callback tokens back to drafts.");
-  }
-
   const firstGenerate = runNode(["scripts/generate_offnote_daily_post.mjs", "2026-05-23", "evening"]);
   if (firstGenerate.status !== 0) {
     throw new Error(`initial generate guard failed:\n${firstGenerate.stderr}\n${firstGenerate.stdout}`);
@@ -175,8 +160,13 @@ try {
   if (publish.status !== 0) {
     throw new Error(`auto-publish guard failed:\n${publish.stderr}\n${publish.stdout}`);
   }
-  if (!publish.stdout.includes("already published")) {
-    throw new Error(`Expected already-published skip message, got:\n${publish.stdout}`);
+  if (!publish.stdout.includes("slot already published")) {
+    throw new Error(`Expected slot-specific already-published skip message, got:\n${publish.stdout}`);
+  }
+
+  const publishScript = fs.readFileSync(path.join(tmp, "scripts", "publish_offnote_due.mjs"), "utf8");
+  if (!publishScript.includes("const slotDrafts")) {
+    throw new Error("Offnote auto-publish must select and deduplicate drafts per slot.");
   }
 
   console.log(JSON.stringify({ ok: true, guard: "offnote materials tone and publish guards pass" }, null, 2));

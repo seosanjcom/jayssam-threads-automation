@@ -6,13 +6,10 @@ on:
       mode:
         description: "Run mode"
         required: true
-        default: "preview"
+        default: "auto_publish"
         type: choice
         options:
-          - preview
-          - approval_check
           - auto_publish
-          - manual_publish
           - delete_post
           - health
       slot:
@@ -28,16 +25,9 @@ on:
         required: false
         type: string
   schedule:
-    # KST 15:30 - first daily preview. Posting remains approval-gated.
+    # KST 15:30, 21:30 - generate, validate, and automatically publish each daily slot.
     - cron: "30 6 * * *"
-    # KST 16:00 - approval checker only; the five-minute checker also supports immediate approval.
-    - cron: "0 7 * * *"
-    # KST 21:30 - second daily preview. Posting remains approval-gated.
     - cron: "30 12 * * *"
-    # KST 22:00 - approval checker only; the five-minute checker also supports immediate approval.
-    - cron: "0 13 * * *"
-    # Approval checker. GitHub may delay scheduled jobs, so publishing remains approval-gated.
-    - cron: "*/5 * * * *"
     # KST 22:15 - health watchdog.
     - cron: "15 13 * * *"
 
@@ -95,16 +85,9 @@ jobs:
           fi
 
           case "${{ github.event.schedule }}" in
-            "30 6 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "0 7 * * *") echo "mode=approval_check" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "30 12 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "0 13 * * *") echo "mode=approval_check" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+            "30 6 * * *") echo "mode=auto_publish" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+            "30 12 * * *") echo "mode=auto_publish" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             "15 13 * * *") echo "mode=health" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "*/5 * * * *")
-              echo "mode=approval_check" >> "$GITHUB_OUTPUT"
-              echo "slot=evening" >> "$GITHUB_OUTPUT"
-              echo "run=true" >> "$GITHUB_OUTPUT"
-              ;;
             *) echo "mode=skip" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=false" >> "$GITHUB_OUTPUT" ;;
           esac
 
@@ -120,8 +103,6 @@ jobs:
         if: steps.route.outputs.run == 'true'
         run: |
           node --check scripts/generate_offnote_daily_post.mjs
-          node --check scripts/send_offnote_preview_telegram.mjs
-          node --check scripts/telegram_check_offnote_approvals.mjs
           node --check scripts/publish_offnote_due.mjs
           node --check scripts/threads_publish.mjs
           node --check scripts/delete_threads_posts.mjs
@@ -132,7 +113,7 @@ jobs:
           node scripts/test_offnote_automation_guards.mjs
           python -m py_compile scripts/generate_offnote_cardnews.py
 
-      - name: Create preview draft and cards
+      - name: Create automatic publishing draft
         id: preview
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview'
         run: |
@@ -145,7 +126,7 @@ jobs:
           node scripts/validate_offnote_draft.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
           echo "Cardnews skipped by default. Generate manually only for high-density posts."
 
-      - name: Commit generated card assets before preview
+      - name: Commit generated draft before automatic publishing
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
         run: |
           git config user.name "github-actions[bot]"
@@ -160,24 +141,6 @@ jobs:
         run: |
           node scripts/use_github_raw_media.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
           node scripts/verify_media_urls.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
-
-      - name: Send Telegram preview
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
-        run: node scripts/send_offnote_preview_telegram.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
-
-      - name: Commit pending approval state
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'preview' && steps.preview.outputs.created == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f outputs/afterwork-profit
-          git commit -m "Queue Offnote approval $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
-          git pull --rebase
-          git push
-
-      - name: Check Telegram approval and publish
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'approval_check'
-        run: node scripts/telegram_check_offnote_approvals.mjs
 
       - name: Ensure due Offnote draft assets
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'auto_publish'
@@ -221,7 +184,7 @@ jobs:
           node scripts/delete_threads_posts.mjs "${{ inputs.post_ids }}"
 
       - name: Commit approval check results
-        if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'approval_check' || steps.route.outputs.mode == 'auto_publish' || steps.route.outputs.mode == 'manual_publish' || steps.route.outputs.mode == 'delete_post')
+        if: steps.route.outputs.run == 'true' && (steps.route.outputs.mode == 'auto_publish' || steps.route.outputs.mode == 'delete_post')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -235,7 +198,7 @@ jobs:
           if git diff --cached --quiet; then
             git status --short
           else
-            git commit -m "Record Offnote approval check $(TZ=Asia/Seoul date +%F-%H%M)"
+            git commit -m "Record Offnote automatic publish $(TZ=Asia/Seoul date +%F-%H%M)"
             git pull --rebase
             git push
           fi

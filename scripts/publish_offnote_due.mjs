@@ -110,14 +110,14 @@ const drafts = findJsonFiles(automationRoot)
   .filter(Boolean)
   .filter((item) => item.data.account === "offnote.kr");
 
-const pending = drafts
+const slotDrafts = drafts.filter((item) => String(item.data.id || "").includes(`-${slot}-`));
+const pending = slotDrafts
   .filter((item) => ["pending_approval", "approved"].includes(item.data.status))
-  .filter((item) => !slot || String(item.data.id || "").includes(`-${slot}-`) || item.data.recommended_publish_time)
   .sort((a, b) => b.mtime - a.mtime)[0];
 
-const alreadyPublished = drafts.find((item) => item.data.status === "published");
+const alreadyPublished = slotDrafts.find((item) => item.data.status === "published");
 if (alreadyPublished) {
-  console.log(`Offnote already published for ${date}: ${alreadyPublished.data.id}. Auto-publish skipped.`);
+  console.log(`Offnote ${slot} slot already published for ${date}: ${alreadyPublished.data.id}. Auto-publish skipped.`);
   process.exit(0);
 }
 
@@ -137,8 +137,8 @@ if (isShoppingRouteContent(draft)) {
   process.exit(0);
 }
 draft.status = "approved";
-draft.approved_at = new Date().toISOString();
-draft.approval_source = `auto_publish_due:${slot}`;
+draft.approved_at = draft.approved_at || new Date().toISOString();
+draft.approval_source = `automatic_schedule:${slot}`;
 writeJson(pending.file, draft);
 
 const result = spawnSync("node", ["scripts/threads_publish.mjs", pending.file], {
