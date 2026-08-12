@@ -901,7 +901,7 @@ test("lifemagazine daily product generator prefers Telegram manual queue", () =>
   assert.equal(drafts.length, 2);
   assert.deepEqual(drafts.map((draft) => draft.product_name), ["대용량 머리끈", "케이블 정리 클립"]);
   assert.deepEqual(drafts.map((draft) => draft.recommended_publish_time), ["11:30 KST", "18:00 KST"]);
-  assert.match(drafts[0].threads_text, /머리끈 맨날 잃어버리는 사람/);
+  assert.match(drafts[0].threads_text, /머리 묶으려는데 또 머리끈 없으면/);
   assert.ok(drafts.every((draft) => validateLifemagazineDraft(draft).ok));
 });
 
