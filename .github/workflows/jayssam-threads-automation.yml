@@ -176,17 +176,18 @@ jobs:
             python scripts/generate_jayssam_queue_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}" || python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
             DRAFT_PATH="$(cat outputs/automation/latest-draft-path.txt)"
           fi
-          node scripts/upload_cardnews_to_catbox.mjs "$DRAFT_PATH"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f outputs/automation outputs/cards
+          git add -f "$DRAFT_PATH" outputs/automation outputs/cards
           git commit -m "Add generated Jayssam assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
+          git pull --rebase --autostash origin master
           git push
+          node scripts/upload_cardnews_to_catbox.mjs "$DRAFT_PATH"
           node scripts/verify_media_urls.mjs "$DRAFT_PATH"
           node scripts/publish_latest_approved.mjs "$DRAFT_PATH"
           node scripts/mark_jayssam_news_queue_posted.mjs "$DRAFT_PATH"
           node scripts/send_telegram_message.mjs "[제이쌤 게시 완료] ${{ steps.route.outputs.slot }} 슬롯 게시 완료"
-          git add -f outputs/meta-publish-log.json content/jayssam-news-queue.csv
+          git add -f "$DRAFT_PATH" outputs/meta-publish-log.json content/jayssam-news-queue.csv
           git commit -m "Record Jayssam publish $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git pull --rebase --autostash origin master
           git push
