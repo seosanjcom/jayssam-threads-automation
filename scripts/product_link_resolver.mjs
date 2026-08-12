@@ -1,3 +1,5 @@
+import { searchCoupangPartnerProducts } from "./coupang_partners_api.mjs";
+
 function decodeHtml(value = "") {
   return String(value)
     .replace(/&amp;/gi, "&")
@@ -104,6 +106,46 @@ function isAccessBlockedPage(html, metadata) {
   return /access denied|you don.?t have permission|접근할 수 있는 권한이 없습니다|권한이 없습니다|captcha|robot check/.test(pageText);
 }
 
+async function resolveBlockedCoupangLink(sourceUrl, resolvedUrl, options = {}) {
+  const keyword = String(options.productName || options.keyword || "").trim();
+  if (!keyword) {
+    return {
+      product_name: "",
+      product_url: resolvedUrl,
+      image_url: "",
+      price: 0,
+      brand: "",
+      description: "",
+      metadata_status: "access_denied",
+      metadata_error: "쿠팡 단축 링크가 접근을 차단했습니다. ‘상품명: ...’을 링크와 함께 보내면 파트너스 API로 상품 정보를 확인합니다.",
+      affiliate_url: sourceUrl,
+    };
+  }
+  const search = options.coupangSearch || searchCoupangPartnerProducts;
+  const api = await search(keyword, options);
+  const product = api.products?.[0];
+  if (!product) {
+    return {
+      product_name: keyword,
+      product_url: resolvedUrl,
+      image_url: "",
+      price: 0,
+      brand: "",
+      description: "",
+      metadata_status: api.status || "access_denied",
+      metadata_error: api.error || "상품 정보를 찾지 못했습니다.",
+      affiliate_url: sourceUrl,
+    };
+  }
+  return {
+    ...product,
+    product_url: product.product_url || resolvedUrl,
+    metadata_status: "coupang_partners_resolved",
+    metadata_source: "coupang_partners_api",
+    affiliate_url: sourceUrl,
+  };
+}
+
 export function extractProductMetadata(html, sourceUrl = "") {
   const product = parseJsonLdProducts(html)[0] || {};
   const productName = normalizeName(
@@ -161,17 +203,7 @@ export async function resolveProductLink(url, options = {}) {
     const html = await response.text();
     const metadata = extractProductMetadata(html, resolvedUrl);
     if (isAccessBlockedPage(html, metadata)) {
-      return {
-        product_name: "",
-        product_url: resolvedUrl,
-        image_url: "",
-        price: 0,
-        brand: "",
-        description: "",
-        metadata_status: "access_denied",
-        metadata_error: "상품 페이지가 접근을 차단해 상품 정보를 확인할 수 없습니다. 상품명 또는 상품 상세 화면을 함께 보내 주세요.",
-        affiliate_url: sourceUrl,
-      };
+      return resolveBlockedCoupangLink(sourceUrl, resolvedUrl, options);
     }
     return { ...metadata, affiliate_url: sourceUrl };
   } catch (error) {

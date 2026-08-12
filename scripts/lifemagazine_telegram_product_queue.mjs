@@ -28,6 +28,7 @@ export function buildProductQueueReminder(targetDate) {
     "",
     "내일 라이프매거진 상품을 직접 정할래?",
     "상품 링크만 그대로 보내도 돼. 링크를 열어 상품명·가격·이미지를 읽고, 생활 장면 중심으로 글을 만들게.",
+    "쿠팡 단축 링크가 막히면 ‘상품명: ...’을 링크와 같이 보내면 파트너스 API로 확인할 수 있어.",
     "",
     "원하는 말투나 꼭 넣을 포인트가 있으면 링크 다음 줄에 적어줘.",
     "",
@@ -53,10 +54,15 @@ function extractUrls(text) {
     .filter(Boolean);
 }
 
+function extractProductNameHint(text) {
+  const match = String(text || "").match(/(?:^|\n)\s*(?:상품명|제품명|상품\s*이름)\s*[:：]\s*([^\n]+)/i);
+  return match ? match[1].trim().slice(0, 180) : "";
+}
+
 function cleanOperatorNote(text) {
   return String(text || "")
     .replace(/https?:\/\/[^\s<>()]+/gi, "")
-    .replace(/^(?:내일\s*상품|상품\s*링크|링크|포인트|하고싶은말|메모|내말)\s*[:：]?\s*/gim, "")
+    .replace(/^(?:내일\s*상품|상품\s*링크|링크|상품명|제품명|상품\s*이름|포인트|하고싶은말|메모|내말)\s*[:：]?\s*/gim, "")
     .replace(/(?:^|\n)\s*(?:\d+[.)]|[-•])\s*/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim()
@@ -103,9 +109,10 @@ export function parseTelegramProductQueueReply(text, options = {}) {
 
   const urls = extractUrls(text);
   const operatorNote = cleanOperatorNote(text);
+  const productName = extractProductNameHint(text);
   const products = urls.map((affiliateUrl) => normalizeProductCandidate({
     source: "manual_queue",
-    product_name: "",
+    product_name: productName,
     affiliate_url: affiliateUrl,
     operator_note: operatorNote,
     usage_status: "not_confirmed",
@@ -117,7 +124,7 @@ export async function enrichProductQueueLinks(queue, options = {}) {
   const resolver = options.resolveLink || resolveProductLink;
   const products = [];
   for (const product of queue.products || []) {
-    const resolved = product.affiliate_url ? await resolver(product.affiliate_url, options) : {};
+    const resolved = product.affiliate_url ? await resolver(product.affiliate_url, { ...options, productName: product.product_name || "" }) : {};
     products.push(normalizeProductCandidate({
       ...product,
       product_name: product.product_name || resolved.product_name || "",

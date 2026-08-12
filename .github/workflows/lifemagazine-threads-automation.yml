@@ -56,6 +56,8 @@ jobs:
       THREADS_CAROUSEL_ENABLED: "false"
       LIFEMAGAZINE_TELEGRAM_BOT_TOKEN: ${{ secrets.LIFEMAGAZINE_TELEGRAM_BOT_TOKEN }}
       LIFEMAGAZINE_TELEGRAM_CHAT_ID: ${{ secrets.LIFEMAGAZINE_TELEGRAM_CHAT_ID }}
+      COUPANG_PARTNERS_ACCESS_KEY: ${{ secrets.COUPANG_PARTNERS_ACCESS_KEY }}
+      COUPANG_PARTNERS_SECRET_KEY: ${{ secrets.COUPANG_PARTNERS_SECRET_KEY }}
 
     steps:
       - name: Checkout
@@ -76,6 +78,8 @@ jobs:
           node --check scripts/send_lifemagazine_preview_telegram.mjs
           node --check scripts/telegram_check_lifemagazine_approvals.mjs
           node --check scripts/lifemagazine_product_candidates.mjs
+          node --check scripts/coupang_partners_api.mjs
+          node --check scripts/product_link_resolver.mjs
           node --check scripts/lifemagazine_telegram_product_queue.mjs
           node --check scripts/lifemagazine_visual_policy.mjs
           node --check scripts/generate_lifemagazine_product_daily.mjs

@@ -688,7 +688,36 @@ test("product resolver marks an access-denied shopping page as unresolved", asyn
 
   assert.equal(result.metadata_status, "access_denied");
   assert.equal(result.product_name, "");
-  assert.match(result.metadata_error, /상품명 또는 상품 상세 화면/);
+  assert.match(result.metadata_error, /상품명: \.\.\./);
+});
+
+test("blocked Coupang short link is enriched through Partners API when a product name is supplied", async () => {
+  const result = await resolveProductLink("https://link.coupang.com/a/example", {
+    productName: "보온 텀블러",
+    fetchImpl: async () => new Response("<html><title>Sorry! Access denied</title><body>이 페이지에 접근할 수 있는 권한이 없습니다.</body></html>", {
+      status: 200,
+      headers: { "content-type": "text/html" },
+    }),
+    coupangSearch: async (keyword) => {
+      assert.equal(keyword, "보온 텀블러");
+      return {
+        status: "resolved",
+        products: [{
+          product_name: "스테인리스 보온 텀블러 500ml",
+          product_url: "https://www.coupang.com/vp/products/example",
+          image_url: "https://cdn.example.com/tumbler.jpg",
+          price: 18900,
+          brand: "테스트브랜드",
+          description: "스테인리스 보온 텀블러 500ml",
+        }],
+      };
+    },
+  });
+
+  assert.equal(result.metadata_status, "coupang_partners_resolved");
+  assert.equal(result.product_name, "스테인리스 보온 텀블러 500ml");
+  assert.equal(result.price, 18900);
+  assert.equal(result.affiliate_url, "https://link.coupang.com/a/example");
 });
 
 test("lifemagazine bare product link is enriched before draft creation", async () => {
@@ -712,6 +741,12 @@ test("lifemagazine bare product link is enriched before draft creation", async (
   assert.equal(queue.products[0].price, 8900);
   assert.match(queue.products[0].operator_note, /아침마다 머리끈/);
   assert.match(buildProductQueueConfirmation(queue), /대용량 데일리 머리끈/);
+});
+
+test("lifemagazine product queue reads an explicit product name with a short link", () => {
+  const queue = parseTelegramProductQueueReply("상품명: 보온 텀블러\nhttps://link.coupang.com/a/example\n포인트: 회사 책상에 두기 좋은 보온력", { date: "2026-08-03" });
+  assert.equal(queue.products[0].product_name, "보온 텀블러");
+  assert.match(queue.products[0].operator_note, /회사 책상/);
 });
 
 test("lifemagazine product queue parses manual Telegram reply and confirms saved products", () => {
