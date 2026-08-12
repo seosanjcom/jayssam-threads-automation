@@ -112,14 +112,17 @@ async function publishDraft(root, draftItem, approvalSource) {
     await sendMessage(`offnote.kr already published: ${draft.id}`);
     return;
   }
-  if (draft.status !== "pending_approval") {
+  const retryableStatuses = new Set(["pending_approval", "approved", "publish_failed"]);
+  if (!retryableStatuses.has(draft.status)) {
     await sendMessage(`offnote.kr not published: ${draft.id} is status=${draft.status}.`);
     return;
   }
 
+  const isRetry = draft.status === "approved" || draft.status === "publish_failed";
   draft.status = "approved";
-  draft.approved_at = new Date().toISOString();
+  draft.approved_at = draft.approved_at || new Date().toISOString();
   draft.approval_source = approvalSource;
+  if (isRetry) draft.publish_retry_requested_at = new Date().toISOString();
   writeJson(draftItem.file, draft);
 
   const result = spawnSync("node", ["scripts/threads_publish.mjs", draftItem.file], {
@@ -274,13 +277,13 @@ try {
       await answerCallback(callback.id, "Already published.");
       continue;
     }
-    if (draft.status !== "pending_approval") {
-      await answerCallback(callback.id, "Not pending approval.");
+    if (!["pending_approval", "approved", "publish_failed"].includes(draft.status)) {
+      await answerCallback(callback.id, "This draft cannot be published now.");
       await sendMessage(`offnote.kr not published: ${draftId} is status=${draft.status}.`);
       continue;
     }
 
-    await answerCallback(callback.id, "Publishing...");
+    await answerCallback(callback.id, draft.status === "pending_approval" ? "Publishing..." : "Retrying publication...");
     await publishDraft(root, draftItem, `telegram_callback:${callback.id}`);
   }
 
