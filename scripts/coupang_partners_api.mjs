@@ -8,7 +8,7 @@ function compact(value = "", limit = 240) {
 }
 
 function signedDate(date = new Date()) {
-  return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+  return date.toISOString().slice(2).replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
 }
 
 export function buildCoupangAuthorization({ accessKey, secretKey, method = "GET", path, query = "", date = new Date() }) {

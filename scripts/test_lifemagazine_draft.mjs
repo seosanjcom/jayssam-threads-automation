@@ -37,6 +37,7 @@ import {
 } from "./lifemagazine_telegram_product_queue.mjs";
 import { generateDailyProductDrafts } from "./generate_lifemagazine_product_daily.mjs";
 import { extractProductMetadata, resolveProductLink } from "./product_link_resolver.mjs";
+import { buildCoupangAuthorization } from "./coupang_partners_api.mjs";
 
 const sampleAccounts = [
   { accountKey: "jayssam", threadsUsername: "jayssam_edu", displayName: "제이쌤", project: "jayssam", automationRoot: "outputs/automation", defaultSlots: ["15:00 KST", "21:00 KST"], dailyPostLimit: 2, minIntervalHours: 6 },
@@ -661,6 +662,19 @@ test("lifemagazine product queue reminder includes reply examples", () => {
   assert.match(message, /답변 예시/);
   assert.match(message, /상품 링크만 그대로 보내도 돼/);
   assert.match(message, /내일은 자동으로 해줘/);
+});
+
+test("Coupang Partners HMAC uses the documented two-digit UTC year format", () => {
+  const header = buildCoupangAuthorization({
+    accessKey: "access",
+    secretKey: "secret",
+    method: "GET",
+    path: "/v2/providers/affiliate_open_api/apis/openapi/products/search",
+    query: "keyword=%ED%85%80%EB%B8%94%EB%9F%AC&limit=3",
+    date: new Date("2026-08-12T03:00:00.000Z"),
+  });
+  assert.match(header, /signed-date=260812T030000Z/);
+  assert.match(header, /algorithm=HmacSHA256/);
 });
 
 test("product resolver extracts safe product metadata from JSON-LD and Open Graph", () => {
