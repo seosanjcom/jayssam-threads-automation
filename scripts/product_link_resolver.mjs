@@ -99,6 +99,11 @@ function firstBrand(value) {
   return String(value.name || "").trim();
 }
 
+function isAccessBlockedPage(html, metadata) {
+  const pageText = `${metadata.product_name || ""} ${metadata.description || ""} ${stripHtml(html)}`.toLowerCase();
+  return /access denied|you don.?t have permission|접근할 수 있는 권한이 없습니다|권한이 없습니다|captcha|robot check/.test(pageText);
+}
+
 export function extractProductMetadata(html, sourceUrl = "") {
   const product = parseJsonLdProducts(html)[0] || {};
   const productName = normalizeName(
@@ -153,7 +158,21 @@ export async function resolveProductLink(url, options = {}) {
     if (!contentType.includes("html")) {
       return { product_url: resolvedUrl, metadata_status: "unsupported_content", metadata_error: "상품 상세 HTML을 확인할 수 없습니다." };
     }
-    const metadata = extractProductMetadata(await response.text(), resolvedUrl);
+    const html = await response.text();
+    const metadata = extractProductMetadata(html, resolvedUrl);
+    if (isAccessBlockedPage(html, metadata)) {
+      return {
+        product_name: "",
+        product_url: resolvedUrl,
+        image_url: "",
+        price: 0,
+        brand: "",
+        description: "",
+        metadata_status: "access_denied",
+        metadata_error: "상품 페이지가 접근을 차단해 상품 정보를 확인할 수 없습니다. 상품명 또는 상품 상세 화면을 함께 보내 주세요.",
+        affiliate_url: sourceUrl,
+      };
+    }
     return { ...metadata, affiliate_url: sourceUrl };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

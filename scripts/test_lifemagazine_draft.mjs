@@ -36,7 +36,7 @@ import {
   saveManualProductQueue,
 } from "./lifemagazine_telegram_product_queue.mjs";
 import { generateDailyProductDrafts } from "./generate_lifemagazine_product_daily.mjs";
-import { extractProductMetadata } from "./product_link_resolver.mjs";
+import { extractProductMetadata, resolveProductLink } from "./product_link_resolver.mjs";
 
 const sampleAccounts = [
   { accountKey: "jayssam", threadsUsername: "jayssam_edu", displayName: "제이쌤", project: "jayssam", automationRoot: "outputs/automation", defaultSlots: ["15:00 KST", "21:00 KST"], dailyPostLimit: 2, minIntervalHours: 6 },
@@ -676,6 +676,19 @@ test("product resolver extracts safe product metadata from JSON-LD and Open Grap
   assert.equal(metadata.brand, "데일리픽");
   assert.equal(metadata.price, 8900);
   assert.equal(metadata.image_url, "https://cdn.example.com/hair.png");
+});
+
+test("product resolver marks an access-denied shopping page as unresolved", async () => {
+  const result = await resolveProductLink("https://link.coupang.com/a/example", {
+    fetchImpl: async () => new Response("<html><title>Sorry! Access denied</title><body>이 페이지에 접근할 수 있는 권한이 없습니다.</body></html>", {
+      status: 200,
+      headers: { "content-type": "text/html" },
+    }),
+  });
+
+  assert.equal(result.metadata_status, "access_denied");
+  assert.equal(result.product_name, "");
+  assert.match(result.metadata_error, /상품명 또는 상품 상세 화면/);
 });
 
 test("lifemagazine bare product link is enriched before draft creation", async () => {
