@@ -82,5 +82,8 @@
     "price": 21000,
     "source_url": "https://link.coupang.com/a/f85dtqwQDI",
     "metadata_status": "coupang_partners_resolved"
-  }
+  },
+  "published_reply_ids": [
+    "17901704247481293"
+  ]
 }
