@@ -143,8 +143,8 @@ function assertPublishableDraft(draft) {
   const isLifemagazine = draft.account === "lifemagazine_";
 
   if (draft.account === "offnote.kr") {
-    if (threadsText.length < 180) {
-      throw new Error(`Safety stop: offnote.kr threads_text is too short (${threadsText.length}/180).`);
+    if (threadsText.length < 160) {
+      throw new Error(`Safety stop: offnote.kr threads_text is too short (${threadsText.length}/160).`);
     }
     if (threadsText.length > 500) {
       throw new Error(`Safety stop: offnote.kr threads_text exceeds Threads API limit (${threadsText.length}/500).`);
