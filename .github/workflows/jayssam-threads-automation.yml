@@ -32,14 +32,14 @@ on:
   schedule:
     # KST 10:05 - collect previous reaction metrics
     - cron: "5 1 * * *"
-    # KST 15:00 post route: 12:00 preview, 15:00 publish.
-    - cron: "0 3 * * *"
-    - cron: "0 6 * * *"
-    - cron: "20 6 * * *"
-    # KST 21:00 post route from week 2: 18:00 preview, 21:00 publish.
-    - cron: "0 9 * * *"
-    - cron: "0 12 * * *"
-    - cron: "20 12 * * *"
+    # KST 13:00 post route: 10:30 preview, 13:00 publish.
+    - cron: "30 1 * * *"
+    - cron: "0 4 * * *"
+    - cron: "20 4 * * *"
+    # KST 20:00 post route: 17:00 preview, 20:00 publish.
+    - cron: "0 8 * * *"
+    - cron: "0 11 * * *"
+    - cron: "20 11 * * *"
 
 permissions:
   contents: write
@@ -65,8 +65,8 @@ jobs:
       THREADS_ACCOUNT_HANDLE: "@jayssam_edu"
       THREADS_AUTO_PUBLISH: "true"
       THREADS_SAFETY_MODE: "true"
-      THREADS_DAILY_POST_LIMIT: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'publish' && '3' || '2' }}
-      THREADS_MIN_INTERVAL_HOURS: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'publish' && '0' || '5' }}
+      THREADS_DAILY_POST_LIMIT: "2"
+      THREADS_MIN_INTERVAL_HOURS: "5"
       THREADS_PUBLISH_WAIT_MS: "30000"
       THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true"
       THREADS_EXPECTED_USERNAME: "jayssam_edu"
@@ -100,12 +100,12 @@ jobs:
           else
             case "${{ github.event.schedule }}" in
               "5 1 * * *") echo "mode=metrics" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 3 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 6 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "20 6 * * *") echo "mode=watchdog" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 9 * * *") node scripts/github_phase_gate.mjs "preview" "night" >> "$GITHUB_OUTPUT" ;;
-              "0 12 * * *") node scripts/github_phase_gate.mjs "publish" "night" >> "$GITHUB_OUTPUT" ;;
-              "20 12 * * *") node scripts/github_phase_gate.mjs "watchdog" "night" >> "$GITHUB_OUTPUT" ;;
+              "30 1 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "0 4 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "20 4 * * *") echo "mode=watchdog" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "0 8 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "0 11 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+              "20 11 * * *") echo "mode=watchdog" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
               *) node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT" ;;
             esac
           fi

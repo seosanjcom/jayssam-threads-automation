@@ -3,9 +3,11 @@ name: Lifemagazine Threads Automation
 on:
   schedule:
     - cron: "0 11 * * *"
+    # KST 22:30 - collect two low-risk Coupang Partners candidates and prepare tomorrow's posts.
     - cron: "30 13 * * *"
     - cron: "*/10 * * * *"
-    - cron: "30 2,7,12 * * *"
+    # KST 11:30, 18:00 - publish only safe pre-approved daily drafts.
+    - cron: "30 2,9 * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -19,6 +21,7 @@ on:
           - publish
           - product_queue
           - product_drafts
+          - auto_product_drafts
           - health
           - product_lookup_test
           - delete_posts
@@ -55,8 +58,8 @@ jobs:
       THREADS_ACCOUNT_HANDLE: "@lifemagazine_"
       THREADS_AUTO_PUBLISH: "true"
       THREADS_SAFETY_MODE: "true"
-      THREADS_DAILY_POST_LIMIT: "3"
-      THREADS_MIN_INTERVAL_HOURS: "3"
+      THREADS_DAILY_POST_LIMIT: "2"
+      THREADS_MIN_INTERVAL_HOURS: "5"
       THREADS_PUBLISH_WAIT_MS: "30000"
       THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true"
       THREADS_EXPECTED_USERNAME: "lifemagazine_"
@@ -117,17 +120,21 @@ jobs:
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'product_queue') || (github.event_name == 'schedule' && github.event.schedule == '0 11 * * *')
         run: node scripts/lifemagazine_telegram_product_queue.mjs
 
-      - name: Generate product drafts
-        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'product_drafts') || (github.event_name == 'schedule' && github.event.schedule == '30 13 * * *')
+      - name: Generate manual product drafts for review
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'product_drafts'
+        run: node scripts/generate_lifemagazine_product_daily.mjs --send-preview
+
+      - name: Generate safe automatic Coupang drafts for the next day
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'auto_product_drafts') || (github.event_name == 'schedule' && github.event.schedule == '30 13 * * *')
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            node scripts/generate_lifemagazine_product_daily.mjs --tomorrow --send-preview
+            node scripts/generate_lifemagazine_product_daily.mjs --tomorrow --auto-approve --send-preview
           else
-            node scripts/generate_lifemagazine_product_daily.mjs --send-preview
+            node scripts/generate_lifemagazine_product_daily.mjs --auto-approve --send-preview
           fi
 
       - name: Publish latest approved
-        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '30 2,7,12 * * *')
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '30 2,9 * * *')
         run: node scripts/publish_lifemagazine_latest_approved.mjs
 
       - name: Delete corrected Lifemagazine posts
@@ -159,7 +166,7 @@ jobs:
           echo "lifemagazine health ok"
 
       - name: Commit lifemagazine results
-        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish' || inputs.mode == 'product_drafts' || inputs.mode == 'delete_posts')) || github.event_name == 'schedule'
+        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish' || inputs.mode == 'product_drafts' || inputs.mode == 'auto_product_drafts' || inputs.mode == 'delete_posts')) || github.event_name == 'schedule'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

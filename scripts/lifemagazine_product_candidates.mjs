@@ -14,6 +14,11 @@ const LOW_RISK_KEYWORDS = [
   "립밤",
   "거치대",
   "트레이",
+  "연결 고리",
+  "옷걸이",
+  "바구니",
+  "수세미 거치대",
+  "싱크대 거치대",
 ];
 
 export const PRODUCT_SELECTION_RULES = {
@@ -73,7 +78,7 @@ export function normalizeProductCandidate(input = {}, options = {}) {
   const riskLevel = riskLevelFor(text);
   const reviewCount = firstNumber(input.review_count, input.reviewCount, input.review_count_text);
 
-  const isHealthSensitive = /링티|수분\s*보충|전해질|영양제|비타민|의료|건강/.test(text);
+  const isHealthSensitive = /링티|수분\s*보충|전해질|영양제|비타민|의료|건강|보충제|유산균|프로바이오틱스|어린이|유아|아기|키즈|베이비|음료|식품|분말/.test(text);
   const whenToUse = firstText(input.when_to_use, input.whenToUse, input.scene_hint, sceneHintFor(text));
   const recommendationReason = firstText(input.recommendation_reason, input.recommendationReason, input.selection_reason, whenToUse);
   const usageGuidance = firstText(input.usage_guidance, input.usageGuidance, input.how_to_use, input.howToUse);
@@ -135,6 +140,8 @@ export function selectDailyProductCandidates(candidates = [], count = 3) {
   const automatic = normalized.filter((candidate) => candidate.source !== "manual_queue" && candidate.product_name && candidate.affiliate_url && completeBrief(candidate));
   for (const candidate of [...manual, ...rankProductCandidates(automatic)]) {
     if (candidate.risk_level === "hold" || candidate.requires_manual_claim_review) continue;
+    // 자동 발행은 용도·표현을 상품명만으로도 안전하게 검증할 수 있는 저위험 생활용품으로 한정한다.
+    if (candidate.source === "coupang_api" && candidate.risk_level !== "low") continue;
     if (seenNames.has(candidate.product_name)) continue;
     selected.push(candidate);
     seenNames.add(candidate.product_name);

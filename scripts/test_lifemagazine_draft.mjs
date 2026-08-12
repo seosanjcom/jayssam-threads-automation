@@ -25,6 +25,7 @@ import { applyLifemagazineApprovalAction } from "./telegram_check_lifemagazine_a
 import {
   fixtureProductCandidates,
   normalizeProductCandidate,
+  selectDailyProductCandidates,
   COUPANG_DISCLOSURE,
 } from "./lifemagazine_product_candidates.mjs";
 import {
@@ -35,7 +36,7 @@ import {
   parseTelegramProductQueueReply,
   saveManualProductQueue,
 } from "./lifemagazine_telegram_product_queue.mjs";
-import { generateDailyProductDrafts } from "./generate_lifemagazine_product_daily.mjs";
+import { buildCoupangCandidate, generateDailyProductDrafts } from "./generate_lifemagazine_product_daily.mjs";
 import { extractProductMetadata, resolveProductLink } from "./product_link_resolver.mjs";
 import { buildCoupangAuthorization } from "./coupang_partners_api.mjs";
 
@@ -897,10 +898,37 @@ test("lifemagazine daily product generator prefers Telegram manual queue", () =>
     candidates: fixtureProductCandidates("2026-08-03"),
   });
 
-  assert.equal(drafts.length, 3);
-  assert.deepEqual(drafts.map((draft) => draft.product_name), ["대용량 머리끈", "케이블 정리 클립", "소지품 파우치"]);
-  assert.deepEqual(drafts.map((draft) => draft.recommended_publish_time), ["11:30 KST", "16:30 KST", "21:30 KST"]);
+  assert.equal(drafts.length, 2);
+  assert.deepEqual(drafts.map((draft) => draft.product_name), ["대용량 머리끈", "케이블 정리 클립"]);
+  assert.deepEqual(drafts.map((draft) => draft.recommended_publish_time), ["11:30 KST", "18:00 KST"]);
   assert.match(drafts[0].threads_text, /머리끈 맨날 잃어버리는 사람/);
   assert.ok(drafts.every((draft) => validateLifemagazineDraft(draft).ok));
+});
+
+test("Coupang API candidate requires a partner link and keeps sensitive products out of auto-selection", () => {
+  const safe = buildCoupangCandidate({
+    product_id: "safe-1",
+    product_name: "케이블 정리 클립 20개",
+    product_url: "https://link.coupang.com/a/safe-example",
+    product_image: "https://image.example.com/clip.jpg",
+    category_name: "생활용품",
+  }, {
+    keyword: "케이블 정리 클립",
+    recommendation_reason: "충전선 정리에 쓰기 좋아서",
+    when_to_use: "책상 위 충전선이 엉킬 때",
+    usage_guidance: "케이블 굵기를 확인하고 붙여 써",
+  });
+  const notAffiliate = buildCoupangCandidate({ product_name: "케이블 정리 클립", product_url: "https://www.coupang.com/vp/products/1" }, {});
+  const sensitive = normalizeProductCandidate({
+    source: "coupang_api",
+    product_name: "어린이 비타민",
+    affiliate_url: "https://link.coupang.com/a/sensitive-example",
+    recommendation_reason: "영양 보충",
+    when_to_use: "매일",
+  });
+
+  assert.equal(safe.affiliate_url, "https://link.coupang.com/a/safe-example");
+  assert.equal(notAffiliate, null);
+  assert.equal(selectDailyProductCandidates([safe, sensitive], 2).length, 1);
 });
 
