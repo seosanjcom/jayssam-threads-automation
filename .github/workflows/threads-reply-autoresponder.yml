@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      THREADS_REPLY_AUTORESPONDER_ENABLED: ${{ vars.THREADS_REPLY_AUTORESPONDER_ENABLED || 'false' }}
+      THREADS_REPLY_AUTORESPONDER_ENABLED: ${{ vars.THREADS_REPLY_AUTORESPONDER_ENABLED || 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
