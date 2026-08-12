@@ -22,6 +22,7 @@ on:
           - product_queue
           - product_drafts
           - auto_product_drafts
+          - auto_product_drafts_remaining
           - health
           - product_lookup_test
           - delete_posts
@@ -133,6 +134,10 @@ jobs:
             node scripts/generate_lifemagazine_product_daily.mjs --auto-approve --send-preview
           fi
 
+      - name: Generate safe automatic Coupang draft for today's remaining slot
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'auto_product_drafts_remaining'
+        run: node scripts/generate_lifemagazine_product_daily.mjs --remaining-today --auto-approve --send-preview
+
       - name: Publish latest approved
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'publish') || (github.event_name == 'schedule' && github.event.schedule == '30 2,9 * * *')
         run: node scripts/publish_lifemagazine_latest_approved.mjs
@@ -166,7 +171,7 @@ jobs:
           echo "lifemagazine health ok"
 
       - name: Commit lifemagazine results
-        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish' || inputs.mode == 'product_drafts' || inputs.mode == 'auto_product_drafts' || inputs.mode == 'delete_posts')) || github.event_name == 'schedule'
+        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'preview' || inputs.mode == 'approval_check' || inputs.mode == 'publish' || inputs.mode == 'product_drafts' || inputs.mode == 'auto_product_drafts' || inputs.mode == 'auto_product_drafts_remaining' || inputs.mode == 'delete_posts')) || github.event_name == 'schedule'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

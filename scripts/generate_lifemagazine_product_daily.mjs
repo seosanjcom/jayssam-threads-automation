@@ -73,6 +73,16 @@ function kstDateKey(date = new Date()) {
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
+function kstClock(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date).reduce((out, part) => ({ ...out, [part.type]: part.value }), {});
+  return `${parts.hour}:${parts.minute}`;
+}
+
 function rotationStartIndex(date) {
   const digits = String(date || "").replace(/\D/g, "");
   const numeric = Number(digits.slice(-4)) || 0;
@@ -142,14 +152,15 @@ export function generateDailyProductDrafts(options = {}) {
   const date = options.date || kstDateKey();
   const manualCandidates = options.manualCandidates || loadManualProductQueue(date, { root });
   const automaticCandidates = options.candidates || [];
-  const targetCount = Number(options.count || DAILY_PRODUCT_SLOTS.length);
+  const slots = Array.isArray(options.slots) && options.slots.length ? options.slots : DAILY_PRODUCT_SLOTS;
+  const targetCount = Number(options.count || slots.length);
   const selected = selectDailyProductCandidates([...manualCandidates, ...automaticCandidates], targetCount);
   if (selected.length < targetCount) {
     throw new Error(`자동 발행 가능한 저위험 라이프매거진 상품 후보가 부족합니다. 필요=${targetCount}, 선별=${selected.length}`);
   }
 
   return selected.map((candidate, index) => {
-    const slot = DAILY_PRODUCT_SLOTS[index];
+    const slot = slots[index];
     const autoApproved = options.autoApprove === true && candidate.source === "coupang_api";
     const draft = generateLifemagazineDraft({
       date,
@@ -191,7 +202,7 @@ export async function generateDailyProductDraftsAndPreview(options = {}) {
   if (!candidates) {
     const result = await collectSafeCoupangCandidates({
       date,
-      count: options.count || DAILY_PRODUCT_SLOTS.length,
+      count: options.count || (Array.isArray(options.slots) && options.slots.length ? options.slots.length : DAILY_PRODUCT_SLOTS.length),
       accessKey: options.accessKey,
       secretKey: options.secretKey,
       fetchImpl: options.fetchImpl,
@@ -218,8 +229,15 @@ if (isDirectRun) {
   const targetDate = dateArg || (tomorrow
     ? kstDateKey(new Date(Date.now() + 24 * 60 * 60 * 1000))
     : undefined);
+  const remainingSlots = args.has("--remaining-today")
+    ? DAILY_PRODUCT_SLOTS.filter((slot) => slot.time > kstClock())
+    : undefined;
+  if (args.has("--remaining-today") && !remainingSlots.length) {
+    throw new Error("오늘 남은 라이프매거진 발행 슬롯이 없습니다.");
+  }
   const result = await generateDailyProductDraftsAndPreview({
     date: targetDate,
+    slots: remainingSlots,
     sendPreview: args.has("--send-preview"),
     autoApprove: args.has("--auto-approve"),
   });

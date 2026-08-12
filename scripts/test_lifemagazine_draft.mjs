@@ -905,6 +905,21 @@ test("lifemagazine daily product generator prefers Telegram manual queue", () =>
   assert.ok(drafts.every((draft) => validateLifemagazineDraft(draft).ok));
 });
 
+test("lifemagazine daily product generator can target only a remaining slot", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-remaining-slot-"));
+  const drafts = generateDailyProductDrafts({
+    root: tmp,
+    date: "2026-08-12",
+    now: "2026-08-12T07:00:00.000Z",
+    slots: [{ slot: "evening", time: "18:00", label: "저녁 생활템" }],
+    candidates: fixtureProductCandidates("2026-08-12"),
+  });
+
+  assert.equal(drafts.length, 1);
+  assert.match(drafts[0].id, /-evening-/);
+  assert.equal(drafts[0].recommended_publish_time, "18:00 KST");
+});
+
 test("Coupang API candidate requires a partner link and keeps sensitive products out of auto-selection", () => {
   const safe = buildCoupangCandidate({
     product_id: "safe-1",
