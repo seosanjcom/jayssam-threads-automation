@@ -1870,28 +1870,49 @@ def hashtags_for_topic(topic: dict, date_text: str = "", slot: str = "") -> str:
 
 
 def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_type: str, date_text: str = "", slot: str = "") -> list[str]:
+    """Build a concise, evidence-first Threads post that stays inside the API text limit."""
     expert = topic["expert"]
     resource = topic.get("resource", {})
-    field_note = ""
-    if topic.get("slug") in {"careernet-holland-interest", "careernet-vocation-aptitude", "ebsi-career-exploration"}:
-        field_note = "꿈길 인증 진로체험 현장에서 보면, 검사 결과는 정답이 아니라 아이와 대화를 시작하는 자료에 가깝습니다."
-    variant_note = ""
-    if date_text:
-        variant = topic_variant_title(topic, date_text, slot)
-        variant_focus = variant.split(" - ", 1)[1] if " - " in variant else variant
-        variant_note = f"오늘 관점: {variant_focus}"
-    parts = [
-        topic["hook"],
-        variant_note,
-        f"바로가기: {resource.get('url_label', '')}",
-        field_note,
-        expert["must_know"],
-        f"정확히는: {resource.get('free', '')}",
-        f"이렇게 쓰세요: {resource.get('use', expert['check'])}",
-        f"주의할 점: {resource.get('caution', expert['avoid'])}",
-        hashtags_for_topic(topic, date_text, slot),
-    ]
-    return [part for part in parts if part]
+    body = [str(item).strip() for item in topic.get("body", []) if str(item).strip()]
+    is_resource_post = bool(resource.get("url_label"))
+
+    if is_resource_post:
+        core_fact = resource.get("free") or (body[0] if body else expert["must_know"])
+        action = resource.get("use") or expert["check"]
+        caution = resource.get("caution") or expert["avoid"]
+        parts = [
+            topic["hook"],
+            f"확인된 정보: {core_fact}",
+            f"이렇게 써보세요: {action}",
+            f"주의: {caution}",
+            f"공식 확인: {resource.get('url_label')}",
+        ]
+    else:
+        factual_context = body[0] if body else expert["must_know"]
+        parent_action = expert.get("check") or expert.get("use_for") or "아이의 현재 경험과 연결해 한 번 더 확인해보세요."
+        parts = [
+            topic["hook"],
+            f"무엇이 중요한가: {factual_context}",
+            f"부모 체크: {parent_action}",
+        ]
+        if latest_signal and latest_signal.get("title"):
+            parts.append(f"오늘 참고한 교육 이슈: {latest_signal['title']}")
+        parts.append(f"출처: {topic['source_name']}")
+
+    parts.append(hashtags_for_topic(topic, date_text, slot))
+    compact: list[str] = []
+    total = 0
+    for part in (item.strip() for item in parts if item and item.strip()):
+        separator = 2 if compact else 0
+        remaining = 490 - total - separator
+        if remaining <= 0:
+            break
+        if len(part) > remaining:
+            compact.append(part[: max(0, remaining - 1)].rstrip() + "…")
+            break
+        compact.append(part)
+        total += len(part) + separator
+    return compact
 
 
 def main() -> None:
