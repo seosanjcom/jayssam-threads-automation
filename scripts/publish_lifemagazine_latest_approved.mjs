@@ -70,7 +70,7 @@ export function latestApprovedLifemagazineDraft(options = {}) {
     .filter((item) => item.data.account === account)
     .filter((item) => item.data.status === "approved")
     .filter((item) => !publishedIds.has(item.data.id))
-    .filter((item) => isDraftDue(item.data, now))
+    .filter((item) => item.data.publish_on_approve === true || isDraftDue(item.data, now))
     .sort((a, b) => b.mtime - a.mtime)[0] || null;
 }
 

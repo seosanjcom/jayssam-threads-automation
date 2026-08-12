@@ -541,6 +541,19 @@ test("latestApprovedLifemagazineDraft selects newest unpublished approved draft"
   assert.equal(latest.data.id, newer.id);
 });
 
+test("latestApprovedLifemagazineDraft selects an approval-immediate draft before its scheduled time", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-immediate-"));
+  const draft = generateLifemagazineDraft({ date: "2026-08-03", topic: "승인 즉시 발행", source_urls: ["https://example.com/a"] });
+  draft.status = "approved";
+  draft.publish_on_approve = true;
+  draft.scheduled_publish_at = "2026-08-04T12:00:00.000Z";
+  const file = saveLifemagazineDraft(draft, { root });
+
+  const latest = latestApprovedLifemagazineDraft({ root, now: new Date("2026-08-03T12:00:00.000Z") });
+  assert.equal(latest.file, file);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
 test("latestApprovedLifemagazineDraft waits until the scheduled publish time", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-due-"));
   const due = generateLifemagazineDraft({
@@ -582,7 +595,7 @@ test("applyLifemagazineApprovalAction updates only pending lifemagazine drafts",
   const held = applyLifemagazineApprovalAction({ ...draft, status: "pending_approval" }, "hold");
 
   assert.equal(approved.status, "approved");
-  assert.equal(approved.publish_on_approve, false);
+  assert.equal(approved.publish_on_approve, true);
   assert.equal(held.status, "held");
   assert.throws(() => applyLifemagazineApprovalAction({ ...draft, account: "offnote.kr" }, "approve"));
 });

@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import {
   buildProductQueueConfirmation,
@@ -69,7 +70,7 @@ export function applyLifemagazineApprovalAction(draft, action) {
   if (draft.account !== "lifemagazine_") throw new Error(`Refusing to update non-lifemagazine draft: ${draft.account}`);
   if (draft.status !== "pending_approval") throw new Error(`Draft must be pending_approval, got ${draft.status}`);
   if (action === "approve") {
-    return { ...draft, status: "approved", approved_at: new Date().toISOString(), publish_on_approve: false };
+    return { ...draft, status: "approved", approved_at: new Date().toISOString(), publish_on_approve: true };
   }
   if (action === "hold") {
     return { ...draft, status: "held", held_at: new Date().toISOString() };
@@ -103,10 +104,23 @@ async function handleCallback(callback) {
   }
   const updated = applyLifemagazineApprovalAction(item.data, action);
   writeJson(item.file, updated);
-  const suffix = updated.status === "approved"
-    ? "정해진 발행 시간에 publish가 처리돼."
-    : "보류 상태로 바꿨어.";
-  await sendMessage(`lifemagazine_ ${updated.status}: ${id}\n${suffix}`);
+  if (updated.status !== "approved") {
+    await sendMessage(`lifemagazine_ ${updated.status}: ${id}\n보류 상태로 바꿨어.`);
+    return;
+  }
+
+  const publish = spawnSync("node", ["scripts/publish_lifemagazine_latest_approved.mjs"], {
+    cwd: root,
+    encoding: "utf8",
+    env: process.env,
+  });
+  const published = readJsonIfExists(item.file, updated);
+  if ((publish.status ?? 1) === 0 && published.status === "published") {
+    await sendMessage(`lifemagazine_ published: ${id}\n승인 직후 게시를 완료했어.`);
+    return;
+  }
+  const reason = String(published.publish_failure_reason || publish.stderr || publish.stdout || "발행 결과를 확인하지 못했습니다.").slice(0, 500);
+  await sendMessage(`lifemagazine_ publish failed: ${id}\n${reason}`);
 }
 
 async function handleMessage(message) {

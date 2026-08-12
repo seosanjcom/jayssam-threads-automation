@@ -1513,10 +1513,11 @@ def make_card(out: Path, topic: dict, index: int, total: int, label: str, headin
 
     if index in {2, 3, 4, 5, 6}:
         draw.rounded_rectangle((86, 858, 994, 930), radius=20, fill="#eeeaff")
-        draw.text((122, 876), footer_line(index), font=font(29, True), fill=accent)
+        draw_multiline(draw, (122, 870), footer_line(topic, index), font(25, True), accent, 820, 8)
 
     draw.text((82, 980), "JAYSSAM FUTURE EDUCATION", font=font(24, True), fill="#a0a5ad")
-    draw.text((690, 980), f"{topic['keyword']} / source checked", font=font(22), fill="#a0a5ad")
+    source_label = str(topic.get("source_name", "공식 교육 자료"))[:36]
+    draw.text((570, 980), f"SOURCE · {source_label}", font=font(20), fill="#a0a5ad")
     img.save(out)
 
 
@@ -1603,54 +1604,52 @@ def write_draft(topic: dict, date_text: str, slot: str, card_dir: Path, media_pa
 
 
 def slide_payload(topic: dict, index: int, label: str, heading: str, body: str) -> dict:
+    """Turn one topic into a reader-first card sequence, not a repeated template."""
     expert = topic["expert"]
     slug = topic["slug"]
+    evidence = [item.strip() for item in topic.get("body", []) if item and item.strip()]
+    checklist = checklist_rows(slug) or [(str(i + 1), value) for i, value in enumerate(evidence[:3])]
+    lens = lens_rows(slug) or [
+        ("사실", evidence[0] if evidence else expert["must_know"]),
+        ("해석", expert["must_know"]),
+        ("행동", expert["check"]),
+    ]
     if index == 1:
         return {
             "kind": "cover",
-            "eyebrow": topic["keyword"],
+            "eyebrow": f"{topic['keyword']} · 부모 관점",
             "title": heading,
             "subtitle": body,
-            "footer": "짧지만 깊게 읽는 미래교육 칼럼입니다.",
+            "footer": f"출처: {topic['source_name']}",
         }
     if index == 2:
         return {
             "kind": "compare",
-            "title": "표면과 본질",
-            "rows": [
-                ("오해", parent_misread(slug)),
-                ("실제", expert["must_know"]),
-            ],
+            "title": "이 뉴스에서 봐야 할 사실",
+            "rows": [("사실", evidence[0] if evidence else expert["news_frame"]), ("해석", expert["must_know"])],
         }
     if index == 3:
         return {
             "kind": "checklist",
-            "title": "교육이 향하는 곳",
-            "rows": checklist_rows(slug),
+            "title": "부모가 확인할 3가지",
+            "rows": checklist,
         }
     if index == 4:
         return {
             "kind": "warning",
-            "title": "놓치기 쉬운 문장",
-            "rows": [
-                ("주의", expert["avoid"]),
-                ("신호", expert["check"]),
-            ],
+            "title": "오늘 아이에게 물어볼 질문",
+            "rows": [("질문", expert["check"]), ("피할 말", expert["avoid"])],
         }
     if index == 5:
         return {
             "kind": "lens",
-            "title": "관점이 바뀌는 지점",
-            "rows": lens_rows(slug),
+            "title": "우리 집에 적용하면",
+            "rows": lens,
         }
     return {
         "kind": "summary",
-        "title": "저장용 핵심 정리",
-        "rows": [
-            ("흐름", trend_takeaway(slug)),
-            ("본질", parent_takeaway(slug)),
-            ("문장", body),
-        ],
+        "title": "저장해둘 한 문장",
+        "rows": [("핵심", parent_takeaway(slug)), ("실천", expert["use_for"]), ("출처", topic["source_name"])],
     }
 
 
@@ -1736,15 +1735,19 @@ def parent_takeaway(slug: str) -> str:
     return data.get(slug, "결과보다 아이가 생각한 흔적을 보세요.")
 
 
-def footer_line(index: int) -> str:
-    lines = {
-        2: "겉으로 보이는 장면 아래에서 교육의 방향이 바뀝니다.",
-        3: "중요한 것은 기능보다 아이에게 남는 사고의 형태입니다.",
-        4: "좋은 문장은 불안을 키우지 않고 관점을 바꿉니다.",
-        5: "같은 이슈도 어떤 언어로 읽느냐에 따라 전혀 다르게 보입니다.",
-        6: "짧게 저장해두고 오래 꺼내 읽을 문장으로 정리했습니다.",
-    }
-    return lines.get(index, "부모 관점으로 보면 놓치던 신호가 보입니다.")
+def footer_line(topic: dict, index: int) -> str:
+    expert = topic["expert"]
+    if index == 2:
+        return "사실과 해석을 분리하면 불안한 교육 뉴스도 읽기 쉬워집니다."
+    if index == 3:
+        return "한 번의 결과보다, 반복해서 보이는 과정을 확인하세요."
+    if index == 4:
+        return f"대화의 출발점: {expert['check']}"
+    if index == 5:
+        return "우리 아이의 현재 경험에 대입해 한 가지만 바꿔보세요."
+    if index == 6:
+        return f"출처를 확인하고, 내 상황에 맞게 해석하세요."
+    return "교육 이슈는 아이의 일상 장면까지 연결될 때 의미가 생깁니다."
 
 
 def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_type: str) -> list[str]:
@@ -1771,72 +1774,56 @@ def build_threads_text_parts(topic: dict, latest_signal: dict | None, content_ty
 
 
 def slide_payload(topic: dict, index: int, label: str, heading: str, body: str) -> dict:
+    """Build a varied card sequence from verified facts, not a generic slide template."""
     expert = topic["expert"]
     resource = topic.get("resource", {})
+    evidence = [item.strip() for item in topic.get("body", []) if item and item.strip()]
     if index == 1:
         return {
             "kind": "cover",
-            "eyebrow": topic["keyword"],
+            "eyebrow": f"{topic['keyword']} · 부모 관점",
             "title": heading,
             "subtitle": body,
-            "footer": "저장해두고 바로 써먹는 교육정보입니다.",
+            "footer": f"출처: {topic['source_name']}",
         }
-    if index == 2:
-        return {
-            "kind": "compare",
-            "title": "어디서 보나요?",
-            "rows": [
-                ("사이트", resource.get("site", "")),
-                ("주소", resource.get("url_label", "")),
-            ],
+    if resource:
+        resource_rows = {
+            2: ("공식 확인처", [("사이트", resource.get("site", "")), ("주소", resource.get("url_label", ""))]),
+            3: ("무엇을 볼 수 있나", [("제공", resource.get("free", expert["must_know"])), ("메뉴", resource.get("menu", ""))]),
+            4: ("우리 집 활용법", [("활용", resource.get("use", expert["check"])), ("확인", resource.get("check", expert["must_know"]))]),
+            5: ("주의할 점", [("주의", resource.get("caution", expert["avoid"])), ("검색", resource.get("search", topic["keyword"]))]),
+            6: ("저장해둘 한 줄", [("핵심", expert["must_know"]), ("실천", expert["use_for"]), ("출처", topic["source_name"])]),
         }
-    if index == 3:
-        return {
-            "kind": "checklist",
-            "title": "무료로 되는 것",
-            "rows": [
-                ("제공", resource.get("free", expert["must_know"])),
-                ("메뉴", resource.get("menu", "")),
-            ],
-        }
-    if index == 4:
-        return {
-            "kind": "warning",
-            "title": "이렇게 쓰세요",
-            "rows": [
-                ("활용", resource.get("use", expert["check"])),
-                ("확인", resource.get("check", expert["must_know"])),
-            ],
-        }
-    if index == 5:
-        return {
-            "kind": "lens",
-            "title": "주의할 점",
-            "rows": [
-                ("주의", resource.get("caution", expert["avoid"])),
-                ("검색", resource.get("search", topic["keyword"])),
-            ],
-        }
-    return {
-        "kind": "summary",
-        "title": "저장용 한 줄",
-        "rows": [
-            ("어디", resource.get("site", "")),
-            ("무엇", resource.get("free", "")),
-            ("검색", resource.get("search", "")),
-        ],
+        title, rows = resource_rows.get(index, resource_rows[6])
+        return {"kind": "resource", "title": title, "rows": rows}
+
+    checklist = checklist_rows(topic["slug"]) or [(str(i + 1), value) for i, value in enumerate(evidence[:3])]
+    lens = lens_rows(topic["slug"]) or [
+        ("사실", evidence[0] if evidence else expert["news_frame"]),
+        ("해석", expert["must_know"]),
+        ("행동", expert["check"]),
+    ]
+    content_rows = {
+        2: ("이 뉴스에서 봐야 할 사실", [("사실", evidence[0] if evidence else expert["news_frame"]), ("해석", expert["must_know"])]),
+        3: ("부모가 확인할 3가지", checklist),
+        4: ("오늘 아이에게 물어볼 질문", [("질문", expert["check"]), ("피할 말", expert["avoid"])]),
+        5: ("우리 집에 적용하면", lens),
+        6: ("저장해둘 한 문장", [("핵심", parent_takeaway(topic["slug"])), ("실천", expert["use_for"]), ("출처", topic["source_name"])]),
     }
+    title, rows = content_rows.get(index, content_rows[6])
+    return {"kind": "education_insight", "title": title, "rows": rows}
 
 
-def footer_line(index: int) -> str:
+def footer_line(topic: dict, index: int) -> str:
+    expert = topic["expert"]
     lines = {
-        2: "사이트 이름과 검색어까지 저장해두세요.",
-        3: "무료로 확인 가능한 항목만 골랐습니다.",
-        4: "검사와 자료는 결론이 아니라 대화의 출발점입니다.",
-        5: "추천 결과를 정답처럼 쓰지 않는 것이 핵심입니다.",
-        6: "오늘은 이 검색어 하나만 저장해도 충분합니다.",
+        2: "사실과 해석을 나누면, 교육 뉴스가 덜 불안해집니다.",
+        3: "한 번의 결과보다 반복되는 과정을 확인하세요.",
+        4: f"대화의 출발점: {expert['check']}",
+        5: "우리 아이의 현재 경험에 대입해 한 가지만 바꿔보세요.",
+        6: "출처를 확인하고, 내 상황에 맞게 해석하세요.",
     }
-    return lines.get(index, "바로 써먹을 수 있는 교육정보입니다.")
+    return lines.get(index, "교육 이슈는 아이의 일상 장면까지 연결될 때 의미가 생깁니다.")
 
 
 def hashtags_for_topic(topic: dict, date_text: str = "", slot: str = "") -> str:
