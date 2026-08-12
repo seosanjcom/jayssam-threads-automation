@@ -77,6 +77,10 @@ export function normalizeProductCandidate(input = {}, options = {}) {
     product_url: firstText(input.product_url, input.productUrl, input.url),
     affiliate_url: firstText(input.affiliate_url, input.affiliateUrl, input.shortUrl),
     image_url: firstText(input.image_url, input.productImage, input.imageUrl, input.thumbnail),
+    brand: firstText(input.brand, input.brandName),
+    description: firstText(input.description, input.productDescription),
+    metadata_status: firstText(input.metadata_status, input.metadataStatus),
+    metadata_error: firstText(input.metadata_error, input.metadataError),
     collected_at: options.collectedAt || input.collected_at || new Date().toISOString(),
     selection_reason: firstText(input.selection_reason, input.scene_hint, sceneHintFor(text)),
     operator_note: firstText(input.operator_note, input.memo, input.note),
@@ -107,8 +111,8 @@ export function selectDailyProductCandidates(candidates = [], count = 3) {
   const selected = [];
   const seenNames = new Set();
   const normalized = candidates.map((candidate) => normalizeProductCandidate(candidate));
-  const manual = normalized.filter((candidate) => candidate.source === "manual_queue");
-  const automatic = normalized.filter((candidate) => candidate.source !== "manual_queue");
+  const manual = normalized.filter((candidate) => candidate.source === "manual_queue" && candidate.product_name && candidate.affiliate_url);
+  const automatic = normalized.filter((candidate) => candidate.source !== "manual_queue" && candidate.product_name && candidate.affiliate_url);
   for (const candidate of [...manual, ...rankProductCandidates(automatic)]) {
     if (candidate.risk_level === "hold") continue;
     if (seenNames.has(candidate.product_name)) continue;

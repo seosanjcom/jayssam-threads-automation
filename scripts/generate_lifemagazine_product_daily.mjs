@@ -28,7 +28,9 @@ export function generateDailyProductDrafts(options = {}) {
   const manualCandidates = options.manualCandidates || loadManualProductQueue(date, { root });
   const automaticCandidates = options.candidates || fixtureProductCandidates(date);
   const selected = selectDailyProductCandidates([...manualCandidates, ...automaticCandidates], 3);
-  if (selected.length < 3) throw new Error(`Need 3 safe Lifemagazine product candidates, got ${selected.length}.`);
+  if (!selected.length) {
+    throw new Error("확인 가능한 상품명과 링크가 있는 라이프매거진 상품 후보가 없습니다. 링크 정보를 다시 확인해 주세요.");
+  }
 
   return selected.map((candidate, index) => {
     const slot = DAILY_PRODUCT_SLOTS[index];
@@ -43,7 +45,14 @@ export function generateDailyProductDrafts(options = {}) {
       operator_note: candidate.operator_note,
       scene_brief: candidate.scene_hint,
       target_reader: candidate.scene_hint,
-      product_links: [{ label: "제품 링크", url: candidate.affiliate_url, platform: "coupang" }],
+      notes: candidate.description,
+      product_metadata: {
+        brand: candidate.brand,
+        price: candidate.price,
+        source_url: candidate.product_url || candidate.affiliate_url,
+        metadata_status: candidate.metadata_status,
+      },
+      product_links: [{ label: "제품 링크", url: candidate.affiliate_url, platform: "affiliate" }],
     }, { now: options.now });
     const validation = validateLifemagazineDraft(draft);
     if (!validation.ok) throw new Error(`Invalid Lifemagazine product draft ${draft.id}: ${validation.errors.join("; ")}`);

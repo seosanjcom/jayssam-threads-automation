@@ -30,11 +30,13 @@ import {
 import {
   buildProductQueueConfirmation,
   buildProductQueueReminder,
+  enrichProductQueueLinks,
   loadManualProductQueue,
   parseTelegramProductQueueReply,
   saveManualProductQueue,
 } from "./lifemagazine_telegram_product_queue.mjs";
 import { generateDailyProductDrafts } from "./generate_lifemagazine_product_daily.mjs";
+import { extractProductMetadata } from "./product_link_resolver.mjs";
 
 const sampleAccounts = [
   { accountKey: "jayssam", threadsUsername: "jayssam_edu", displayName: "제이쌤", project: "jayssam", automationRoot: "outputs/automation", defaultSlots: ["15:00 KST", "21:00 KST"], dailyPostLimit: 2, minIntervalHours: 6 },
@@ -655,10 +657,48 @@ test("lifemagazine publish refuses mojibake-looking Korean text", () => {
 test("lifemagazine product queue reminder includes reply examples", () => {
   const message = buildProductQueueReminder("2026-08-03");
 
-  assert.match(message, /내일 라이프매거진 상품 3개/);
+  assert.match(message, /내일 라이프매거진 상품을 직접 정할래/);
   assert.match(message, /답변 예시/);
-  assert.match(message, /상품명 \/ 쿠팡링크 \/ 하고싶은말/);
+  assert.match(message, /상품 링크만 그대로 보내도 돼/);
   assert.match(message, /내일은 자동으로 해줘/);
+});
+
+test("product resolver extracts safe product metadata from JSON-LD and Open Graph", () => {
+  const metadata = extractProductMetadata(`
+    <html><head>
+      <meta property="og:title" content="대용량 데일리 머리끈 | 스토어" />
+      <meta property="og:image" content="https://cdn.example.com/hair.png" />
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"대용량 데일리 머리끈","image":"https://cdn.example.com/hair.png","brand":{"@type":"Brand","name":"데일리픽"},"offers":{"@type":"Offer","price":"8900"}}</script>
+    </head></html>
+  `, "https://link.example.com/hair");
+
+  assert.equal(metadata.product_name, "대용량 데일리 머리끈");
+  assert.equal(metadata.brand, "데일리픽");
+  assert.equal(metadata.price, 8900);
+  assert.equal(metadata.image_url, "https://cdn.example.com/hair.png");
+});
+
+test("lifemagazine bare product link is enriched before draft creation", async () => {
+  const parsed = parseTelegramProductQueueReply("https://link.coupang.com/a/hair\n포인트: 아침마다 머리끈 찾는 사람용", {
+    date: "2026-08-03",
+    collectedAt: "2026-08-02T12:00:00.000Z",
+  });
+  const queue = await enrichProductQueueLinks(parsed, {
+    resolveLink: async () => ({
+      product_name: "대용량 데일리 머리끈",
+      product_url: "https://www.coupang.com/vp/products/123",
+      image_url: "https://cdn.example.com/hair.png",
+      price: 8900,
+      brand: "데일리픽",
+      metadata_status: "resolved",
+    }),
+  });
+
+  assert.equal(queue.mode, "manual");
+  assert.equal(queue.products[0].product_name, "대용량 데일리 머리끈");
+  assert.equal(queue.products[0].price, 8900);
+  assert.match(queue.products[0].operator_note, /아침마다 머리끈/);
+  assert.match(buildProductQueueConfirmation(queue), /대용량 데일리 머리끈/);
 });
 
 test("lifemagazine product queue parses manual Telegram reply and confirms saved products", () => {
@@ -677,7 +717,7 @@ test("lifemagazine product queue parses manual Telegram reply and confirms saved
   assert.equal(queue.products.length, 2);
   assert.equal(queue.products[0].product_name, "대용량 머리끈");
   assert.equal(queue.products[0].operator_note, "머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌");
-  assert.match(buildProductQueueConfirmation(queue), /2개 상품 확인했고 저장했어/);
+  assert.match(buildProductQueueConfirmation(queue), /2개 링크를 저장했어/);
 });
 
 test("lifemagazine product queue parses natural mixed numbering formats", () => {

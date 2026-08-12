@@ -3,6 +3,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { normalizeProductCandidate } from "./lifemagazine_product_candidates.mjs";
+import { resolveProductLink } from "./product_link_resolver.mjs";
 
 const root = process.cwd();
 
@@ -25,32 +26,41 @@ export function buildProductQueueReminder(targetDate) {
   return [
     `[라이프매거진 상품 지정] ${targetDate}`,
     "",
-    "내일 라이프매거진 상품 3개 직접 정할래?",
-    "있으면 상품명 / 쿠팡링크 / 하고싶은말을 보내줘.",
+    "내일 라이프매거진 상품을 직접 정할래?",
+    "상품 링크만 그대로 보내도 돼. 링크를 열어 상품명·가격·이미지를 읽고, 생활 장면 중심으로 글을 만들게.",
     "",
-    "하고싶은말이 있으면 그걸 본문에 먼저 녹이고,",
-    "없으면 내가 생활 장면 잡아서 쓸게.",
+    "원하는 말투나 꼭 넣을 포인트가 있으면 링크 다음 줄에 적어줘.",
     "",
     "답변 예시:",
-    "내일 상품",
-    "1. 대용량 머리끈",
-    "링크 https://link.coupang.com/a/example",
-    "하고싶은말 머리끈 맨날 잃어버리는 사람한테 쟁여템 느낌",
+    "https://link.coupang.com/a/example",
+    "포인트: 아침마다 머리끈 찾느라 시간 쓰는 사람용, 쟁여템 느낌",
     "",
-    "2. 케이블 정리 클립",
-    "링크 https://link.coupang.com/a/example2",
-    "하고싶은말 책상 위 충전선 굴러다니는 거 싫은 사람용",
-    "",
-    "상품은 있는데 할 말 없으면 상품명+링크만 보내도 돼.",
-    "직접 고를 상품 없으면 이렇게 보내줘:",
+    "상품 여러 개라면 링크를 줄마다 보내도 돼.",
+    "직접 고를 상품이 없으면 이렇게 보내줘:",
     "내일은 자동으로 해줘",
     "",
-    "내가 답변 확인하면 몇 개 저장됐는지 다시 확정 메시지 보낼게.",
+    "링크를 받으면 파악한 상품 정보와 초안을 다시 보여주고 승인받을게.",
   ].join("\n");
 }
 
 function isAutoReply(text) {
   return /자동으로\s*해줘|자동\s*후보|알아서\s*해줘/.test(String(text || ""));
+}
+
+function extractUrls(text) {
+  return [...String(text || "").matchAll(/https?:\/\/[^\s<>()]+/gi)]
+    .map((match) => match[0].replace(/[),.]+$/, ""))
+    .filter(Boolean);
+}
+
+function cleanOperatorNote(text) {
+  return String(text || "")
+    .replace(/https?:\/\/[^\s<>()]+/gi, "")
+    .replace(/^(?:내일\s*상품|상품\s*링크|링크|포인트|하고싶은말|메모|내말)\s*[:：]?\s*/gim, "")
+    .replace(/(?:^|\n)\s*(?:\d+[.)]|[-•])\s*/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+    .slice(0, 500);
 }
 
 function splitBlocks(text) {
@@ -70,7 +80,7 @@ function parseBlock(block, options = {}) {
   const imageLine = lines.find((line) => /^이미지|^사진/.test(line) && /https?:\/\/\S+/.test(line)) || "";
   const imageUrl = (imageLine.match(/https?:\/\/\S+/) || [""])[0].replace(/[),.]+$/, "");
   const noteLine = lines.find((line) => /^(하고싶은말|메모|내말|포인트)\s*/.test(line)) || "";
-  const operatorNote = noteLine.replace(/^(하고싶은말|메모|내말|포인트)\s*/g, "").trim();
+  const operatorNote = noteLine.replace(/^(하고싶은말|메모|내말|포인트)\s*[:：]?\s*/g, "").trim();
 
   return normalizeProductCandidate({
     source: "manual_queue",
@@ -84,10 +94,47 @@ function parseBlock(block, options = {}) {
 
 export function parseTelegramProductQueueReply(text, options = {}) {
   if (isAutoReply(text)) return { date: options.date, mode: "auto", products: [] };
-  const products = splitBlocks(text)
+
+  const blocks = splitBlocks(text);
+  const numberedProducts = blocks
     .map((block) => parseBlock(block, options))
-    .filter((item) => item.product_name);
+    .filter((item) => item.product_name || item.affiliate_url);
+  if (numberedProducts.length) return { date: options.date, mode: "manual", products: numberedProducts };
+
+  const urls = extractUrls(text);
+  const operatorNote = cleanOperatorNote(text);
+  const products = urls.map((affiliateUrl) => normalizeProductCandidate({
+    source: "manual_queue",
+    product_name: "",
+    affiliate_url: affiliateUrl,
+    operator_note: operatorNote,
+    usage_status: "not_confirmed",
+  }, { collectedAt: options.collectedAt || new Date().toISOString() }));
   return { date: options.date, mode: products.length ? "manual" : "unknown", products };
+}
+
+export async function enrichProductQueueLinks(queue, options = {}) {
+  const resolver = options.resolveLink || resolveProductLink;
+  const products = [];
+  for (const product of queue.products || []) {
+    const resolved = product.affiliate_url ? await resolver(product.affiliate_url, options) : {};
+    products.push(normalizeProductCandidate({
+      ...product,
+      product_name: product.product_name || resolved.product_name || "",
+      product_url: resolved.product_url || product.product_url || product.affiliate_url,
+      affiliate_url: product.affiliate_url,
+      image_url: product.image_url || resolved.image_url || "",
+      price: product.price || resolved.price || 0,
+      brand: product.brand || resolved.brand || "",
+      description: product.description || resolved.description || "",
+      metadata_status: resolved.metadata_status || product.metadata_status || "not_requested",
+      metadata_error: resolved.metadata_error || product.metadata_error || "",
+      operator_note: product.operator_note || "",
+      source: "manual_queue",
+      usage_status: "not_confirmed",
+    }, { collectedAt: product.collected_at || options.collectedAt || new Date().toISOString() }));
+  }
+  return { ...queue, products };
 }
 
 export function queuePathFor(date, options = {}) {
@@ -111,27 +158,35 @@ export function loadManualProductQueue(date, options = {}) {
   return Array.isArray(queue.products) ? queue.products.map((item) => normalizeProductCandidate(item)) : [];
 }
 
+function productMetadataSummary(item) {
+  const details = [];
+  if (item.brand) details.push(item.brand);
+  if (item.price) details.push(`${Number(item.price).toLocaleString("ko-KR")}원`);
+  if (item.metadata_status === "fetch_failed") details.push("링크 정보 확인 제한");
+  return details.length ? ` (${details.join(" · ")})` : "";
+}
+
 export function buildProductQueueConfirmation(queue) {
   const date = queue.date || "";
   if (queue.mode === "auto") {
     return [
       `[라이프매거진 상품 지정 확인] ${date}`,
-      "확인했어. 내일 상품은 자동 후보로 3개 잡아서 초안 만들게.",
+      "확인했어. 내일 상품은 검증 가능한 생활용품 후보로만 골라 초안을 만들게.",
       "초안/이미지는 발행 전에 다시 승인 요청 보낼게.",
     ].join("\n");
   }
   const products = queue.products || [];
   return [
     `[라이프매거진 상품 지정 확인] ${date}`,
-    `${products.length}개 상품 확인했고 저장했어.`,
+    `${products.length}개 링크를 저장했어. 상품 정보를 확인한 뒤, 확인된 정보만 글에 반영할게.`,
     "",
     ...products.map((item, index) => [
-      `${index + 1}. ${item.product_name}`,
+      `${index + 1}. ${item.product_name || "상품명 확인 필요"}${productMetadataSummary(item)}`,
       item.affiliate_url ? `링크: ${item.affiliate_url}` : "링크: 없음 - 발행 전 보류 대상",
-      item.operator_note ? `하고싶은말: ${item.operator_note}` : "하고싶은말: 없음 - 내가 생활 장면 잡아서 쓸게",
+      item.operator_note ? `원하는 포인트: ${item.operator_note}` : "원하는 포인트: 없음 - 상품 정보와 생활 장면을 기준으로 작성",
     ].join("\n")),
     "",
-    "이걸로 내일 초안 만들고, 발행 전 미리보기에서 다시 승인 받게.",
+    "초안을 만든 뒤 미리보기에서 다시 승인받을게.",
   ].join("\n\n");
 }
 
@@ -168,4 +223,3 @@ if (isDirectRun) {
   const result = await sendProductQueueReminder({ date });
   console.log(`Sent Lifemagazine product queue reminder for ${result.targetDate}`);
 }
-

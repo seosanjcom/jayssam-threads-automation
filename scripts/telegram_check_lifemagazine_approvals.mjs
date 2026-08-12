@@ -3,6 +3,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   buildProductQueueConfirmation,
+  enrichProductQueueLinks,
   parseTelegramProductQueueReply,
   saveManualProductQueue,
   tomorrowKst,
@@ -111,12 +112,20 @@ async function handleCallback(callback) {
 async function handleMessage(message) {
   const text = String(message?.text || "").trim();
   if (!text) return;
-  if (!/내일|상품|자동으로\s*해줘|링크|하고싶은말/.test(text)) return;
+  if (!/https?:\/\/|내일|상품|자동으로\s*해줘|알아서\s*해줘|링크|하고싶은말|포인트|메모/.test(text)) return;
+
   const date = tomorrowKst();
-  const queue = parseTelegramProductQueueReply(text, { date });
-  if (queue.mode === "unknown") return;
+  const parsed = parseTelegramProductQueueReply(text, { date });
+  if (parsed.mode === "unknown") return;
+  const queue = parsed.mode === "auto" ? parsed : await enrichProductQueueLinks(parsed);
   const savedPath = saveManualProductQueue(queue, { root });
   await sendMessage(`${buildProductQueueConfirmation(queue)}\n\n저장 위치: ${path.relative(root, savedPath)}`);
+
+  if (queue.mode === "manual" && !queue.products.some((item) => item.product_name && item.affiliate_url)) {
+    await sendMessage("링크는 저장했지만 상품명을 확인하지 못했어. 상품명 한 줄만 추가해서 다시 보내주면, 확인된 정보 기준으로 초안을 만들게.");
+    return;
+  }
+
   try {
     const drafts = await generateDailyProductDraftsAndPreview({ root, date, sendPreview: true });
     await sendMessage(`[라이프매거진 내일 초안 생성 완료]\n${date} 초안 ${drafts.length}개를 만들고 미리보기를 보냈어.\n각 미리보기에서 승인/보류 눌러주면 돼.`);
@@ -144,8 +153,14 @@ if (isDirectRun) {
   let maxOffset = Number(state.offset || 0);
   for (const update of updates.result || []) {
     maxOffset = Math.max(maxOffset, update.update_id);
-    await handleCallback(update.callback_query);
-    await handleMessage(update.message);
+    const callbackChatId = update.callback_query?.message?.chat?.id;
+    const messageChatId = update.message?.chat?.id;
+    if (callbackChatId !== undefined && String(callbackChatId) === String(chatId)) {
+      await handleCallback(update.callback_query);
+    }
+    if (messageChatId !== undefined && String(messageChatId) === String(chatId)) {
+      await handleMessage(update.message);
+    }
   }
   writeJson(statePath, { offset: maxOffset, checked_at: new Date().toISOString() });
 }

@@ -132,7 +132,7 @@ async function publishDraft(root, draftItem, approvalSource) {
       THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "true",
       THREADS_EXPECTED_USERNAME: "offnote.kr",
       THREADS_CAROUSEL_ENABLED: "false",
-      THREADS_REQUIRE_MEDIA: "true",
+      THREADS_REQUIRE_MEDIA: "false",
     },
   });
 

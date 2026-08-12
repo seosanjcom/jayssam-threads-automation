@@ -132,8 +132,8 @@ jobs:
           node --check scripts/send_telegram_preview.mjs
           node --check scripts/publish_latest_approved.mjs
           node --check scripts/threads_publish.mjs
-          node --check scripts/upload_cardnews_to_catbox.mjs
           node --check scripts/use_github_raw_media.mjs
+          node --check scripts/upload_cardnews_to_catbox.mjs
           node --check scripts/verify_media_urls.mjs
           node --check scripts/send_telegram_message.mjs
           node --check scripts/mark_jayssam_news_queue_posted.mjs
@@ -159,7 +159,7 @@ jobs:
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'verify_publish_path'
         run: |
           python scripts/generate_jayssam_queue_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}" || python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
-          node scripts/use_github_raw_media.mjs "$(cat outputs/automation/latest-draft-path.txt)"
+          node scripts/upload_cardnews_to_catbox.mjs "$(cat outputs/automation/latest-draft-path.txt)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f outputs/automation outputs/cards
@@ -176,7 +176,7 @@ jobs:
             python scripts/generate_jayssam_queue_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}" || python scripts/generate_jayssam_daily_post.py "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
             DRAFT_PATH="$(cat outputs/automation/latest-draft-path.txt)"
           fi
-          node scripts/use_github_raw_media.mjs "$DRAFT_PATH"
+          node scripts/upload_cardnews_to_catbox.mjs "$DRAFT_PATH"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f outputs/automation outputs/cards

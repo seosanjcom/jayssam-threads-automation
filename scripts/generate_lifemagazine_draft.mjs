@@ -209,47 +209,56 @@ function toneOpening(input) {
 
 function productSceneLines(input) {
   const candidate = input.product_candidate || {};
-  const name = String(input.product_name || candidate.product_name || input.topic || "이거").trim();
+  const name = String(input.product_name || candidate.product_name || input.topic || "이 제품").trim();
   const operatorNote = String(input.operator_note || candidate.operator_note || "").trim();
-  const scene = String(operatorNote || input.scene_brief || candidate.scene_hint || candidate.selection_reason || "").trim();
+  const scene = String(input.scene_brief || candidate.scene_hint || candidate.selection_reason || "매일 반복되는 작은 불편").trim();
+  const combined = `${name} ${scene}`;
 
   if (operatorNote) {
     return [
       operatorNote,
-      "이런 건 내 생활패턴이랑 맞는지가 더 중요한 것 같아.",
-      "광고처럼 거창한 템이라기보다, 매일 거슬리는 부분 줄여주는 쪽이면 충분히 괜찮더라.",
-      "필요했던 사람은 한 번 볼 만한 정도로 남겨둘게.",
+      `${name}은(는) 딱 필요한 상황이 정해져 있는 물건이라, 과장된 장점보다 그 상황에 맞는지가 더 중요해 보여.`,
+      `나는 ${scene}에서 시간을 덜 쓰게 해주는지부터 보고 골랐어.`,
+      "상품 정보와 링크는 댓글에 정리해둘게. 필요할 때만 천천히 확인해봐.",
     ];
   }
-  if (/머리끈/.test(name + scene)) {
+  if (/머리끈/.test(combined)) {
     return [
-      "머리끈 맨날 잃어버리는 사람 나와봐..",
-      "분명 어제 손목에 있었는데 아침엔 또 없음ㅋㅋ",
-      "이런 건 예쁜 거 하나보다 그냥 대용량으로 집에 두는 쪽이 마음 편하더라.",
-      "자주 묶는 사람은 이런 소모템 떨어지는 순간이 제일 귀찮아서, 쟁여두기용으로 볼 만함.",
+      "아침마다 머리끈 하나 찾느라 서랍을 뒤지는 날이 은근 많더라.",
+      `${name}처럼 소모품은 예쁜 한 개보다, 자주 쓰는 곳에 여분을 남겨두는 쪽이 훨씬 실용적이었어.`,
+      "세면대 옆·가방 안·책상 서랍에 나눠 두면 ‘없어서 못 묶는’ 순간이 줄어듦.",
+      "지금 쓰는 방식이 불편했던 사람만 댓글의 상품 정보 확인해봐.",
     ];
   }
-  if (/케이블|충전/.test(name + scene)) {
+  if (/케이블|충전/.test(combined)) {
     return [
-      "책상 위 충전선 자꾸 굴러다니는 사람 있지..",
-      "나도 작은 거 하나만 늘어도 갑자기 정신없어 보여서 이런 정리템 먼저 보게 됨.",
-      "대단한 물건은 아닌데 매일 보이는 자리에는 이런 게 은근 차이 나더라.",
-      "깔끔한 척하고 싶을 때보다 찾기 쉽게 두고 싶을 때 더 괜찮은 쪽.",
+      "충전할 때마다 선이 책상 아래로 떨어지면, 그 작은 짜증이 하루에 몇 번씩 쌓이더라.",
+      `${name}은(는) 책상을 예쁘게 만드는 물건보다, 자주 쓰는 선의 자리를 정해두는 용도로 봤어.`,
+      "새로 사기 전에 내 케이블 굵기와 붙일 면이 맞는지만 확인하면 실패 확률이 훨씬 낮아.",
+      "정리보다 ‘찾는 시간’을 줄이고 싶은 사람에게만 링크 남길게.",
     ];
   }
-  if (/파우치|가방/.test(name + scene)) {
+  if (/파우치|가방/.test(combined)) {
     return [
-      "가방 안에서 립밤이랑 머리끈 맨날 사라지는 사람 나만 그런 거 아니지..",
-      "작은 거 찾느라 가방 뒤지는 시간이 제일 별거 아닌데 제일 귀찮음ㅋㅋ",
-      "이런 건 예쁜 것보다 손이 자주 가는지가 더 중요한 것 같아.",
-      "자주 들고 다니는 사람은 가방 정리용으로 한 번 볼 만함.",
+      "가방 안에서 립밤·충전선·카드지갑 찾느라 한 번씩 멈추는 거, 별일 아닌데 꽤 피곤함.",
+      `${name}은(는) 수납을 늘리는 것보다 자주 꺼내는 물건의 위치를 고정하는 쪽으로 골랐어.`,
+      "가방 크기와 들고 다니는 물건 수를 먼저 떠올려 보고, 내 루틴에 맞으면 그때 확인해봐.",
+      "제품 정보와 가격은 댓글 링크에서 최신 기준으로 볼 수 있어.",
+    ];
+  }
+  if (/청소|행주|욕실|주방/.test(combined)) {
+    return [
+      "매일 쓰는 살림템은 특별한 날보다 ‘없을 때’ 존재감이 더 크더라.",
+      `${name}은(는) ${scene}에서 손이 한 번 덜 가는지를 기준으로 골랐어.`,
+      "좋다는 말보다 우리 집에서 어디에 둘지, 얼마나 자주 쓸지를 먼저 생각해보는 게 맞는 것 같아.",
+      "필요한 사람만 댓글에서 상품 정보 확인해봐.",
     ];
   }
   return [
-    `${scene || "생활 속에서 은근 자주 쓰는 거"} 찾는 사람은 이거 한 번 볼 만해.`,
-    "엄청 대단한 제품이라기보다, 없으면 계속 불편한 쪽에 가까움.",
-    "예쁜데 손 안 가는 것보다 매일 쓰면 그게 진짜 잘 산 템이지.",
-    "나는 이런 건 생활패턴이랑 맞는지가 제일 중요하다고 봄.",
+    `${name}, ${scene}에서 실제로 자주 쓰일지부터 따져봤어.`,
+    "생활템은 기능이 많아 보이는 것보다 내 동선에서 한 번이라도 덜 번거로운지가 더 중요하더라.",
+    "사기 전에 크기·구성·후기처럼 확인 가능한 정보는 링크에서 직접 보고 결정하는 걸 추천해.",
+    "상품 정보는 댓글에 남길게. 내 생활에 맞는 사람만 천천히 봐줘.",
   ];
 }
 
@@ -291,11 +300,19 @@ function buildComments(input, productLinks) {
 
   if (productLinks.length) {
     if (input.content_mode === "found_product" || input.content_mode === "recommendation") {
+      const productMetadata = input.product_metadata || {};
+      const verifiedDetails = [
+        productName ? `상품명: ${productName}` : "",
+        productMetadata.brand ? `브랜드: ${productMetadata.brand}` : "",
+        productMetadata.price ? `확인 당시 표시가: ${Number(productMetadata.price).toLocaleString("ko-KR")}원 (가격은 변동될 수 있어요)` : "",
+      ].filter(Boolean);
+      const usesCoupangLink = productLinks.some((item) => /coupang\.com/i.test(String(item.url || item)));
       comments.push([
-        "제품 링크는 여기 둘게!",
+        "제품 정보는 여기 정리해둘게.",
+        ...verifiedDetails,
         ...productLinks.map((item) => `${item.label || "제품 링크"}: ${item.url || item}`),
         "",
-        COUPANG_DISCLOSURE,
+        usesCoupangLink ? COUPANG_DISCLOSURE : "이 댓글에는 제휴 링크가 포함될 수 있으며, 구매 시 수수료를 받을 수 있어요.",
       ].join("\n"));
       return comments;
     }
@@ -390,6 +407,7 @@ export function generateLifemagazineDraft(input = {}, options = {}) {
     non_endorsement_disclaimer: "이 게시물은 언급된 인물의 구매 권유나 보증을 의미하지 않아.",
     official_confirmation_source: input.official_confirmation_source || "",
     notes: input.notes || "",
+    product_metadata: input.product_metadata || {},
   };
 }
 
