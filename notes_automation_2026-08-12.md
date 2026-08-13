@@ -22,3 +22,8 @@
 - 게시물의 모든 깊이의 답글은 `GET /{media-id}/conversation`으로 조회한다. 최상위 답글만 보려면 `GET /{media-id}/replies`를 사용한다.
 - 실시간 웹훅 답글 수신은 `threads_read_replies` 권한 외에 앱 심사 Advanced Access, 사업체 인증, 공개 계정, 공개 수신 엔드포인트가 필요하다. 권한 재연결 전에는 기능 플래그를 비활성으로 유지한다.
 - 공식 문서: https://developers.facebook.com/documentation/threads/retrieve-and-manage-replies , https://developers.facebook.com/documentation/threads/retrieve-and-manage-replies/replies-and-conversations , https://developers.facebook.com/documentation/threads/webhooks
+
+## Meta 기본 Chrome 재연결 점검
+
+2026-08-12 KST 기준 사용자의 기본 Chrome Meta 개발자 대시보드에서 로그인 상태를 확인했다. 대시보드에 실제 Threads 관련 앱으로 보이는 `내 스레드 도구`(앱 ID `887998727597864`), `lifemagazine threads automatio`(앱 ID `1758521345560578`), `Offnote DM Automation`(앱 ID `1066092645918940`)가 표시됐다. 기존 예제 설정의 앱 ID `930745706528491`은 현재 대시보드 목록에 없으므로 재연결 전 실제 워크플로별 앱·토큰 매핑을 확인해야 한다. `내 스레드 도구` 앱은 Threads API 이용 사례가 설정되어 있으나, 비즈니스 및 액세스 인증·앱 검수는 미완료 상태로 표시됐다.
+`내 스레드 도구` 앱의 Threads API 이용 사례 권한 화면에서는 `threads_manage_replies`와 `threads_read_replies`가 모두 ‘테스트 준비 완료’로 표시됐다. 앞서 세 계정 토큰으로 `threads_publishing_limit`과 게시물 대화 조회가 성공했으므로, 현재 자동화 계정은 테스트 사용자 권한 범위에서 댓글 조회·답글 발행을 수행할 수 있다. 따라서 새 Meta OAuth 승인은 현재 시점에 필요하지 않으며, 향후 토큰 재연결 때만 두 권한을 명시적으로 요청하도록 워크플로 설정을 갱신한다.

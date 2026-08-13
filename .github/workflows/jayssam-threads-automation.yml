@@ -72,7 +72,7 @@ jobs:
       THREADS_EXPECTED_USERNAME: "jayssam_edu"
       THREADS_REDIRECT_URI: "https://blog.naver.com/taemomjoo"
       THREADS_PUBLISH_LOG: "outputs/meta-publish-log.json"
-      THREADS_OAUTH_SCOPES: "threads_basic,threads_content_publish,threads_manage_insights"
+      THREADS_OAUTH_SCOPES: "threads_basic,threads_content_publish,threads_manage_insights,threads_read_replies,threads_manage_replies"
       THREADS_REQUIRE_MEDIA: "true"
       THREADS_CAROUSEL_ENABLED: "true"
       THREADS_ALLOW_SINGLE_IMAGE_FALLBACK: "true"
