@@ -551,7 +551,7 @@ test("latestApprovedLifemagazineDraft selects newest unpublished approved draft"
   saveLifemagazineDraft(older, { root: tmp });
   const newerPath = saveLifemagazineDraft(newer, { root: tmp });
 
-  const latest = latestApprovedLifemagazineDraft({ root: tmp, publishedIds: new Set([older.id]) });
+  const latest = latestApprovedLifemagazineDraft({ root: tmp, publishedIds: new Set([older.id]), now: "2026-05-23T12:00:00.000Z" });
 
   assert.equal(latest.file, newerPath);
   assert.equal(latest.data.id, newer.id);
@@ -561,12 +561,24 @@ test("latestApprovedLifemagazineDraft selects an approval-immediate draft before
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-immediate-"));
   const draft = generateLifemagazineDraft({ date: "2026-08-03", topic: "승인 즉시 발행", source_urls: ["https://example.com/a"] });
   draft.status = "approved";
+  draft.date = "2026-08-03";
   draft.publish_on_approve = true;
   draft.scheduled_publish_at = "2026-08-04T12:00:00.000Z";
   const file = saveLifemagazineDraft(draft, { root });
 
   const latest = latestApprovedLifemagazineDraft({ root, now: new Date("2026-08-03T12:00:00.000Z") });
   assert.equal(latest.file, file);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test("latestApprovedLifemagazineDraft never revives an approved draft from a previous KST date", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-stale-"));
+  const stale = generateLifemagazineDraft({ date: "2026-05-24", topic: "stale", source_urls: ["https://example.com/a"] });
+  stale.status = "approved";
+  saveLifemagazineDraft(stale, { root });
+
+  const latest = latestApprovedLifemagazineDraft({ root, now: "2026-05-25T09:00:00.000Z" });
+  assert.equal(latest, null);
   fs.rmSync(root, { recursive: true, force: true });
 });
 

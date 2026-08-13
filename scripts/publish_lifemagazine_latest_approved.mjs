@@ -43,6 +43,21 @@ function isDraftDue(data, now = new Date()) {
   return scheduled <= new Date(now).getTime();
 }
 
+function kstDateKey(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(new Date(now));
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${value.year}-${value.month}-${value.day}`;
+}
+
+function isCurrentKstDraft(data, now = new Date()) {
+  const expectedDate = kstDateKey(now);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(data.date || ""))) return data.date === expectedDate;
+  if (data.scheduled_publish_at) return kstDateKey(data.scheduled_publish_at) === expectedDate;
+  return false;
+}
+
 function writePublishFailure(file, message) {
   const data = JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
   data.status = "publish_failed";
@@ -99,6 +114,8 @@ export function latestApprovedLifemagazineDraft(options = {}) {
     .filter((item) => item.data.account === account)
     .filter((item) => item.data.status === "approved")
     .filter((item) => !publishedIds.has(item.data.id))
+    // 지연된 예약 회복 시에도 전날의 미발행 초안을 오늘 다시 올리지 않는다.
+    .filter((item) => isCurrentKstDraft(item.data, now))
     .filter((item) => item.data.publish_on_approve === true || isDraftDue(item.data, now))
     .sort((a, b) => b.mtime - a.mtime)[0] || null;
 }
