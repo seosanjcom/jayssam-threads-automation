@@ -47,8 +47,18 @@ def test_personal_note_is_natural_and_threads_safe() -> None:
 def test_same_day_slots_use_different_observation_materials() -> None:
     afternoon = MODULE.pick_topic("2026-08-12", "afternoon")
     night = MODULE.pick_topic("2026-08-12", "night")
-    assert afternoon["content_id"] != night["content_id"]
+    assert afternoon["seed_id"] != night["seed_id"]
     assert afternoon["text"] != night["text"]
+
+
+def test_recent_seed_is_blocked_even_when_the_slot_name_changes() -> None:
+    original = MODULE.recent_content_ids
+    try:
+        MODULE.recent_content_ids = lambda _date: {"school_after_class-afternoon"}
+        topic = MODULE.pick_topic("2026-08-13", "night")
+        assert topic["seed_id"] != "school_after_class"
+    finally:
+        MODULE.recent_content_ids = original
 
 
 def test_business_judgment_keeps_an_educator_voice() -> None:
@@ -62,5 +72,6 @@ if __name__ == "__main__":
     test_observation_inventory_matches_21_day_dedupe_window()
     test_personal_note_is_natural_and_threads_safe()
     test_same_day_slots_use_different_observation_materials()
+    test_recent_seed_is_blocked_even_when_the_slot_name_changes()
     test_business_judgment_keeps_an_educator_voice()
     print('{"ok": true, "guard": "jayssam educator-observation content quality passes"}')

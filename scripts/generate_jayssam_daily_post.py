@@ -26,7 +26,7 @@ OBSERVATION_SEEDS = [
     ("parent_hurry", "부모가 조금만 덜 급했으면 하는 날", "오늘 상담에서 아이보다 부모님이 더 빨리 답을 찾고 계셨다.\n\n그 마음은 이해한다.\n\n그래도 아이가 자기 속도로 좋아하는 걸 발견할 여지는 조금 남겨두면 좋겠다."),
     ("wrong_plan", "처음 계획이 틀렸던 날", "오늘 수업 계획이 생각보다 잘 안 맞았다.\n\n아이들이 예상보다 다른 데서 오래 멈췄다.\n\n그래서 계획을 바꿨고, 오히려 그 시간이 더 좋았다. 수업도 사업도 잘 짠 계획보다 잘 고치는 감각이 중요하다."),
     ("student_teaches_peer", "아이들이 서로 설명해줄 때", "오늘은 내가 설명하기 전에 아이 하나가 친구에게 먼저 알려줬다.\n\n말이 완벽하지 않아도 자기 방식으로 설명하는 모습이 좋았다.\n\n알았다는 건 정답을 맞힌 것보다, 누군가에게 자기 말로 꺼낼 수 있을 때 더 분명해진다."),
-    ("school_after_class", "수업 끝나고 늦게 남은 질문", "수업 끝나고 가방을 멘 아이가 다시 와서 질문 하나를 했다.\n\n‘집에서도 이거 해봐도 돼요?’\n\n그 질문을 들으면 오늘 수업은 괜찮았다고 생각한다. 배움은 교실 밖으로 조금 나가야 한다."),
+    ("school_after_class", "가방 멘 아이가 다시 돌아온 순간", "수업이 끝나고 가방을 멘 아이가 다시 돌아왔다.\n\n‘집에서도 이거 해봐도 돼요?’\n\n그 한마디를 들으면 오늘 수업은 괜찮았다고 생각한다. 배움은 교실 밖으로 조금 나가야 한다."),
     ("tool_vs_thinking", "도구가 바뀌어도 안 바뀌는 것", "새 도구는 계속 나온다.\n\n그런데 아이가 막혔을 때 문제를 작게 나눠보는 습관은 쉽게 안 바뀐다.\n\n나는 그래서 유행하는 도구보다, 그 아이가 어떤 방식으로 다시 시작하는지를 더 본다."),
     ("career_not_label", "직업 이름보다 먼저 보이는 것", "아이 진로를 이야기할 때 직업 이름부터 정리하고 싶어질 때가 있다.\n\n그런데 나는 오래 붙잡는 것, 자꾸 손이 가는 것, 친구가 부탁하는 걸 먼저 본다.\n\n이름은 나중에 붙어도 된다."),
     ("teacher_energy", "선생님이 너무 앞서가지 않는 법", "수업이 잘 풀리면 선생님은 더 많이 알려주고 싶어진다.\n\n나는 그럴 때 조금 멈춘다.\n\n아이 몫까지 다 해버리면, 아이가 자기 힘을 발견할 시간이 없어진다."),
@@ -91,25 +91,33 @@ def recent_content_ids(date_text: str) -> set[str]:
     return recent
 
 
+def seed_id_from_identity(identity: str) -> str:
+    value = str(identity or "")
+    for seed_id, _, _ in OBSERVATION_SEEDS:
+        if value == seed_id or value.startswith(f"{seed_id}-") or f"-{seed_id}-" in value:
+            return seed_id
+    return ""
+
+
 def pick_topic(date_text: str, slot: str) -> dict:
     seed_number = int(date_text.replace("-", "")) + (1 if slot == "night" else 0)
-    recent = recent_content_ids(date_text)
-    candidates = []
-    for seed_id, title, text in OBSERVATION_SEEDS:
-        for angle_slot, angle_label in ANGLES:
-            candidates.append({
-                "content_id": content_id_for(seed_id, angle_slot),
-                "seed_id": seed_id,
-                "title": title,
-                "text": text,
-                "angle": angle_label,
-                "pillar": "educator_observation" if seed_id not in {"business_long_view", "business_no_shortcut", "class_size_choice"} else "education_business_judgment",
-            })
-    preferred_slot = "night" if slot == "night" else "afternoon"
-    ordered = sorted(candidates, key=lambda item: (0 if item["content_id"].endswith(preferred_slot) else 1, item["content_id"]))
+    recent_seed_ids = {seed_id_from_identity(identity) for identity in recent_content_ids(date_text)} - {""}
+    angle_label = dict(ANGLES).get("night" if slot == "night" else "afternoon", "수업 뒤 메모")
+    candidates = [
+        {
+            "content_id": content_id_for(seed_id, slot),
+            "seed_id": seed_id,
+            "title": title,
+            "text": text,
+            "angle": angle_label,
+            "pillar": "educator_observation" if seed_id not in {"business_long_view", "business_no_shortcut", "class_size_choice"} else "education_business_judgment",
+        }
+        for seed_id, title, text in OBSERVATION_SEEDS
+    ]
+    ordered = sorted(candidates, key=lambda item: item["seed_id"])
     rotated = ordered[seed_number % len(ordered):] + ordered[:seed_number % len(ordered)]
     for candidate in rotated:
-        if candidate["content_id"] not in recent:
+        if candidate["seed_id"] not in recent_seed_ids:
             return candidate
     raise RuntimeError("최근 21일 안에 재사용하지 않을 제이쌤 관찰 소재가 부족합니다. 새 소재를 추가한 뒤 다시 실행하세요.")
 
