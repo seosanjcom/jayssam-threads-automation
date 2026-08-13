@@ -50,6 +50,19 @@ if (schedule === "5 1 * * *") {
   process.exit(0);
 }
 
+// GitHub의 특정 시각 cron이 지연되는 경우를 위한 보조 예약이다. 정해진 시각이 지난
+// 같은 날짜의 슬롯만 재시도하며, 발행기는 이미 발행된 초안과 일일 한도를 다시 검사한다.
+if (schedule === "*/10 * * * *") {
+  if (current >= 13 * 60 && current < 17 * 60) {
+    emit({ mode: "publish", slot: "afternoon", run: "true", kst_date: today, fallback: "true" });
+  } else if (current >= 20 * 60) {
+    emit({ mode: "publish", slot: "night", run: "true", kst_date: today, fallback: "true" });
+  } else {
+    emit({ mode: "noop", slot: "afternoon", run: "false", kst_date: today, fallback: "true" });
+  }
+  process.exit(0);
+}
+
 const isEveningCandidate = current >= 17 * 60 && current <= 21 * 60 + 40;
 const slot = isEveningCandidate ? "evening" : "lunch";
 

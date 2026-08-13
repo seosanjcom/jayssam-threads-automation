@@ -40,6 +40,8 @@ on:
     - cron: "0 8 * * *"
     - cron: "0 11 * * *"
     - cron: "20 11 * * *"
+    # 특정 시각 cron 지연 시, 시간 판정 모듈이 예정 시각이 지난 슬롯만 안전하게 재시도한다.
+    - cron: "*/10 * * * *"
 
 permissions:
   contents: write
