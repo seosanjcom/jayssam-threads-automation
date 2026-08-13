@@ -51,6 +51,35 @@ function writePublishFailure(file, message) {
   fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
+async function sendTelegramNotice(text) {
+  const token = process.env.LIFEMAGAZINE_TELEGRAM_BOT_TOKEN || "";
+  const chatId = process.env.LIFEMAGAZINE_TELEGRAM_CHAT_ID || "";
+  if (!token || !chatId) {
+    console.log("Lifemagazine Telegram notice skipped: credentials are missing.");
+    return;
+  }
+  const body = new FormData();
+  body.set("chat_id", chatId);
+  body.set("text", text);
+  body.set("disable_web_page_preview", "true");
+  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, { method: "POST", body });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || result.ok === false) throw new Error(`Telegram notice failed: ${JSON.stringify(result)}`);
+}
+
+async function notifyPublishResult(draft, outcome, detail = "") {
+  const title = draft.product_name || draft.topic || draft.id;
+  const slot = draft.recommended_publish_time || "예정 슬롯";
+  const text = outcome === "success"
+    ? `[라이프매거진 자동 발행 완료]\n${slot}\n${title}\n공정위 고지 댓글까지 함께 게시했어.`
+    : `[라이프매거진 자동 발행 실패]\n${slot}\n${title}\n${String(detail).slice(0, 500)}`;
+  try {
+    await sendTelegramNotice(text);
+  } catch (error) {
+    console.error(`Lifemagazine publish notifier error: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
 export function latestApprovedLifemagazineDraft(options = {}) {
   const root = options.root || process.cwd();
   const now = options.now || new Date();
@@ -146,7 +175,11 @@ if (isDirectRun) {
   if (result.stdout) process.stdout.write(result.stdout);
   if (result.stderr) process.stderr.write(result.stderr);
   if ((result.status ?? 1) !== 0) {
-    writePublishFailure(latest.file, result.stderr || result.stdout || "Threads publish failed.");
+    const detail = result.stderr || result.stdout || "Threads publish failed.";
+    writePublishFailure(latest.file, detail);
+    await notifyPublishResult(latest.data, "failure", detail);
+  } else {
+    await notifyPublishResult(latest.data, "success");
   }
   process.exit(result.status ?? 1);
 }

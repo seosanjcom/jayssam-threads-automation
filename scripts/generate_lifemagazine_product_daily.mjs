@@ -5,7 +5,7 @@ import { publishedProductKeysWithinDays, selectDailyProductCandidates } from "./
 import { getCoupangPartnerBestProducts } from "./coupang_partners_api.mjs";
 import { generateLifemagazineDraft, saveLifemagazineDraft } from "./generate_lifemagazine_draft.mjs";
 import { loadManualProductQueue } from "./lifemagazine_telegram_product_queue.mjs";
-import { sendLifemagazinePreview } from "./send_lifemagazine_preview_telegram.mjs";
+import { sendLifemagazineAutoPublishNotice, sendLifemagazinePreview } from "./send_lifemagazine_preview_telegram.mjs";
 import { validateLifemagazineDraft } from "./validate_lifemagazine_draft.mjs";
 
 export const DAILY_PRODUCT_SLOTS = [
@@ -244,9 +244,13 @@ export async function generateDailyProductDraftsAndPreview(options = {}) {
     queryResults = result.queryResults;
   }
   const drafts = generateDailyProductDrafts({ ...options, date, candidates });
-  if (options.sendPreview) {
+  if (options.sendPreview || options.sendAutoNotice) {
     for (const draft of drafts) {
-      await sendLifemagazinePreview(draft.saved_path, { root: options.root || process.cwd() });
+      if (options.sendAutoNotice) {
+        await sendLifemagazineAutoPublishNotice(draft.saved_path, { root: options.root || process.cwd() });
+      } else {
+        await sendLifemagazinePreview(draft.saved_path, { root: options.root || process.cwd() });
+      }
     }
   }
   return { drafts, queryResults };
@@ -272,6 +276,7 @@ if (isDirectRun) {
     date: targetDate,
     slots: remainingSlots,
     sendPreview: args.has("--send-preview"),
+    sendAutoNotice: args.has("--send-auto-notice"),
     autoApprove: args.has("--auto-approve"),
   });
   console.log(JSON.stringify({

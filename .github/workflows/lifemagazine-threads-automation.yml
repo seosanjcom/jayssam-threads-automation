@@ -130,9 +130,9 @@ jobs:
         if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'auto_product_drafts') || (github.event_name == 'schedule' && github.event.schedule == '30 13 * * *')
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            node scripts/generate_lifemagazine_product_daily.mjs --tomorrow --auto-approve --send-preview
+            node scripts/generate_lifemagazine_product_daily.mjs --tomorrow --auto-approve --send-auto-notice
           else
-            node scripts/generate_lifemagazine_product_daily.mjs --auto-approve --send-preview
+            node scripts/generate_lifemagazine_product_daily.mjs --auto-approve --send-auto-notice
           fi
 
       - name: Generate safe automatic Coupang draft for today's remaining slot

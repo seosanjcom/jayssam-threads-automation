@@ -125,6 +125,41 @@ export async function sendLifemagazinePreview(draftPath, options = {}) {
   return { ok: true, id: draft.id, status: draft.status, draftPath: fullPath };
 }
 
+export function buildLifemagazineAutoPublishNotice(draft, options = {}) {
+  const runUrl = options.runUrl || "";
+  return trimTelegram([
+    "[라이프매거진 자동 발행 예정]",
+    `예정: ${draft.recommended_publish_time || ""}`,
+    `상품: ${draft.product_name || draft.topic || draft.id}`,
+    `생활 대상: ${draft.product_metadata?.lifestyle_group || draft.lifestyle_group || "생활 장면 기준 선별"}`,
+    `카테고리 순위: ${draft.product_metadata?.category_rank ? `${draft.product_metadata.category_rank}위` : "상위권 후보 검토 완료"}`,
+    runUrl ? `실행 로그: ${runUrl}` : "",
+    "",
+    "승인 대기 없이 정해진 시각에 자동 발행해. 발행되면 완료 메시지도 바로 보낼게.",
+    "",
+    "[본문]",
+    draft.threads_text || "",
+    commentsPreview(draft) ? `\n[댓글 고지]\n${commentsPreview(draft)}` : "",
+  ].filter(Boolean).join("\n"));
+}
+
+export async function sendLifemagazineAutoPublishNotice(draftPath, options = {}) {
+  const workspaceRoot = options.root || root;
+  const fullPath = path.resolve(workspaceRoot, draftPath);
+  const draft = readJson(fullPath);
+  if (draft.account !== "lifemagazine_") throw new Error(`Not a lifemagazine_ draft: ${draft.account}`);
+
+  const runUrl = process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID
+    ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+    : "";
+  const body = new FormData();
+  body.set("chat_id", process.env.LIFEMAGAZINE_TELEGRAM_CHAT_ID);
+  body.set("text", buildLifemagazineAutoPublishNotice(draft, { runUrl }));
+  body.set("disable_web_page_preview", "true");
+  await telegram("sendMessage", body);
+  return { ok: true, id: draft.id, status: draft.status, draftPath: fullPath };
+}
+
 const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isDirectRun) {

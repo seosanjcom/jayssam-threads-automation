@@ -142,10 +142,10 @@ const sources = [
   ...(Array.isArray(draft.source_urls) ? draft.source_urls : []),
 ].filter(Boolean);
 
-const slotLabel = draft.slot === "night" ? "21시 꿀정보형" : "15시 교육뉴스 해석형";
-const message = [
-  `[제이쌤 미리보기] ${slotLabel}`,
-  `상태: ${draft.status}`,
+  const slotLabel = draft.slot === "night" ? "20:00 수업 뒤 기록" : "13:00 수업 뒤 기록";
+  const message = [
+    `[제이쌤 자동 발행 예정] ${slotLabel}`,
+    "승인 대기 없이 정해진 시각에 자동 발행해. 발행되면 완료 메시지도 바로 보낼게.",
   `제목: ${title}`,
   `파일: ${path.relative(root, file)}`,
   "",

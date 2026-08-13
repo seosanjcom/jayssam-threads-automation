@@ -104,6 +104,7 @@ jobs:
         run: |
           node --check scripts/generate_offnote_daily_post.mjs
           node --check scripts/publish_offnote_due.mjs
+          node --check scripts/send_offnote_auto_publish_notice.mjs
           node --check scripts/threads_publish.mjs
           node --check scripts/delete_threads_posts.mjs
           node --check scripts/use_github_raw_media.mjs
@@ -161,6 +162,10 @@ jobs:
             git pull --rebase
             git push
           fi
+
+      - name: Notify scheduled Offnote post
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'auto_publish'
+        run: node scripts/send_offnote_auto_publish_notice.mjs "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
 
       - name: Auto-publish due Offnote draft
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'auto_publish'

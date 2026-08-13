@@ -19,7 +19,7 @@ import {
   renderStudioHome,
   saveUploadedMediaFiles,
 } from "./threads_studio_server.mjs";
-import { buildLifemagazineTelegramMessage, prepareLifemagazinePreviewDraft } from "./send_lifemagazine_preview_telegram.mjs";
+import { buildLifemagazineAutoPublishNotice, buildLifemagazineTelegramMessage, prepareLifemagazinePreviewDraft } from "./send_lifemagazine_preview_telegram.mjs";
 import { latestApprovedLifemagazineDraft } from "./publish_lifemagazine_latest_approved.mjs";
 import { applyLifemagazineApprovalAction } from "./telegram_check_lifemagazine_approvals.mjs";
 import {
@@ -526,6 +526,20 @@ test("telegram preview marks draft pending and renders readable Korean message",
   assert.match(message, /승인하면 approved 상태/);
   assert.match(message, /댓글 1/);
   assert.doesNotMatch(message, /�|願|쒗|볤/);
+});
+
+test("automatic publish notice keeps an approved draft approval-free", () => {
+  const draft = generateLifemagazineDraft({
+    date: "2026-05-24", slot: "morning", topic: "가방 정리 생활템", product_candidate: normalizeProductCandidate({
+      product_name: "다용도 수납 파우치", affiliate_url: "https://link.coupang.com/a/pouch", lifestyle_group: "대학생", category_rank: 2,
+    }),
+  });
+  draft.status = "approved";
+  const notice = buildLifemagazineAutoPublishNotice(draft);
+  assert.equal(draft.status, "approved");
+  assert.match(notice, /\[라이프매거진 자동 발행 예정\]/);
+  assert.match(notice, /승인 대기 없이/);
+  assert.doesNotMatch(notice, /승인하면 approved 상태/);
 });
 
 test("latestApprovedLifemagazineDraft selects newest unpublished approved draft", () => {
