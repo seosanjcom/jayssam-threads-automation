@@ -1,7 +1,8 @@
 {
   "processed_reply_ids": [
     "18115690142485910",
-    "18122586970754232"
+    "18122586970754232",
+    "18027226832853229"
   ],
   "events": [
     {
@@ -23,8 +24,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-13T05:13:39.377Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18027226832853229",
+      "post_id": "18100851578188317",
+      "username": "lifemagazine_",
+      "text": "제품 정보는 여기 정리해둘게!!\n상품명: 굵은 선 정리 클립\n확인 당시 표시가: 4,900원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=8054796621&itemId=22603173779&vendorItemId=89644842573&traceid=V0-153-b64bff6eca781df9&requestid=20260812233621968257566893&token=31850C%7CMIXED\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-13T10:32:26.129Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-13T08:47:33.976Z",
+  "updated_at": "2026-08-13T10:32:26.401Z",
   "timezone": "Asia/Seoul"
 }
