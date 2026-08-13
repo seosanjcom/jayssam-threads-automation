@@ -25,6 +25,7 @@ import { applyLifemagazineApprovalAction } from "./telegram_check_lifemagazine_a
 import {
   fixtureProductCandidates,
   normalizeProductCandidate,
+  publishedProductKeysWithinDays,
   selectDailyProductCandidates,
   COUPANG_DISCLOSURE,
 } from "./lifemagazine_product_candidates.mjs";
@@ -920,6 +921,19 @@ test("lifemagazine daily product generator can target only a remaining slot", ()
   assert.equal(drafts[0].recommended_publish_time, "18:00 KST");
 });
 
+test("45-day product history and adjacent category rules prevent duplicate automatic picks", () => {
+  const history = [{ product_id: "recent-1", product_name: "케이블 정리 클립", published_at: "2026-08-01T03:00:00.000Z" }];
+  const recent = publishedProductKeysWithinDays(history, "2026-08-12", 45);
+  const candidates = [
+    normalizeProductCandidate({ source: "coupang_api", product_id: "recent-1", product_name: "케이블 정리 클립", category: "생활용품", category_id: 1014, category_rank: 1, affiliate_url: "https://link.coupang.com/a/recent", recommendation_reason: "정리용", when_to_use: "책상 위가 어수선할 때" }),
+    normalizeProductCandidate({ source: "coupang_api", product_id: "same-category", product_name: "수납 바구니", category: "생활용품", category_id: 1014, category_rank: 2, lifestyle_group: "자취생", affiliate_url: "https://link.coupang.com/a/same-category", recommendation_reason: "정리용", when_to_use: "현관이 어수선할 때" }),
+    normalizeProductCandidate({ source: "coupang_api", product_id: "same-target", product_name: "벽걸이 수납 포켓", category: "홈인테리어", category_id: 1015, category_rank: 1, lifestyle_group: "자취생", affiliate_url: "https://link.coupang.com/a/same-target", recommendation_reason: "정리용", when_to_use: "침대 옆이 어수선할 때" }),
+    normalizeProductCandidate({ source: "coupang_api", product_id: "fresh-1", product_name: "다용도 파일 트레이", category: "문구/오피스", category_id: 1021, category_rank: 1, lifestyle_group: "대학생", affiliate_url: "https://link.coupang.com/a/fresh", recommendation_reason: "정리용", when_to_use: "가방 안 충전선이 엉킬 때" }),
+  ];
+  const selected = selectDailyProductCandidates(candidates, 2, { recentProductIds: recent.productIds, recentProductNames: recent.productNames, previousCategoryId: 1014, previousLifestyleGroup: "자취생" });
+  assert.deepEqual(selected.map((item) => item.product_id), ["fresh-1"]);
+});
+
 test("Coupang API candidate requires a partner link and keeps sensitive products out of auto-selection", () => {
   const safe = buildCoupangCandidate({
     product_id: "safe-1",
@@ -927,8 +941,11 @@ test("Coupang API candidate requires a partner link and keeps sensitive products
     product_url: "https://link.coupang.com/a/safe-example",
     product_image: "https://image.example.com/clip.jpg",
     category_name: "생활용품",
+    category_rank: 1,
   }, {
-    keyword: "케이블 정리 클립",
+    lifestyle_group: "대학생",
+    category_id: 1021,
+    category_name: "문구/오피스",
     recommendation_reason: "충전선 정리에 쓰기 좋아서",
     when_to_use: "책상 위 충전선이 엉킬 때",
     usage_guidance: "케이블 굵기를 확인하고 붙여 써",
@@ -944,6 +961,8 @@ test("Coupang API candidate requires a partner link and keeps sensitive products
 
   assert.equal(safe.affiliate_url, "https://link.coupang.com/a/safe-example");
   assert.equal(notAffiliate, null);
+  assert.equal(safe.category_rank, 1);
+  assert.equal(safe.category_id, 1021);
   assert.equal(selectDailyProductCandidates([safe, sensitive], 2).length, 1);
 });
 

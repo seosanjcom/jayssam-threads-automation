@@ -73,9 +73,9 @@ jobs:
       THREADS_REDIRECT_URI: "https://blog.naver.com/taemomjoo"
       THREADS_PUBLISH_LOG: "outputs/meta-publish-log.json"
       THREADS_OAUTH_SCOPES: "threads_basic,threads_content_publish,threads_manage_insights,threads_read_replies,threads_manage_replies"
-      THREADS_REQUIRE_MEDIA: "true"
-      THREADS_CAROUSEL_ENABLED: "true"
-      THREADS_ALLOW_SINGLE_IMAGE_FALLBACK: "true"
+      THREADS_REQUIRE_MEDIA: "false"
+      THREADS_CAROUSEL_ENABLED: "false"
+      THREADS_ALLOW_SINGLE_IMAGE_FALLBACK: "false"
 
     steps:
       - name: Checkout
@@ -115,7 +115,7 @@ jobs:
         run: node scripts/create_jayssam_github_env.mjs
 
       - name: Setup card image runtime
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode != 'metrics'
+        if: steps.route.outputs.run == 'true' && false
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-noto-cjk
@@ -182,8 +182,11 @@ jobs:
           git commit -m "Add generated Jayssam assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git pull --rebase --autostash origin master
           git push
-          node scripts/upload_cardnews_to_catbox.mjs "$DRAFT_PATH"
-          node scripts/verify_media_urls.mjs "$DRAFT_PATH"
+          MEDIA_COUNT="$(node -e "const d=require('./' + process.argv[1]); process.stdout.write(String((d.local_media_paths || []).length));" "$DRAFT_PATH")"
+          if [[ "$MEDIA_COUNT" != "0" ]]; then
+            node scripts/upload_cardnews_to_catbox.mjs "$DRAFT_PATH"
+            node scripts/verify_media_urls.mjs "$DRAFT_PATH"
+          fi
           node scripts/publish_latest_approved.mjs "$DRAFT_PATH"
           node scripts/mark_jayssam_news_queue_posted.mjs "$DRAFT_PATH"
           node scripts/send_telegram_message.mjs "[제이쌤 게시 완료] ${{ steps.route.outputs.slot }} 슬롯 게시 완료"

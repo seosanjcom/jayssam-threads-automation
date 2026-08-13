@@ -57,7 +57,9 @@ function firstNumber(...values) {
 
 function riskLevelFor(text) {
   if (HOLD_KEYWORDS.some((keyword) => text.includes(keyword))) return "hold";
+  if (/건강|헬스|식품|음료|분말|유아|아기|키즈|베이비|의약|치료|약품|보충/.test(text)) return "hold";
   if (LOW_RISK_KEYWORDS.some((keyword) => text.includes(keyword))) return "low";
+  if (/생활용품|주방용품|홈인테리어|문구\/오피스/.test(text)) return "low";
   return "medium";
 }
 
@@ -74,6 +76,8 @@ function sceneHintFor(text) {
 export function normalizeProductCandidate(input = {}, options = {}) {
   const productName = firstText(input.product_name, input.productName, input.itemName, input.name);
   const category = firstText(input.category, input.categoryName, input.keyword, input.group);
+  const categoryId = firstText(input.category_id, input.categoryId);
+  const categoryRank = firstNumber(input.category_rank, input.categoryRank, input.rank);
   const text = `${productName} ${category}`;
   const riskLevel = riskLevelFor(text);
   const reviewCount = firstNumber(input.review_count, input.reviewCount, input.review_count_text);
@@ -89,6 +93,9 @@ export function normalizeProductCandidate(input = {}, options = {}) {
     product_id: firstText(input.product_id, input.productId, input.itemId, input.id),
     product_name: productName,
     category,
+    category_id: categoryId,
+    category_rank: categoryRank,
+    lifestyle_group: firstText(input.lifestyle_group, input.lifestyleGroup),
     price: firstNumber(input.price, input.productPrice, input.salePrice),
     rating: firstNumber(input.rating, input.productRating),
     review_count: reviewCount,
@@ -124,27 +131,54 @@ export function rankProductCandidates(candidates = []) {
 
 export function fixtureProductCandidates(date = new Date().toISOString().slice(0, 10)) {
   return [
-    { productId: `${date}-hair`, productName: "대용량 머리끈 100개", categoryName: "헤어소품", productPrice: 8900, reviewCount: 812, affiliateUrl: "https://link.coupang.com/a/sample-hair", productImage: "https://example.com/hair.jpg" },
-    { productId: `${date}-cable`, productName: "케이블 정리 클립", categoryName: "생활용품", productPrice: 6900, reviewCount: 401, affiliateUrl: "https://link.coupang.com/a/sample-cable", productImage: "https://example.com/cable.jpg" },
-    { productId: `${date}-pouch`, productName: "작은 소지품 파우치", categoryName: "가방정리", productPrice: 9900, reviewCount: 255, affiliateUrl: "https://link.coupang.com/a/sample-pouch", productImage: "https://example.com/pouch.jpg" },
-    { productId: `${date}-tray`, productName: "책상 잔물건 정리 트레이", categoryName: "수납정리", productPrice: 7900, reviewCount: 180, affiliateUrl: "https://link.coupang.com/a/sample-tray", productImage: "https://example.com/tray.jpg" },
+    { source: "test_fixture", productId: `${date}-hair`, productName: "대용량 머리끈 100개", categoryName: "헤어소품", productPrice: 8900, reviewCount: 812, affiliateUrl: "https://link.coupang.com/a/sample-hair", productImage: "https://example.com/hair.jpg" },
+    { source: "test_fixture", productId: `${date}-cable`, productName: "케이블 정리 클립", categoryName: "생활용품", productPrice: 6900, reviewCount: 401, affiliateUrl: "https://link.coupang.com/a/sample-cable", productImage: "https://example.com/cable.jpg" },
+    { source: "test_fixture", productId: `${date}-pouch`, productName: "작은 소지품 파우치", categoryName: "가방정리", productPrice: 9900, reviewCount: 255, affiliateUrl: "https://link.coupang.com/a/sample-pouch", productImage: "https://example.com/pouch.jpg" },
+    { source: "test_fixture", productId: `${date}-tray`, productName: "책상 잔물건 정리 트레이", categoryName: "수납정리", productPrice: 7900, reviewCount: 180, affiliateUrl: "https://link.coupang.com/a/sample-tray", productImage: "https://example.com/tray.jpg" },
   ].map((item) => normalizeProductCandidate(item, { collectedAt: `${date}T00:00:00.000Z` }));
 }
 
-export function selectDailyProductCandidates(candidates = [], count = 3) {
+export function publishedProductKeysWithinDays(history = [], referenceDate = new Date().toISOString().slice(0, 10), days = 45) {
+  const productIds = new Set();
+  const productNames = new Set();
+  const cutoff = Date.parse(`${referenceDate}T00:00:00Z`) - days * 86400000;
+  for (const item of history) {
+    const dateText = String(item?.published_at || item?.date || item?.created_at || "").slice(0, 10);
+    const publishedAt = Date.parse(`${dateText}T00:00:00Z`);
+    if (!Number.isFinite(publishedAt) || publishedAt < cutoff) continue;
+    const productId = firstText(item?.product_id, item?.productId);
+    const productName = firstText(item?.product_name, item?.productName).toLowerCase();
+    if (productId) productIds.add(productId);
+    if (productName) productNames.add(productName);
+  }
+  return { productIds, productNames };
+}
+
+export function selectDailyProductCandidates(candidates = [], count = 3, options = {}) {
   const selected = [];
   const seenNames = new Set();
+  const seenCategories = new Set();
+  const seenLifestyleGroups = new Set();
+  const recentProductIds = options.recentProductIds || new Set();
+  const recentProductNames = options.recentProductNames || new Set();
+  const previousCategoryId = String(options.previousCategoryId || "");
+  const previousLifestyleGroup = String(options.previousLifestyleGroup || "");
   const normalized = candidates.map((candidate) => normalizeProductCandidate(candidate));
   const completeBrief = (candidate) => candidate.recommendation_reason && candidate.when_to_use;
   const manual = normalized.filter((candidate) => candidate.source === "manual_queue" && candidate.product_name && candidate.affiliate_url && completeBrief(candidate));
   const automatic = normalized.filter((candidate) => candidate.source !== "manual_queue" && candidate.product_name && candidate.affiliate_url && completeBrief(candidate));
   for (const candidate of [...manual, ...rankProductCandidates(automatic)]) {
     if (candidate.risk_level === "hold" || candidate.requires_manual_claim_review) continue;
-    // 자동 발행은 용도·표현을 상품명만으로도 안전하게 검증할 수 있는 저위험 생활용품으로 한정한다.
-    if (candidate.source === "coupang_api" && candidate.risk_level !== "low") continue;
+    // 자동 발행은 상위 1~5위 안에서 건강·어린이·식품이 아닌 저위험 생활 상품만 허용한다.
+    if (candidate.source === "coupang_api" && (candidate.risk_level !== "low" || candidate.category_rank < 1 || candidate.category_rank > 5)) continue;
+    if (recentProductIds.has(candidate.product_id) || recentProductNames.has(candidate.product_name.toLowerCase())) continue;
     if (seenNames.has(candidate.product_name)) continue;
+    if (candidate.category_id && (seenCategories.has(candidate.category_id) || (previousCategoryId && candidate.category_id === previousCategoryId))) continue;
+    if (candidate.lifestyle_group && (seenLifestyleGroups.has(candidate.lifestyle_group) || (previousLifestyleGroup && candidate.lifestyle_group === previousLifestyleGroup))) continue;
     selected.push(candidate);
     seenNames.add(candidate.product_name);
+    if (candidate.category_id) seenCategories.add(candidate.category_id);
+    if (candidate.lifestyle_group) seenLifestyleGroups.add(candidate.lifestyle_group);
     if (selected.length === count) break;
   }
   return selected;

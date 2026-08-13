@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import { pathToFileURL } from "node:url";
 
-import { selectDailyProductCandidates } from "./lifemagazine_product_candidates.mjs";
-import { searchCoupangPartnerProducts } from "./coupang_partners_api.mjs";
+import { publishedProductKeysWithinDays, selectDailyProductCandidates } from "./lifemagazine_product_candidates.mjs";
+import { getCoupangPartnerBestProducts } from "./coupang_partners_api.mjs";
 import { generateLifemagazineDraft, saveLifemagazineDraft } from "./generate_lifemagazine_draft.mjs";
 import { loadManualProductQueue } from "./lifemagazine_telegram_product_queue.mjs";
 import { sendLifemagazinePreview } from "./send_lifemagazine_preview_telegram.mjs";
@@ -13,45 +13,19 @@ export const DAILY_PRODUCT_SLOTS = [
   { slot: "evening", time: "18:00", label: "저녁 생활템" },
 ];
 
-// 상품명만으로도 용도와 추천 근거를 과장 없이 설명할 수 있는 생활용품만 자동 검색한다.
-// 건강·영양·어린이·의료·고위험 카테고리는 후보 선별기에서 다시 차단한다.
-export const SAFE_COUPANG_QUERY_ROTATION = [
-  {
-    keyword: "케이블 정리 클립",
-    recommendation_reason: "충전선이 책상 위에서 계속 굴러다니는 불편을 정리할 수 있는 생활템이라서",
-    when_to_use: "재택근무 책상이나 침대 옆 충전선이 자꾸 엉킬 때",
-    usage_guidance: "케이블 굵기와 부착 위치를 먼저 확인한 뒤 필요한 곳에만 붙여 써",
-  },
-  {
-    keyword: "책상 정리 트레이",
-    recommendation_reason: "매일 쓰는 작은 물건의 자리를 한곳에 잡아두기 좋은 정리템이라서",
-    when_to_use: "리모컨·열쇠·이어폰처럼 자주 찾는 물건이 계속 흩어질 때",
-    usage_guidance: "올려둘 물건의 크기를 재고, 동선 가까운 곳에 하나만 두고 써",
-  },
-  {
-    keyword: "여행용 소지품 파우치",
-    recommendation_reason: "가방 속 자잘한 물건을 한 번에 꺼내기 쉽게 정리할 수 있어서",
-    when_to_use: "립밤·보조배터리·이어폰처럼 가방 안에서 자꾸 사라지는 물건이 있을 때",
-    usage_guidance: "평소 들고 다니는 물건을 먼저 펼쳐 보고 크기에 맞는 파우치를 골라",
-  },
-  {
-    keyword: "옷걸이 연결 고리",
-    recommendation_reason: "옷장 안에서 같은 종류의 옷을 세로로 정리할 때 공간을 덜 차지하게 해줘서",
-    when_to_use: "셔츠나 얇은 옷이 늘어나 옷장 자리가 부족할 때",
-    usage_guidance: "옷걸이 무게와 옷장 높이를 먼저 확인하고 가벼운 옷부터 걸어 써",
-  },
-  {
-    keyword: "수납 정리 바구니",
-    recommendation_reason: "자주 쓰는 물건을 종류별로 묶어두기 쉬운 기본 생활템이라서",
-    when_to_use: "욕실·주방·현관처럼 작은 물건이 계속 늘어나는 곳을 정리할 때",
-    usage_guidance: "넣을 물건의 양을 먼저 정하고, 너무 큰 바구니 하나보다 용도별로 나눠 써",
-  },
-  {
-    keyword: "싱크대 수세미 거치대",
-    recommendation_reason: "설거지 뒤 젖은 수세미를 싱크대 주변에 그대로 두는 불편을 줄여줘서",
-    when_to_use: "수세미나 행주 둘 자리가 애매해서 싱크대가 쉽게 어수선해질 때",
-    usage_guidance: "싱크대 폭과 설치 방식, 물 빠짐 구조를 확인한 뒤 골라",
-  },
+// 라이프매거진은 한 카테고리만 반복하지 않는다. 각 생활 대상의 실제 장면을 기준으로
+// 쿠팡 카테고리 베스트 상위 1~5위만 수집하고, 건강·어린이·식품은 후보 단계에서 차단한다.
+export const LIFESTYLE_CATEGORY_ROTATION = [
+  { lifestyle_group: "육아가정", category_id: 1014, category_name: "생활용품", recommendation_reason: "가족이 함께 쓰는 공간의 잔불편을 덜어주는 기본 생활템이라서", when_to_use: "현관·욕실·거실에 작은 물건이 자꾸 쌓일 때", usage_guidance: "집에서 둘 위치와 크기를 먼저 확인하고 필요한 곳에만 하나씩 써" },
+  { lifestyle_group: "워킹맘", category_id: 1010, category_name: "뷰티", recommendation_reason: "출근 전후에 짧게 챙길 수 있는 실용적인 소지품이면 좋겠어서", when_to_use: "가방과 책상에 매일 챙길 작은 물건이 필요할 때", usage_guidance: "성분·피부 타입처럼 개인차가 큰 내용은 확인하고, 생활 소품 위주로 골라" },
+  { lifestyle_group: "1인가구", category_id: 1013, category_name: "주방용품", recommendation_reason: "혼자 사는 집에서 매일 반복되는 정리와 설거지 동선을 조금 편하게 해줘서", when_to_use: "싱크대와 조리대가 금방 어수선해질 때", usage_guidance: "싱크대 폭과 설치 방식, 수납할 물건의 크기를 먼저 확인해" },
+  { lifestyle_group: "대학생", category_id: 1021, category_name: "문구/오피스", recommendation_reason: "강의실과 책상 사이를 오갈 때 자주 쓰는 물건을 정리하기 좋아서", when_to_use: "필기구·충전선·작은 소지품이 가방 안에서 자꾸 섞일 때", usage_guidance: "평소 들고 다니는 물건의 크기와 수납 위치를 먼저 보고 골라" },
+  { lifestyle_group: "자취생", category_id: 1014, category_name: "생활용품", recommendation_reason: "작은 집에서 바로 체감되는 정리와 청소의 불편을 줄여줘서", when_to_use: "세면대·현관·침대 옆에 물건이 계속 굴러다닐 때", usage_guidance: "붙이거나 걸기 전에는 설치할 면과 무게를 확인해" },
+  { lifestyle_group: "워킹맘", category_id: 1014, category_name: "생활용품", recommendation_reason: "바쁜 평일에 집안 동선을 한 번 덜 돌아도 되는 생활템이라서", when_to_use: "출근 준비와 귀가 뒤에 자주 찾는 물건의 자리가 애매할 때", usage_guidance: "하루에 가장 자주 지나는 동선 가까이에만 두고 써" },
+  { lifestyle_group: "육아가정", category_id: 1015, category_name: "홈인테리어", recommendation_reason: "가족이 쓰는 거실과 방을 조금 더 편하게 정리하는 데 도움이 될 수 있어서", when_to_use: "거실이나 방에서 자잘한 물건의 자리가 계속 바뀔 때", usage_guidance: "공간 크기와 고정 방식, 아이 손이 닿는 위치인지를 먼저 확인해" },
+  { lifestyle_group: "1인가구", category_id: 1014, category_name: "생활용품", recommendation_reason: "혼자 쓰는 공간의 반복되는 작은 불편을 줄이기 좋아서", when_to_use: "침대 옆이나 욕실처럼 매일 쓰는 좁은 공간이 어수선할 때", usage_guidance: "딱 필요한 수량만 두고, 청소하기 쉬운 구조인지 확인해" },
+  { lifestyle_group: "대학생", category_id: 1014, category_name: "생활용품", recommendation_reason: "자취방·기숙사처럼 작은 공간에서 쓰기 좋은 기본 생활템이라서", when_to_use: "책상과 침대 주변의 충전선·소지품을 정리하고 싶을 때", usage_guidance: "기숙사나 자취방의 설치 가능 여부와 크기를 먼저 확인해" },
+  { lifestyle_group: "자취생", category_id: 1013, category_name: "주방용품", recommendation_reason: "혼밥 뒤 설거지와 수납을 조금 간단하게 만들 수 있어서", when_to_use: "설거지 뒤 수세미나 행주 둘 곳이 마땅하지 않을 때", usage_guidance: "물 빠짐과 고정 방식, 싱크대 재질을 먼저 확인해" },
 ];
 
 function loadEnv() {
@@ -86,7 +60,7 @@ function kstClock(date = new Date()) {
 function rotationStartIndex(date) {
   const digits = String(date || "").replace(/\D/g, "");
   const numeric = Number(digits.slice(-4)) || 0;
-  return numeric % SAFE_COUPANG_QUERY_ROTATION.length;
+  return numeric % LIFESTYLE_CATEGORY_ROTATION.length;
 }
 
 function isCoupangAffiliateUrl(value) {
@@ -98,25 +72,28 @@ function isCoupangAffiliateUrl(value) {
   }
 }
 
-export function buildCoupangCandidate(product, brief) {
+export function buildCoupangCandidate(product, profile) {
   const affiliateUrl = String(product.product_url || "").trim();
   if (!isCoupangAffiliateUrl(affiliateUrl)) return null;
   return {
     source: "coupang_api",
     product_id: product.product_id,
     product_name: product.product_name,
-    category: product.category_name,
+    category: profile.category_name || product.category_name,
+    category_id: profile.category_id,
+    category_rank: product.category_rank,
+    lifestyle_group: profile.lifestyle_group,
     price: product.price,
     brand: product.brand,
     description: product.description,
     product_url: affiliateUrl,
     affiliate_url: affiliateUrl,
     image_url: product.image_url,
-    metadata_status: "coupang_partner_api_resolved",
-    recommendation_reason: brief.recommendation_reason,
-    when_to_use: brief.when_to_use,
-    usage_guidance: brief.usage_guidance,
-    operator_note: `쿠팡 파트너스 API 검색어: ${brief.keyword}`,
+    metadata_status: "coupang_partner_api_category_best",
+    recommendation_reason: profile.recommendation_reason,
+    when_to_use: profile.when_to_use,
+    usage_guidance: profile.usage_guidance,
+    operator_note: `쿠팡 파트너스 ${profile.category_name} 베스트 ${product.category_rank}위 · ${profile.lifestyle_group} 생활 장면`,
   };
 }
 
@@ -124,27 +101,71 @@ export async function collectSafeCoupangCandidates(options = {}) {
   const date = options.date || kstDateKey();
   const count = Math.max(2, Number(options.count || DAILY_PRODUCT_SLOTS.length));
   const start = rotationStartIndex(date);
-  const briefs = Array.from({ length: Math.min(SAFE_COUPANG_QUERY_ROTATION.length, count + 2) }, (_, index) => (
-    SAFE_COUPANG_QUERY_ROTATION[(start + index) % SAFE_COUPANG_QUERY_ROTATION.length]
+  // 두 건을 뽑기 위해 추가 후보 카테고리를 조회하되, 일일 5회 이내로 제한한다.
+  const profiles = Array.from({ length: Math.min(LIFESTYLE_CATEGORY_ROTATION.length, count + 3) }, (_, index) => (
+    LIFESTYLE_CATEGORY_ROTATION[(start + index) % LIFESTYLE_CATEGORY_ROTATION.length]
   ));
   const candidates = [];
   const queryResults = [];
 
-  for (const brief of briefs) {
-    const result = await searchCoupangPartnerProducts(brief.keyword, {
-      limit: 6,
+  for (const profile of profiles) {
+    const result = await getCoupangPartnerBestProducts(profile.category_id, {
+      limit: 5,
       accessKey: options.accessKey,
       secretKey: options.secretKey,
       fetchImpl: options.fetchImpl,
     });
-    queryResults.push({ keyword: brief.keyword, status: result.status, error: result.error || "", received: result.products.length });
+    queryResults.push({
+      lifestyle_group: profile.lifestyle_group,
+      category_id: profile.category_id,
+      category_name: profile.category_name,
+      status: result.status,
+      error: result.error || "",
+      received: result.products.length,
+      ranks_requested: "1-5",
+    });
     for (const product of result.products) {
-      const candidate = buildCoupangCandidate(product, brief);
+      const candidate = buildCoupangCandidate(product, profile);
       if (candidate) candidates.push(candidate);
     }
   }
 
   return { date, candidates, queryResults };
+}
+
+function collectProductHistory(root) {
+  const history = [];
+  const pushJson = (file) => {
+    try {
+      const value = JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
+      history.push(...(Array.isArray(value) ? value : [value]));
+    } catch { /* malformed operational files must not block the next safe draft */ }
+  };
+  const walk = (directory) => {
+    if (!fs.existsSync(directory)) return;
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const fullPath = `${directory}/${entry.name}`;
+      if (entry.isDirectory()) walk(fullPath);
+      else if (entry.name.endsWith(".json")) pushJson(fullPath);
+    }
+  };
+  pushJson(`${root}/outputs/lifemagazine/meta-publish-log.json`);
+  walk(`${root}/outputs/lifemagazine/automation`);
+  return history;
+}
+
+function sortedProductHistory(history = []) {
+  return [...history].sort((left, right) => String(right.published_at || right.created_at || right.draft_date || "").localeCompare(String(left.published_at || left.created_at || left.draft_date || "")));
+}
+
+function latestCategoryId(history = []) {
+  const record = sortedProductHistory(history).find((item) => item?.product_metadata?.category_id || item?.category_id);
+  return String(record?.product_metadata?.category_id || record?.category_id || "");
+}
+
+function latestLifestyleGroup(history = []) {
+  const record = sortedProductHistory(history).find((item) => item?.product_metadata?.lifestyle_group || item?.lifestyle_group);
+  return String(record?.product_metadata?.lifestyle_group || record?.lifestyle_group || "");
 }
 
 export function generateDailyProductDrafts(options = {}) {
@@ -154,7 +175,14 @@ export function generateDailyProductDrafts(options = {}) {
   const automaticCandidates = options.candidates || [];
   const slots = Array.isArray(options.slots) && options.slots.length ? options.slots : DAILY_PRODUCT_SLOTS;
   const targetCount = Number(options.count || slots.length);
-  const selected = selectDailyProductCandidates([...manualCandidates, ...automaticCandidates], targetCount);
+  const productHistory = options.productHistory || collectProductHistory(root);
+  const recent = publishedProductKeysWithinDays(productHistory, date, 45);
+  const selected = selectDailyProductCandidates([...manualCandidates, ...automaticCandidates], targetCount, {
+    recentProductIds: recent.productIds,
+    recentProductNames: recent.productNames,
+    previousCategoryId: options.previousCategoryId || latestCategoryId(productHistory),
+    previousLifestyleGroup: options.previousLifestyleGroup || latestLifestyleGroup(productHistory),
+  });
   if (selected.length < targetCount) {
     throw new Error(`자동 발행 가능한 저위험 라이프매거진 상품 후보가 부족합니다. 필요=${targetCount}, 선별=${selected.length}`);
   }
@@ -181,6 +209,11 @@ export function generateDailyProductDrafts(options = {}) {
         source_url: candidate.product_url || candidate.affiliate_url,
         metadata_status: candidate.metadata_status,
         coupang_api_candidate: candidate.source === "coupang_api",
+        product_id: candidate.product_id,
+        category_id: candidate.category_id,
+        category_name: candidate.category,
+        category_rank: candidate.category_rank,
+        lifestyle_group: candidate.lifestyle_group,
       },
       product_links: [{ label: "제품 링크", url: candidate.affiliate_url, platform: "coupang" }],
     }, { now: options.now });
