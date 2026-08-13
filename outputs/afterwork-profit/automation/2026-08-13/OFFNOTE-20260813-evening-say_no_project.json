@@ -8,7 +8,7 @@
   "slot": "evening",
   "topic": "새 프로젝트를 거절한 오후",
   "topic_tag": "디지털노마드 일상",
-  "status": "approved",
+  "status": "published",
   "created_at": "2026-08-13T06:08:37.849Z",
   "source": "github-actions-offnote-digital-nomad-notes",
   "recommended_publish_time": "15:30 KST",
@@ -38,5 +38,12 @@
     "evening"
   ],
   "telegram_auto_notice_sent_at": "2026-08-13T06:08:39.220Z",
-  "editorial_revision": "2026-08-13: 추상적 리듬 선언을 실제 업무 장면과 명확한 판단으로 교체"
+  "editorial_revision": "2026-08-13: 추상적 리듬 선언을 실제 업무 장면과 명확한 판단으로 교체",
+  "approved_at": "2026-08-13T07:59:26.632Z",
+  "approval_source": "automatic_schedule:evening",
+  "published_at": "2026-08-13T08:00:02.571Z",
+  "auto_publish": {
+    "slot": "evening",
+    "approved_at": "2026-08-13T07:59:26.632Z"
+  }
 }
