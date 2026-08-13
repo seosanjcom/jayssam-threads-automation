@@ -1,6 +1,7 @@
 {
   "processed_reply_ids": [
-    "18115690142485910"
+    "18115690142485910",
+    "18122586970754232"
   ],
   "events": [
     {
@@ -12,8 +13,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-12T10:49:37.944Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18122586970754232",
+      "post_id": "18098163662200026",
+      "username": "lifemagazine_",
+      "text": "제품 정보는 여기 정리해둘게!!\n상품명: [헤이드] 고급 옷걸이 연장 후크 (무광니켈도금)\n확인 당시 표시가: 11,000원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=8310281087&itemId=23979076926&vendorItemId=88740249462&traceid=V0-153-d7699e5554b51fc6&requestid=20260812233620818091767657&token=31850C%7CMIXED\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-13T05:13:39.377Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-13T03:04:05.455Z",
+  "updated_at": "2026-08-13T05:13:39.520Z",
   "timezone": "Asia/Seoul"
 }
