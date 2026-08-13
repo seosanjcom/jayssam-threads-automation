@@ -83,5 +83,8 @@
   },
   "approval_source": "automatic_safe_coupang_selection",
   "auto_publish_allowed": true,
-  "telegram_approval_token": "f2c6ad1ee2ba6078"
+  "telegram_approval_token": "f2c6ad1ee2ba6078",
+  "published_reply_ids": [
+    "18122586970754232"
+  ]
 }
