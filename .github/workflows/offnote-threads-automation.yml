@@ -9,6 +9,7 @@ on:
         default: "auto_publish"
         type: choice
         options:
+          - preview
           - auto_publish
           - delete_post
           - health
@@ -25,7 +26,10 @@ on:
         required: false
         type: string
   schedule:
-    # KST 15:30, 21:30 - generate, validate, and automatically publish each daily slot.
+    # KST 14:00, 20:00 - generate and announce the upcoming automatic post.
+    - cron: "0 5 * * *"
+    - cron: "0 11 * * *"
+    # KST 15:30, 21:30 - automatically publish each daily slot.
     - cron: "30 6 * * *"
     - cron: "30 12 * * *"
     # KST 22:15 - health watchdog.
@@ -85,7 +89,9 @@ jobs:
           fi
 
           case "${{ github.event.schedule }}" in
+            "0 5 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             "30 6 * * *") echo "mode=auto_publish" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
+            "0 11 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             "30 12 * * *") echo "mode=auto_publish" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             "15 13 * * *") echo "mode=health" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
             *) echo "mode=skip" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=false" >> "$GITHUB_OUTPUT" ;;
@@ -125,6 +131,7 @@ jobs:
             exit 0
           fi
           node scripts/validate_offnote_draft.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+          node scripts/send_offnote_auto_publish_notice.mjs "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           echo "Cardnews skipped by default. Generate manually only for high-density posts."
 
       - name: Commit generated draft before automatic publishing
