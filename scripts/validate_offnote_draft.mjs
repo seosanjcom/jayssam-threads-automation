@@ -41,6 +41,10 @@ const forcedCtaTerms = [
   /링크.*(?:댓글|프로필)/,
   /DM.*(?:줘|주세요)/i,
 ];
+const abstractClosingPatterns = [
+  /오늘도\s*내\s*리듬을\s*잃지\s*않는\s*쪽이면\s*충분하다/,
+  /대단한\s*방법은\s*아니어도.*일하는\s*하루가\s*꽤\s*편해진다/s,
+];
 const bannedPositioning = [
   /나처럼\s*해/,
   /나처럼\s*수익화/,
@@ -81,6 +85,9 @@ if (forcedCtaTerms.some((pattern) => pattern.test(text))) {
 }
 if (bannedPositioning.some((pattern) => pattern.test(text))) {
   errors.push("offnote draft contains banned anxious, boastful, or explanatory positioning language");
+}
+if (abstractClosingPatterns.some((pattern) => pattern.test(draft.threads_text || ""))) {
+  errors.push("offnote draft uses an abstract generic closing without a concrete personal observation");
 }
 if ((draft.thread_comments || []).length > 0) {
   errors.push("offnote personal-note drafts should not add promotional comment expansion");

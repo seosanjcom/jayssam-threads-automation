@@ -84,6 +84,16 @@ try {
     throw new Error(`Expected anxious/CTA tone validation failure, got:\n${badToneValidate.stderr}\n${badToneValidate.stdout}`);
   }
 
+  const abstractDraftPath = path.join(tmp, "outputs", "afterwork-profit", "automation", "2026-05-24", "OFFNOTE-20260524-evening-abstract.json");
+  writeJson(abstractDraftPath, {
+    id: "OFFNOTE-20260524-evening-abstract", account: "offnote.kr", status: "approved", content_mode: "digital_nomad_personal_note",
+    threads_text: "요즘은 안 할 일을 더 빨리 고른다.\n\n오늘도 내 리듬을 잃지 않는 쪽이면 충분하다.", thread_comments: [], cardnews_slides: [],
+  });
+  const abstractValidate = runNode(["scripts/validate_offnote_draft.mjs", abstractDraftPath]);
+  if (abstractValidate.status === 0 || !abstractValidate.stderr.includes("abstract generic closing")) {
+    throw new Error(`Expected abstract personal-note validation failure, got:\n${abstractValidate.stderr}\n${abstractValidate.stdout}`);
+  }
+
   const badDraftPath = path.join(tmp, "outputs", "afterwork-profit", "automation", "2026-05-24", "OFFNOTE-20260524-evening-shopping-route.json");
   writeJson(badDraftPath, {
     id: "OFFNOTE-20260524-evening-shopping-route", account: "offnote.kr", status: "approved", content_mode: "digital_nomad_personal_note",

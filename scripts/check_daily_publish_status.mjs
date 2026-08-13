@@ -46,15 +46,19 @@ const dateText = process.argv[3] || kstDateText();
 const dateKey = dateText.replaceAll("-", "");
 const logPath = process.env.THREADS_PUBLISH_LOG || "outputs/meta-publish-log.json";
 const log = readJson(logPath, []);
-const expectedPrefix = `GHA-${dateKey}-${slot}-`;
+const expectedPrefixes = [
+  `JAY-${dateKey}-${slot}-`,
+  // 구형 뉴스 큐 초안의 감시 호환성은 유지한다.
+  `GHA-${dateKey}-${slot}-`,
+];
 const account = process.env.THREADS_USER_ID || "";
-const found = log.find((item) => String(item.draft_id || "").startsWith(expectedPrefix) && (!account || item.account === account));
+const found = log.find((item) => expectedPrefixes.some((prefix) => String(item.draft_id || "").startsWith(prefix)) && (!account || item.account === account));
 
 if (found) {
   await notify(`[제이쌤 자동화 확인]\n${dateText} ${slot} 게시 로그 확인 완료\nthreads_media_id: ${found.threads_media_id || found.media_id || "recorded"}`);
-  console.log(`Publish watchdog passed for ${expectedPrefix}`);
+  console.log(`Publish watchdog passed for ${expectedPrefixes.join(", ")}`);
   process.exit(0);
 }
 
 await notify(`[제이쌤 자동화 경고]\n${dateText} ${slot} 게시 로그가 없습니다.\nGitHub Actions 실행 로그를 바로 확인해야 합니다.`);
-throw new Error(`Publish watchdog failed: no publish log for ${expectedPrefix}`);
+throw new Error(`Publish watchdog failed: no publish log for ${expectedPrefixes.join(", ")}`);
