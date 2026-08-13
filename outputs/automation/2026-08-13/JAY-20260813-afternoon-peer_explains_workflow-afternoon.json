@@ -1,0 +1,30 @@
+{
+  "id": "JAY-20260813-afternoon-peer_explains_workflow-afternoon",
+  "content_id": "peer_explains_workflow-afternoon",
+  "date": "2026-08-13",
+  "slot": "afternoon",
+  "account": "27960473083547672",
+  "status": "approved",
+  "title": "수강생끼리 작업 흐름을 나눈 날",
+  "topic": "수강생끼리 작업 흐름을 나눈 날",
+  "pillar": "adult_learner_observation",
+  "content_type": "educator_personal_note",
+  "angle": "수업 현장 메모",
+  "threads_text": "오늘은 내가 설명하기 전에 한 수강생이 옆자리 사람에게 자기 작업 순서를 보여줬다.\n\n완벽한 답은 아니어도 실제로 해본 사람의 말에는 다른 힘이 있다.\n\n아는 건 혼자 이해한 순간보다, 내 방식으로 건넬 수 있을 때 더 또렷해진다.",
+  "thread_comments": [],
+  "local_media_paths": [],
+  "source_urls": [],
+  "source_note": "제이쌤의 성인 수강생·진로 전환·교육사업 운영 관찰",
+  "created_at": "2026-08-13T15:53:54+09:00",
+  "editorial_rules": {
+    "voice": "성인 교육 현장을 오래 본 교육자의 실제 관찰과 여유 있는 판단",
+    "avoid": [
+      "아동·학부모 소재",
+      "뉴스 요약",
+      "정답 제시",
+      "AI 설명체",
+      "억지 CTA"
+    ],
+    "dedupe_days": 21
+  }
+}
