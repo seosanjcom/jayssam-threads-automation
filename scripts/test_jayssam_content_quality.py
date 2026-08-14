@@ -27,6 +27,7 @@ BANNED_EXPLANATORY_PHRASES = (
     "링크는 댓글",
 )
 BANNED_CHILD_CENTRIC_TERMS = ("학부모", "부모님", "우리 애", "가방 멘")
+BANNED_TEMPLATE_TONE = ("짚어볼게", "정리해야 한다", "체크해봐", "확인해봐", "같이 짚어")
 REQUIRED_PILLARS = {
     "practical_tool_education",
     "small_business_marketing_education",
@@ -61,6 +62,8 @@ def test_notes_are_threads_safe_and_keep_the_owner_voice() -> None:
         for banned in BANNED_EXPLANATORY_PHRASES:
             assert banned not in combined
         for banned in BANNED_CHILD_CENTRIC_TERMS:
+            assert banned not in combined
+        for banned in BANNED_TEMPLATE_TONE:
             assert banned not in combined
         assert not text.startswith("교육 뉴스")
         assert not title.startswith(("수업 뒤", "늦게 남은 질문"))
@@ -145,10 +148,20 @@ def test_generated_posts_add_a_specific_tip_and_natural_action_prompt() -> None:
             draft_path = MODULE.write_draft(topic, "2026-09-15", "afternoon")
             draft = json.loads(draft_path.read_text(encoding="utf-8"))
             text = draft["threads_text"]
-            assert "📌 " in text, seed_id
             assert any(marker in text for marker in ("💬 ", "📌 ", "📩 ")), seed_id
+            assert text.rstrip().split("\n")[-1].startswith(("💬 ", "📌 ", "📩 ")), seed_id
             assert len(text) <= 500, seed_id
             assert "인 거지" not in text, seed_id
+            for banned in BANNED_TEMPLATE_TONE:
+                assert banned not in text, seed_id
+            if seed_id == "excel_certificate_gap":
+                assert text.count("Ctrl + G") == 1
+            if seed_id == "photoshop_pretty_not_sell":
+                assert text.count("폰트 3~4개") == 1
+            if seed_id == "youtube_title_promise":
+                assert text.count("제목부터 못 뽑게") == 1
+            if seed_id == "career_certificate_question":
+                assert text.count("채용공고 3개") == 1
     finally:
         MODULE.OUT_ROOT = original_out_root
         MODULE.PUBLISH_LOG = original_publish_log
@@ -157,11 +170,12 @@ def test_generated_posts_add_a_specific_tip_and_natural_action_prompt() -> None:
 
 def test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps() -> None:
     seeds = {seed_id: text for seed_id, _, text in MODULE.OBSERVATION_SEEDS}
-    assert "도구함 위치" in seeds["excel_certificate_gap"]
+    assert "도구 위치" in seeds["excel_certificate_gap"]
     assert "고장 난 기계" in seeds["excel_certificate_gap"]
-    assert "목적이 아니라 수단" in seeds["career_certificate_question"]
-    assert "정확히 뭐에 쓰려고" in seeds["career_certificate_question"]
-    assert "설득력" in seeds["photoshop_pretty_not_sell"]
+    assert "목적도 없이" in seeds["career_certificate_question"]
+    assert "자격증 개수" in seeds["career_certificate_question"]
+    assert "정확히 어디다 쓸 건데" in seeds["career_certificate_question"]
+    assert "지갑 열게" in seeds["photoshop_pretty_not_sell"]
     assert "도구일 뿐" in seeds["photoshop_pretty_not_sell"]
     assert "낚싯바늘" in seeds["youtube_title_promise"]
     assert "약속" in seeds["youtube_title_promise"]
