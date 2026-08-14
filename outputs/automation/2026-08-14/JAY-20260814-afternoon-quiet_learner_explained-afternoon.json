@@ -1,0 +1,30 @@
+{
+  "id": "JAY-20260814-afternoon-quiet_learner_explained-afternoon",
+  "content_id": "quiet_learner_explained-afternoon",
+  "date": "2026-08-14",
+  "slot": "afternoon",
+  "account": "27960473083547672",
+  "status": "approved",
+  "title": "말수 적던 수강생이 자기 코드를 풀어낸 날",
+  "topic": "말수 적던 수강생이 자기 코드를 풀어낸 날",
+  "pillar": "adult_learner_observation",
+  "content_type": "educator_personal_note",
+  "angle": "수업 현장 메모",
+  "threads_text": "평소에 질문이 많지 않던 수강생이 오늘은 자기 코드 흐름을 차근차근 설명했다.\n\n중간에 막힌 곳도 있었지만, 왜 그렇게 짰는지는 분명했다.\n\n나는 그 설명이 나오면 속도보다 방향을 먼저 믿게 된다.",
+  "thread_comments": [],
+  "local_media_paths": [],
+  "source_urls": [],
+  "source_note": "제이쌤의 성인 수강생·진로 전환·교육사업 운영 관찰",
+  "created_at": "2026-08-14T14:04:38+09:00",
+  "editorial_rules": {
+    "voice": "성인 교육 현장을 오래 본 교육자의 실제 관찰과 여유 있는 판단",
+    "avoid": [
+      "아동·학부모 소재",
+      "뉴스 요약",
+      "정답 제시",
+      "AI 설명체",
+      "억지 CTA"
+    ],
+    "dedupe_days": 21
+  }
+}
