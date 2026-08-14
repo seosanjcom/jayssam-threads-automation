@@ -932,6 +932,24 @@ test("lifemagazine product scenes rotate contextual CTAs without repeated boiler
   }
 });
 
+test("lifemagazine repeats a manual product with a different-date copy rotation", () => {
+  const base = {
+    content_mode: "found_product",
+    product_name: "케이블 정리 클립",
+    product_candidate: { product_name: "케이블 정리 클립", scene_hint: "책상과 침대 옆 충전선이 자꾸 떨어질 때" },
+    product_links: [{ label: "제품 링크", url: "https://link.coupang.com/a/cable-rotation", platform: "coupang" }],
+  };
+  const drafts = [
+    generateLifemagazineDraft({ ...base, date: "2026-09-01", slot: "morning" }),
+    generateLifemagazineDraft({ ...base, date: "2026-09-02", slot: "morning" }),
+    generateLifemagazineDraft({ ...base, date: "2026-09-03", slot: "morning" }),
+  ];
+  const endings = drafts.map((draft) => draft.threads_text.trim().split("\n").at(-1));
+  const commentHeadings = drafts.map((draft) => draft.thread_comments[0].split("\n")[0]);
+  assert.equal(new Set(endings).size, 3);
+  assert.equal(new Set(commentHeadings).size, 3);
+});
+
 test("lifemagazine daily product generator prefers Telegram manual queue", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-manual-products-"));
   saveManualProductQueue({

@@ -209,15 +209,20 @@ function toneOpening(input) {
 
 function productCopyVariant(input, key, options) {
   const candidate = input.product_candidate || {};
-  const signature = [
-    input.date,
-    input.slot,
+  const stableSignature = [
     input.product_name || candidate.product_name || input.topic,
     input.scene_brief || candidate.scene_hint || candidate.selection_reason,
     key,
   ].join("|");
-  const total = [...signature].reduce((sum, character) => ((sum * 31) + character.codePointAt(0)) >>> 0, 7);
-  return options[total % options.length];
+  const productOffset = [...stableSignature].reduce((sum, character) => ((sum * 31) + character.codePointAt(0)) >>> 0, 7);
+  const dateMatch = String(input.date || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const dateOffset = dateMatch
+    ? Math.floor(Date.UTC(Number(dateMatch[1]), Number(dateMatch[2]) - 1, Number(dateMatch[3])) / 86400000)
+    : 0;
+  const slotOffset = { morning: 0, afternoon: 1, evening: 2, night: 3, manual: 4 }[String(input.slot || "manual")] ?? 4;
+  // 상품이 45일 동안 다시 선택되지 않더라도, 같은 상품을 수동으로 다시 쓸 때는
+  // 날짜·슬롯이 한 칸씩 다음 표현을 고르게 해 같은 CTA가 우연히 이어지지 않게 한다.
+  return options[(productOffset + dateOffset + slotOffset) % options.length];
 }
 
 function productSceneLines(input) {
