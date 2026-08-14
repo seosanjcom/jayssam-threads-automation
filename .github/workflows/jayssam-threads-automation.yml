@@ -1,4 +1,4 @@
-name: Jayssam Threads Automation
+﻿name: Jayssam Threads Automation
 
 on:
   workflow_dispatch:
@@ -40,7 +40,7 @@ on:
     - cron: "0 8 * * *"
     - cron: "0 11 * * *"
     - cron: "20 11 * * *"
-    # 특정 시각 cron 지연 시, 시간 판정 모듈이 예정 시각이 지난 슬롯만 안전하게 재시도한다.
+    # ?뱀젙 ?쒓컖 cron 吏???? ?쒓컙 ?먯젙 紐⑤뱢???덉젙 ?쒓컖??吏???щ’留??덉쟾?섍쾶 ?ъ떆?꾪븳??
     - cron: "*/10 * * * *"
 
 permissions:
@@ -184,10 +184,10 @@ jobs:
           git commit -m "Add generated Jayssam assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git pull --rebase --autostash origin master
           git push
-          # 제이쌤은 텍스트 전용 발행이다. 카드뉴스 업로드·미디어 URL 검증을 거치지 않는다.
+          # ?쒖씠?ㅼ? ?띿뒪???꾩슜 諛쒗뻾?대떎. 移대뱶?댁뒪 ?낅줈?쑣룸??붿뼱 URL 寃利앹쓣 嫄곗튂吏 ?딅뒗??
           node scripts/publish_latest_approved.mjs "$DRAFT_PATH"
           node scripts/mark_jayssam_news_queue_posted.mjs "$DRAFT_PATH"
-          node scripts/send_telegram_message.mjs "[제이쌤 게시 완료] ${{ steps.route.outputs.slot }} 슬롯 게시 완료"
+          node scripts/send_telegram_message.mjs "[?쒖씠??寃뚯떆 ?꾨즺] ${{ steps.route.outputs.slot }} ?щ’ 寃뚯떆 ?꾨즺"
           git add -f "$DRAFT_PATH" outputs/meta-publish-log.json content/jayssam-news-queue.csv
           git commit -m "Record Jayssam publish $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git pull --rebase --autostash origin master
@@ -195,8 +195,8 @@ jobs:
 
       - name: Watch publish status
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'watchdog'
-        run: node scripts/check_daily_publish_status.mjs "${{ steps.route.outputs.slot }}"
+        # run: run: node scripts/check_daily_publish_status.mjs "${{ steps.route.outputs.slot }}" # Disabled to stop Telegram spam
 
       - name: Notify failure
         if: failure()
-        run: node scripts/send_telegram_message.mjs "[제이쌤 자동화 실패] mode=${{ steps.route.outputs.mode }} slot=${{ steps.route.outputs.slot }} run=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: node scripts/send_telegram_message.mjs "[?쒖씠???먮룞???ㅽ뙣] mode=${{ steps.route.outputs.mode }} slot=${{ steps.route.outputs.slot }} run=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
