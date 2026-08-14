@@ -1,0 +1,41 @@
+{
+  "id": "OFFNOTE-20260814-evening-teaching_year_ten",
+  "content_id": "teaching_year_ten",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "date": "2026-08-14",
+  "slot": "evening",
+  "topic": "교육 일을 오래 하며 생긴 습관",
+  "topic_tag": "디지털노마드 일상",
+  "status": "approved",
+  "created_at": "2026-08-14T06:06:15.983Z",
+  "source": "github-actions-offnote-digital-nomad-notes",
+  "recommended_publish_time": "15:30 KST",
+  "content_mode": "digital_nomad_personal_note",
+  "pillar": "cool_digital_nomad_daily",
+  "threads_text": "교육 일을 오래 하면서 제일 많이 바뀐 건 설명하는 방식이다.\n더 많이 말하기보다, 상대가 스스로 이해할 틈을 남기는 쪽으로 바뀌었다.\n\n예전보다 덜 서두르게 된 건, 이 정도의 속도로도 내가 가는 방향은 흔들리지 않는다는 걸 알아서다.",
+  "thread_comments": [],
+  "cardnews_slides": [],
+  "offnote_tone_profile": {
+    "voice": "여유 있고 쿨한 IT 교육업계 10년 차 디지털노마드의 짧은 일상 기록",
+    "cta_policy": "일상 글에는 CTA 없음. 자료·강의 안내는 전체 게시물의 10% 이하에서만 별도 소재로 사용.",
+    "banned_framing": [
+      "불안",
+      "버텼다",
+      "아무것도 못 했다",
+      "성공 비법",
+      "나처럼 해",
+      "수익 보장"
+    ]
+  },
+  "safety_rules": [
+    "Do not add a KakaoTalk or Instagram CTA to personal-note posts.",
+    "Do not use anxious hustle, scarcity, or income-guarantee framing.",
+    "Do not reuse the same content_id within 21 days."
+  ],
+  "telegram_auto_notice_slots": [
+    "evening"
+  ],
+  "telegram_auto_notice_sent_at": "2026-08-14T06:06:17.246Z"
+}
