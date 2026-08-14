@@ -120,6 +120,18 @@ def test_twenty_one_days_of_two_daily_posts_do_not_reuse_a_course_scene() -> Non
         shutil.rmtree(temp_root, ignore_errors=True)
 
 
+def test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps() -> None:
+    seeds = {seed_id: text for seed_id, _, text in MODULE.OBSERVATION_SEEDS}
+    assert "도구함 위치" in seeds["excel_certificate_gap"]
+    assert "고장 난 기계" in seeds["excel_certificate_gap"]
+    assert "목적이 아니라 수단" in seeds["career_certificate_question"]
+    assert "정확히 뭐에 쓰려고" in seeds["career_certificate_question"]
+    assert "설득력" in seeds["photoshop_pretty_not_sell"]
+    assert "도구일 뿐" in seeds["photoshop_pretty_not_sell"]
+    assert "낚싯바늘" in seeds["youtube_title_promise"]
+    assert "약속" in seeds["youtube_title_promise"]
+
+
 def test_pillars_reflect_practical_education_marketing_career_and_owner_judgment() -> None:
     pillars = {MODULE.pillar_for(seed_id) for seed_id, _, _ in MODULE.OBSERVATION_SEEDS}
     assert REQUIRED_PILLARS.issubset(pillars)
@@ -136,5 +148,6 @@ if __name__ == "__main__":
     test_same_day_slots_use_different_course_materials()
     test_recent_seed_is_blocked_even_when_the_slot_name_changes()
     test_twenty_one_days_of_two_daily_posts_do_not_reuse_a_course_scene()
+    test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps()
     test_pillars_reflect_practical_education_marketing_career_and_owner_judgment()
     print('{"ok": true, "guard": "jayssam course spectrum and owner-voice content quality passes"}')
