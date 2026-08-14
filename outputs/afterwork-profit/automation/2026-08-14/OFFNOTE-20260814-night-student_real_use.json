@@ -1,0 +1,43 @@
+{
+  "id": "OFFNOTE-20260814-night-student_real_use",
+  "content_id": "student_real_use",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "date": "2026-08-14",
+  "slot": "night",
+  "topic": "수강생이 실제 업무에 써본 화면",
+  "topic_tag": "디지털노마드 일상",
+  "status": "approved",
+  "created_at": "2026-08-14T11:37:03.322Z",
+  "source": "github-actions-offnote-digital-nomad-notes",
+  "recommended_publish_time": "21:30 KST",
+  "content_mode": "digital_nomad_personal_note",
+  "pillar": "ten_year_education_work",
+  "threads_text": "오늘 수강생에게 실제 업무에 써본 화면을 받았다.\n\n완성도보다 자기 방식으로 바꿔 쓴 흔적이 먼저 보였다.\n\n그 한 장이면 다음 수업에서 뭘 더 다뤄야 할지 충분히 알 수 있다.",
+  "thread_comments": [],
+  "cardnews_slides": [],
+  "offnote_tone_profile": {
+    "voice": "IT 교육업계 10년 차 디지털노마드가 실제 장면 뒤에 남기는 여유 있고 쿨한 개인 기록",
+    "structure": "구체적인 장면 → 내가 고른 방식 → 과장 없는 판단",
+    "cta_policy": "일상 글에는 CTA 없음. 자료·강의 안내는 전체 게시물의 10% 이하에서만 별도 소재로 사용.",
+    "banned_framing": [
+      "불안",
+      "버텼다",
+      "아무것도 못 했다",
+      "성공 비법",
+      "나처럼 해",
+      "수익 보장",
+      "자기계발 조언"
+    ]
+  },
+  "safety_rules": [
+    "Do not add a KakaoTalk or Instagram CTA to personal-note posts.",
+    "Do not use anxious hustle, scarcity, income-guarantee, or generic self-help framing.",
+    "Do not reuse the same content_id within 21 days."
+  ],
+  "telegram_auto_notice_slots": [
+    "night"
+  ],
+  "telegram_auto_notice_sent_at": "2026-08-14T11:37:04.023Z"
+}
