@@ -1,0 +1,31 @@
+{
+  "id": "JAY-20260814-night-business_capacity_limit-night",
+  "content_id": "business_capacity_limit-night",
+  "date": "2026-08-14",
+  "slot": "night",
+  "account": "27960473083547672",
+  "status": "approved",
+  "title": "수업 인원을 늘리지 않은 이유",
+  "topic": "수업 인원을 늘리지 않은 이유",
+  "pillar": "education_business_judgment",
+  "content_type": "educator_personal_note",
+  "angle": "오늘의 작업 기록",
+  "threads_text": "이번 모집에서 인원을 더 받지 않았다.\n\n가능은 했지만 질문을 놓치기 시작하면 그건 내 방식이 아니었다.\n\n교육 사업은 커지는 속도보다 관찰이 무너지지 않는 속도가 더 중요하다.",
+  "thread_comments": [],
+  "local_media_paths": [],
+  "source_urls": [],
+  "source_note": "제이쌤의 성인 수강생·진로 전환·교육사업 운영 현장 기록",
+  "created_at": "2026-08-14T20:54:03+09:00",
+  "editorial_rules": {
+    "voice": "성인 코딩교육 사업가·진로코치가 실제 장면 뒤에 남기는 짧고 솔직한 개인 기록",
+    "structure": "구체적 장면 → 내가 한 판단 또는 수정 → 다음에 남길 한 줄",
+    "avoid": [
+      "아동·학부모 소재",
+      "뉴스 요약",
+      "정답 제시",
+      "AI 설명체",
+      "억지 CTA"
+    ],
+    "dedupe_days": 21
+  }
+}
