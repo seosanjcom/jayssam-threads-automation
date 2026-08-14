@@ -28,51 +28,61 @@ function readJson(file, fallback) {
   }
 }
 
-// 오프노트는 불안한 부업 계정이 아니라, IT 교육업계에서 오래 일한 사람이
-// 자기 리듬으로 일·이동·콘텐츠·성장을 기록하는 디지털노마드 SNS다.
+// 오프노트는 "일 잘하는 법"을 가르치는 계정이 아니다. IT 교육업계에서 10년간 일하며
+// 이동·작업·수업 운영 중 실제로 한 선택을 기록하는 개인 SNS다. 모든 소재는
+// 장면 → 내가 고른 방식 → 그 선택을 남기는 이유의 세 문단을 가진다.
 const NOTES = [
-  ["cafe_same_seat", "카페에 가면 늘 앉는 자리가 있다", "카페에 가면 늘 앉는 자리가 있다.\n자리보다 중요한 건, 노트북을 열면 바로 일 모드로 들어가는 그 익숙함이다."],
-  ["work_bag_light", "가방이 가벼운 날", "가방이 가벼운 날은 일도 조금 가볍다.\n노트북 하나, 충전기 하나, 메모할 것 하나. 오래 일할수록 필요한 건 생각보다 많지 않다."],
-  ["calendar_blank_space", "일정표의 빈칸", "일정표에 빈칸이 있는 걸 좋아한다.\n여유가 남는 날에 생각이 더 잘 정리된다. 꽉 찬 날보다 오래 가는 방식이다."],
-  ["walk_between_calls", "통화와 통화 사이", "통화와 통화 사이에 15분이 남으면 무조건 걷는다.\n의외로 다음 일의 답은 책상보다 길에서 먼저 나온다."],
-  ["desktop_clean", "바탕화면 정리", "바탕화면이 정리되면 할 일도 조금 정리된다.\n일을 오래 하다 보니 새로운 앱보다 지우는 일이 더 중요해졌다."],
-  ["lunch_alone", "혼자 먹는 점심", "혼자 먹는 점심이 잘 맞는 날이 많다.\n누구와 맞추지 않아도 되는 한 시간이 오후 일을 꽤 깔끔하게 만들어준다."],
-  ["no_rush_reply", "답장을 조금 늦게 하는 이유", "메시지에 바로 답하지 않는 날도 있다.\n급한 것과 중요한 걸 구분하는 데는 약간의 간격이 필요하다."],
-  ["early_leave", "일찍 자리를 뜨는 날", "오늘은 할 일을 다 끝내기 전에 자리를 떴다.\n내일도 일할 거라서. 오래 하는 사람은 마무리보다 리듬을 먼저 챙긴다."],
-  ["new_notebook", "새 노트 첫 장", "새 노트 첫 장은 늘 비어 있는 채로 며칠 간다.\n좋은 생각은 억지로 시작할 때보다, 일하다가 자연스럽게 들어올 때가 많다."],
-  ["airport_work", "공항에서 일할 때", "공항에서 일하면 이상하게 할 일이 단순해진다.\n들고 갈 수 있는 일만 남기면, 진짜 중요한 게 보인다."],
-  ["tool_not_status", "장비는 도구일 뿐", "새 장비가 필요할 때도 있지만, 대부분은 지금 있는 걸 더 잘 쓰면 된다.\n일의 결과는 장비보다 내가 얼마나 선명한지에서 갈린다."],
-  ["one_priority", "오늘의 한 가지", "오늘 할 일은 여러 개인데, 끝까지 잡을 건 하나만 정했다.\n이렇게 일하면 하루가 덜 흩어진다."],
-  ["class_preparation", "수업 전 준비", "수업 준비를 오래 했다고 수업이 좋은 건 아니다.\n수강생이 어디에서 멈추고, 어떤 예시에서 자기 일과 연결할지까지 생각해두면 그때부터 준비가 된다."],
-  ["say_no_project", "새 프로젝트를 거절한 오후", "오늘 오후, 새 교육 과정을 같이 해보자는 연락을 받았다.\n일정만 보면 할 수는 있었는데, 이번 달 수강생 피드백이 밀리는 건 싫었다. 그래서 이번엔 정중히 거절했다.\n\n할 수 있는 일을 줄이는 게 아니라, 이미 약속한 일을 잘 끝내려고. 오래 일할수록 이 기준이 내 시간을 더 편하게 만든다."],
-  ["income_quality", "돈 되는 일과 오래 가는 일", "돈이 되는 일도 중요하다.\n그런데 내가 계속 말할 수 있는 내용인지까지 같이 본다. 그게 결국 내 이름으로 남는다."],
-  ["teaching_year_ten", "교육 일을 오래 하며 생긴 습관", "교육 일을 오래 하면서 제일 많이 바뀐 건 설명하는 방식이다.\n더 많이 말하기보다, 상대가 스스로 이해할 틈을 남기는 쪽으로 바뀌었다."],
-  ["content_not_noise", "콘텐츠를 고르는 기준", "콘텐츠는 많이 올리는 것보다 내 이름으로 남겨도 되는 걸 고르는 게 더 중요하다.\n그래서 나는 올리지 않는 글도 꽤 많다."],
-  ["travel_packing", "출장 가방", "출장 갈 때 가방을 싸면 내가 평소에 뭘 중요하게 여기는지 보인다.\n일할 것, 편할 것, 그리고 조금의 여유."],
-  ["hotel_morning", "낯선 도시의 아침", "낯선 도시에서 일하는 아침을 좋아한다.\n장소는 바뀌어도 내가 하는 일은 이어진다는 감각이 꽤 좋다."],
-  ["work_playlist", "일할 때 듣는 음악", "일할 때 듣는 음악은 몇 년째 비슷하다.\n새로운 자극보다 익숙한 리듬이 집중에는 더 잘 맞는다."],
-  ["old_files", "오래된 파일", "예전 파일을 열어보면 그때의 내가 생각보다 잘해둔 게 있다.\n쌓인 시간은 티가 안 나다가, 가끔 이렇게 답을 보여준다."],
-  ["small_team", "작은 팀의 장점", "작은 팀으로 일하면 결정이 빠르다.\n대신 서로의 기준은 더 분명해야 한다. 그 균형이 맞을 때 일이 제일 재밌다."],
-  ["mentor_without_pose", "후배에게 하는 말", "후배에게 늘 대단한 조언을 하진 않는다.\n다만 자기 일이 어떤 사람에게 필요한지는 빨리 알아두라고 말한다."],
-  ["lecture_future", "나중에 강의한다면", "언젠가 강의를 더 넓게 하게 되면, 멋진 말보다 바로 써먹을 장면을 많이 남기고 싶다.\n이 업계에서 오래 일하며 배운 건 결국 현장에 있었다."],
-  ["brand_quiet", "브랜드를 키우는 방식", "브랜드는 크게 말한다고 커지지 않는다.\n내가 하는 말을 오래 믿을 수 있게 만드는 쪽이 나한테는 더 맞다."],
-  ["client_trust", "함께 일할 사람", "같이 일할 사람을 고를 때 실력만 보진 않는다.\n약속을 편하게 지키는 사람과 오래 간다."],
-  ["workday_rhythm", "일하는 시간", "나는 새벽형도 밤샘형도 아니다.\n내가 가장 또렷한 시간에 중요한 일을 넣고, 나머지는 가볍게 흘려보낸다."],
-  ["city_change", "장소를 바꾸는 이유", "가끔은 일하려고 장소를 바꾼다.\n새로운 풍경이 필요한 게 아니라, 같은 생각을 다른 각도에서 보기 위해서."],
-  ["coffee_not_reward", "커피 한 잔", "커피는 보상이 아니라 작업 시작 버튼에 가깝다.\n잔을 놓고 노트북을 열면, 이제 내가 할 차례라는 뜻이다."],
-  ["good_enough", "충분히 잘한 날", "오늘은 크게 한 일이 없어도 충분히 잘한 날이다.\n해야 할 일 하나를 제대로 끝냈고, 다음 날을 위한 여유도 남겼으니까."],
-  ["phone_away", "휴대폰을 멀리 두는 시간", "작업할 때 휴대폰을 멀리 두면 생각보다 마음이 조용해진다.\n집중은 대단한 기술보다 방해를 조금 덜어내는 데서 시작한다."],
-  ["meeting_short", "짧은 미팅", "미팅이 길다고 일이 깊어지는 건 아니다.\n서로 뭘 결정했는지만 선명하면, 짧을수록 좋다."],
-  ["work_clothes", "일할 때 입는 옷", "일할 때 입는 옷도 나만의 기준이 있다.\n편해야 하고, 어디서 누구를 만나도 내가 흐트러진 느낌은 아니어야 한다."],
-  ["education_market", "교육 시장을 볼 때", "교육 시장은 늘 새로운 말이 많다.\n그래도 수강생이 실제로 오래 기억하는 건, 결국 자기 일에 바로 붙여본 한 장면이다."],
-  ["content_archive", "내 콘텐츠를 다시 볼 때", "예전에 쓴 글을 다시 읽는 날이 있다.\n지금의 나와 달라서 지우기보다, 그때도 나름 잘 보고 있었다고 생각한다."],
-  ["next_city", "다음 도시", "다음 주엔 다른 도시에서 일할 예정이다.\n일이 있는 곳으로 가는 것도 좋지만, 일을 들고 갈 수 있다는 게 더 좋다."],
-  ["conversation_after_class", "수업 뒤 피드백", "수업 뒤에 수강생과 짧게 나누는 피드백이 좋다.\n결과를 확인하는 시간보다, 다음 주에 자기 일에 뭘 붙여볼지 정리되는 순간이 더 오래 남는다."],
-  ["project_finish", "프로젝트를 끝내는 감각", "프로젝트를 끝낼 때는 다음 걸 바로 시작하지 않는다.\n한 번 잘 닫아봐야, 다음 일을 더 가볍게 열 수 있다."],
-  ["quiet_confidence", "조용한 자신감", "내가 하는 일을 굳이 크게 설명하지 않아도 되는 날이 있다.\n오래 쌓인 건 말투보다 결과에서 먼저 보이니까."],
-  ["weekend_idea", "주말에 떠오르는 생각", "주말에 떠오른 생각은 월요일까지 기다려본다.\n그래도 남아 있으면 그때 시작한다. 좋은 일은 조금 기다려도 사라지지 않는다."],
-  ["long_game", "오래 하는 사람", "일을 오래 할수록 단기 성과에 덜 흔들린다.\n내가 만드는 흐름이 맞으면, 숫자는 조금 늦게 따라와도 괜찮다."],
-  ["lesson_material", "자료를 만들 때", "자료를 만들 때 제일 먼저 지우는 건 멋있어 보이기만 하는 문장이다.\n사람들이 실제로 쓰는 문장만 남기고 싶다."],
+  ["cafe_one_tab", "카페에서 탭을 세 개 닫은 아침", "카페에 앉자마자 브라우저 탭을 세 개 닫았다.\n\n오늘은 강의 자료 한 장만 고치기로 했고, 그 외 창은 오히려 방해가 됐다.\n\n할 일이 적어서가 아니라, 지금 열어둘 일을 내가 고른 아침이었다."],
+  ["train_no_laptop", "기차에서 노트북을 안 연 날", "이동 시간이 길었는데 노트북을 열지 않았다.\n\n창밖 보면서 다음 주 수업 순서만 메모장에 적었다.\n\n이동 중엔 결과를 만드는 일보다 생각을 정리하는 일이 더 잘 맞는다."],
+  ["hotel_desk_reset", "호텔 책상 위 물건 세 개", "출장지 호텔 책상 위에는 노트북, 충전기, 물병만 올려뒀다.\n\n준비물을 더 꺼내지 않으니 저녁 작업도 예상보다 빨리 끝났다.\n\n낯선 곳에서는 익숙한 순서 하나만 있어도 충분하다."],
+  ["lunch_calendar_gap", "점심 약속을 비워둔 이유", "오늘 점심 약속은 일부러 잡지 않았다.\n\n오전 회의 뒤에 밀린 피드백을 천천히 읽고 싶었다.\n\n일정표의 빈칸은 남는 시간이 아니라, 내 생각을 다시 듣는 시간이다."],
+  ["rainy_route_change", "비 오는 날 동선을 바꾼 오후", "비가 와서 평소 가던 카페 대신 가까운 라운지에 앉았다.\n\n장소가 바뀌니 미뤄둔 기획안도 조금 다르게 보였다.\n\n가끔은 멀리 가는 것보다 자리 하나만 바꾸면 된다."],
+  ["bag_cable_pouch", "가방에서 케이블 파우치를 뺀 날", "출장 가방을 싸다가 케이블 파우치를 하나 뺐다.\n\n현지에서 꼭 쓸 것만 남기니 가방이 눈에 띄게 가벼워졌다.\n\n일을 오래 할수록 챙기는 것보다 덜 들고 가는 쪽이 편하다."],
+  ["walk_after_feedback", "피드백 보내고 걸은 20분", "수강생 피드백을 보내고 바로 다음 일을 열지 않았다.\n\n동네를 한 바퀴 걸으면서 내가 쓴 문장을 다시 생각했다.\n\n답장을 보낸 뒤 잠깐 비워두면, 다음 대화가 더 또렷해진다."],
+  ["no_back_to_back_calls", "통화를 연달아 잡지 않는 이유", "오후 통화 사이에 30분을 비워뒀다.\n\n한 통화가 길어져도 다음 사람에게 급한 목소리를 내고 싶지 않아서다.\n\n여유는 시간이 남을 때보다, 미리 간격을 만들 때 생긴다."],
+  ["day_off_no_notification", "쉬는 날 알림을 끈 이유", "오늘은 쉬는 날이라 업무 알림을 껐다.\n\n급한 연락은 따로 들어오게 해뒀고, 나머지는 내일 보기로 했다.\n\n다시 잘 일하려면 안 보는 시간도 일정에 넣어야 한다."],
+  ["new_notebook_second_page", "새 노트의 두 번째 페이지", "새 노트 첫 장은 비워두고 두 번째 페이지부터 썼다.\n\n첫 장을 잘 써야 한다는 생각이 들면 메모가 늦어진다.\n\n일은 시작을 예쁘게 만드는 것보다, 다음 문장을 빨리 남기는 편이 낫다."],
+  ["early_leave_decision", "일이 남아도 먼저 나온 저녁", "오늘은 할 일이 조금 남았는데도 먼저 자리를 떴다.\n\n내일 오전에 더 선명하게 볼 수 있는 일이라서다.\n\n끝까지 붙잡는 것보다 다시 열기 좋게 남겨두는 날도 있다."],
+  ["afternoon_same_seat", "오후에만 가는 창가 자리", "오후에는 늘 같은 창가 자리에 앉는다.\n\n그 자리에서는 상담 정리처럼 길게 생각해야 하는 일을 연다.\n\n장소가 집중을 대신해주진 않지만, 시작을 덜 망설이게는 한다."],
+  ["phone_in_bag", "작업할 때 휴대폰을 가방에 넣는 이유", "자료를 고칠 때는 휴대폰을 가방 안쪽에 넣어둔다.\n\n눈앞에 있으면 작은 알림도 자꾸 한 번씩 보게 된다.\n\n집중은 거창한 다짐보다 시야에서 하나 치우는 데서 시작한다."],
+  ["table_booking", "미팅 장소를 먼저 예약한 날", "다음 주 미팅 장소를 미리 예약해뒀다.\n\n회의 내용보다 동선이 꼬이는 게 더 싫어서다.\n\n작은 준비를 먼저 해두면, 만났을 때는 사람 이야기에만 집중할 수 있다."],
+  ["taxi_voice_memo", "택시 안에서 남긴 음성 메모", "이동 중에 떠오른 문장을 음성 메모로 남겼다.\n\n나중에 다시 들으면 대부분 지워지지만, 한 줄은 다음 강의 제목이 되기도 한다.\n\n생각은 완성해서 잡는 것보다 지나가기 전에 붙잡는 쪽이 쉽다."],
+  ["new_city_morning", "낯선 도시에서 맞은 오전", "다른 도시에서 맞은 오전에는 할 일을 더 단순하게 적는다.\n\n오후 수업 전에 꼭 끝낼 것만 남기고 나머지는 비워뒀다.\n\n장소가 바뀌면 내 기준도 조금 더 선명해진다."],
+  ["airport_last_email", "공항에서 메일 한 통만 보낸 이유", "공항 라운지에서 메일을 한 통만 보냈다.\n\n답장할 수 있는 것과 지금 결정해야 하는 것을 분리했다.\n\n이동하는 날까지 평소 속도를 고집할 필요는 없다."],
+  ["friday_close_file", "금요일에 파일을 닫는 방식", "금요일 오후에는 새 문서를 잘 열지 않는다.\n\n이번 주에 고친 자료를 정리하고, 월요일에 볼 질문만 남겨둔다.\n\n한 주를 닫는 감각이 있어야 다음 주도 덜 급해진다."],
+  ["coffee_start_signal", "커피를 보상으로 안 마시는 이유", "커피를 사면 바로 일부터 시작한다.\n\n다 마신 뒤에 하겠다고 미루면 시작 시간이 계속 늦어진다.\n\n내게 커피는 보상보다 작업 시작 버튼에 가깝다."],
+  ["playlist_no_change", "몇 년째 같은 작업 음악", "오늘도 같은 플레이리스트를 틀었다.\n\n새로운 음악은 이동할 때 듣고, 자료 만들 때는 익숙한 걸 고른다.\n\n집중할 때만큼은 새 자극보다 예측 가능한 리듬이 좋다."],
+  ["calendar_buffer", "일정표에 남긴 40분", "오늘 일정표 중간에 40분을 남겨뒀다.\n\n갑자기 생긴 수정 요청을 그 시간 안에 처리했다.\n\n계획이 잘 맞아떨어져서가 아니라, 틀어질 자리를 미리 남겨둔 덕분이다."],
+  ["light_bag_day", "가방이 유난히 가벼운 날", "오늘 가방에는 노트북과 충전기, 얇은 노트만 넣었다.\n\n미팅 자료는 클라우드에서 보고, 종이는 가져가지 않았다.\n\n들고 다니는 물건이 줄면 이동하는 하루가 조금 더 길어진다."],
+  ["close_laptop_before_dinner", "저녁 전에 노트북을 닫은 날", "저녁 약속 30분 전에 노트북을 닫았다.\n\n마지막 문장 하나를 더 고치고 싶었지만 내일 아침으로 넘겼다.\n\n일이 끝난 뒤의 시간을 지키는 것도 내 일정 관리에 들어간다."],
+  ["screen_brightness", "화면 밝기를 낮춘 밤", "늦은 밤 자료를 다듬다가 화면 밝기를 낮췄다.\n\n밤에는 더 많이 보는 것보다, 내일 다시 볼 수 있게 남기는 편을 고른다.\n\n작업을 오래 끌지 않는 것도 실력이라고 생각한다."],
+  ["walk_route_after_class", "수업 뒤 다른 길로 걸은 날", "수업이 끝난 뒤 평소와 다른 길로 걸었다.\n\n방금 나온 질문을 머릿속에서 한 번 더 정리하고 싶었다.\n\n책상에서 못 푼 생각은 걷다가 정리될 때가 있다."],
+  ["desk_only_water", "책상 위에 물만 남긴 오후", "오후 작업 전에 책상 위 물건을 다 치우고 물만 남겼다.\n\n기획안 한 장을 읽는 데 필요한 건 생각보다 많지 않았다.\n\n일이 복잡해질수록 주변부터 조용하게 만드는 편이다."],
+  ["two_stops_city", "하루 동선을 두 곳으로 줄인 날", "오늘은 미팅 장소와 작업 장소를 두 곳으로만 정했다.\n\n중간에 한 곳을 더 들르면 일도 대화도 얇아질 것 같았다.\n\n많이 움직인 날보다, 필요한 곳만 다녀온 날이 더 선명하게 남는다."],
+  ["weekend_slow_start", "주말 오전을 늦게 연 날", "주말 오전에는 바로 노트북을 열지 않았다.\n\n커피를 마시며 지난주에 적어둔 메모만 훑었다.\n\n다음 일을 시작하기 전에 이미 쌓인 생각을 먼저 보는 쪽이 내게는 맞다."],
+  ["class_slide_cut", "슬라이드 30장을 11장으로 줄인 날", "오늘 강의 자료에서 슬라이드 19장을 지웠다.\n\n설명은 줄었지만 수강생이 직접 눌러볼 시간이 생겼다.\n\n자료가 길다고 수업이 깊어지는 건 아니라는 걸 또 확인했다."],
+  ["example_close_to_work", "예시를 실제 업무 쪽으로 옮긴 이유", "이번 수업 예시를 쇼핑몰 주문이 아니라 예약 관리로 바꿨다.\n\n수강생들이 자기 업무 장면을 더 빨리 떠올렸다.\n\n좋은 예시는 쉬운 예시보다 내 일처럼 보이는 예시다."],
+  ["feedback_queue", "피드백 순서를 바꾼 오후", "오늘 피드백은 먼저 온 순서대로 보내지 않았다.\n\n내일 수업에 바로 써야 하는 작업부터 먼저 열었다.\n\n공정한 순서와 필요한 순서는 가끔 다르다."],
+  ["live_demo_changed", "현장 데모를 바꾼 순간", "수업 중 데모가 예상보다 빨리 끝났다.\n\n준비한 다음 예시 대신 수강생 화면에서 막힌 부분을 같이 봤다.\n\n현장에서는 완성된 계획보다 살아 있는 질문이 더 중요하다."],
+  ["course_outline_reorder", "커리큘럼 순서를 바꾼 주", "이번 주 커리큘럼 순서를 조금 바꿨다.\n\n앞 단원보다 지금 반복해서 나오는 질문을 먼저 다루는 게 맞았다.\n\n교재 순서보다 수강생이 멈춘 순서를 믿는 편이다."],
+  ["client_brief_short", "협업 브리프를 한 장으로 줄인 날", "새 협업 브리프를 한 장으로 줄였다.\n\n해야 할 일보다 이번에 하지 않을 일을 먼저 적었다.\n\n작은 팀에서는 그 한 줄이 회의를 훨씬 짧게 만든다."],
+  ["instructor_wait_time", "수업에서 10초 더 기다린 날", "오늘은 질문 뒤에 바로 답하지 않고 10초를 더 기다렸다.\n\n수강생이 자기 화면을 다시 보다가 원인을 먼저 말했다.\n\n가르치는 일은 내가 빨리 말하는 것보다 상대가 먼저 생각할 틈을 남기는 쪽에 가깝다."],
+  ["registration_limit", "이번 모집 인원을 그대로 둔 이유", "이번 과정 모집 인원을 더 늘리지 않았다.\n\n상담과 피드백에 쓸 시간이 줄어드는 건 원하지 않았다.\n\n운영이 커져도 내가 지키고 싶은 기준은 따로 있다."],
+  ["say_no_project", "새 프로젝트를 거절한 오후", "오늘 오후, 새 교육 과정을 같이 해보자는 연락을 받았다.\n\n일정만 보면 할 수는 있었는데, 이번 달 수강생 피드백이 밀리는 건 싫었다. 그래서 이번엔 정중히 거절했다.\n\n할 수 있는 일을 줄이는 게 아니라, 이미 약속한 일을 잘 끝내려고 했다."],
+  ["revision_log", "수정 이력을 남겨두는 이유", "오늘 자료 파일에 수정 이력을 짧게 남겼다.\n\n다음 달의 내가 왜 이 문장을 지웠는지 다시 묻지 않게 하려고.\n\n일한 흔적을 남겨두면 다음 선택이 훨씬 가벼워진다."],
+  ["learner_question_map", "질문을 지도처럼 정리한 날", "수업 뒤에 나온 질문을 주제별로 묶어봤다.\n\n비슷한 질문이 세 번 나오면 그건 개인 문제가 아니라 수업 설계 문제다.\n\n다음 자료는 그 질문부터 열어볼 생각이다."],
+  ["consulting_current_job", "상담에서 현재 일을 먼저 들은 이유", "오늘 상담에서는 희망 직무보다 지금 하는 일을 먼저 들었다.\n\n이미 잘하는 일을 새 기술과 어디에 연결할지부터 보려고 했다.\n\n경력 전환은 지우는 일보다 이어 붙이는 일에 더 가깝다."],
+  ["lesson_material_blank", "자료 끝에 빈 슬라이드를 남긴 이유", "이번 강의 자료 맨 끝에는 빈 슬라이드를 하나 남겼다.\n\n수강생이 자기 업무 예시를 적어볼 자리다.\n\n내 사례를 하나 더 보여주는 것보다 그 한 칸이 오래 남는다."],
+  ["meeting_no_deck", "미팅에서 발표 자료를 안 연 날", "오늘 미팅에서는 준비한 발표 자료를 열지 않았다.\n\n먼저 상대가 지금 어디에서 멈췄는지 듣고 싶었다.\n\n도구를 보여주는 일보다 문제를 제대로 듣는 일이 먼저였다."],
+  ["ten_years_small_change", "10년 차에도 바뀌는 설명 방식", "교육 일을 오래 했는데도 오늘 설명 하나를 다시 고쳤다.\n\n내가 이해하기 쉬운 순서와 수강생이 바로 써볼 수 있는 순서는 다를 때가 있다.\n\n익숙한 방식도 현장 앞에서는 계속 가볍게 바꿔둔다."],
+  ["project_close_note", "프로젝트를 닫으며 남긴 메모", "오늘 프로젝트 파일을 닫기 전에 메모 세 줄을 남겼다.\n\n잘된 점보다 다음에 시작할 때 먼저 볼 곳을 적었다.\n\n끝내는 방식이 정리되면 다음 시작도 덜 무겁다."],
+  ["team_decision_record", "작은 팀에서 결정한 한 가지", "오늘 팀과 논의 끝에 기능 하나를 보류했다.\n\n넣을 수는 있었지만 이번 수업 목표와는 거리가 있었다.\n\n작은 팀일수록 무엇을 안 할지 같이 정하는 시간이 필요하다."],
+  ["student_real_use", "수강생이 실제 업무에 써본 화면", "오늘 수강생에게 실제 업무에 써본 화면을 받았다.\n\n완성도보다 자기 방식으로 바꿔 쓴 흔적이 먼저 보였다.\n\n그 한 장이면 다음 수업에서 뭘 더 다뤄야 할지 충분히 알 수 있다."],
+  ["schedule_boundary", "문의 답변 시간을 정해둔 이유", "오늘은 정해둔 시간까지만 문의 답변을 했다.\n\n계속 열어두면 모든 메시지가 급해 보인다.\n\n내일 처리할 일을 남겨둘 줄 알아야 수업 준비 시간도 지킬 수 있다."],
+  ["classroom_question_pause", "질문 하나에 진도를 멈춘 수업", "오늘 수업은 질문 하나 때문에 계획보다 늦게 끝났다.\n\n그 질문을 넘기면 다음 내용도 자기 일이 되지 않을 것 같았다.\n\n진도를 다 채우는 것보다 함께 멈출 곳을 고르는 편이 더 중요할 때가 있다."],
+  ["portfolio_before_after", "포트폴리오의 전후 화면", "수강생 포트폴리오에서 전후 화면을 나란히 보게 했다.\n\n잘 만든 결과보다 무엇을 고쳤는지가 더 분명해졌다.\n\n자기 선택을 설명할 수 있으면 작업의 무게가 달라진다."],
+  ["workshop_room_check", "워크숍 전날 좌석을 다시 본 이유", "워크숍 전날 좌석 배치를 다시 확인했다.\n\n서로 화면을 보여주기 어려운 자리 하나를 발견해서 옮겼다.\n\n수업의 분위기는 시작 전 작은 불편에서 먼저 흔들린다."],
+  ["no_hurry_content", "올리지 않은 글이 더 많았던 주", "이번 주에도 쓴 글 몇 개를 올리지 않았다.\n\n지금 내 이름으로 남기고 싶은 말인지 한 번 더 봤다.\n\n콘텐츠는 쌓이는 속도보다 나중에 다시 읽을 수 있는지가 더 중요하다."],
 ];
 
 function daysBetween(from, to) {
@@ -90,7 +100,7 @@ function recentContentIds(date) {
   }
   if (!fs.existsSync(OUTPUT_ROOT)) return ids;
   for (const day of fs.readdirSync(OUTPUT_ROOT)) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || daysBetween(day, date) <= 0 || daysBetween(day, date) > RECENT_DEDUPE_DAYS) continue;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || daysBetween(day, date) < 0 || daysBetween(day, date) > RECENT_DEDUPE_DAYS) continue;
     const folder = path.join(OUTPUT_ROOT, day);
     for (const file of fs.readdirSync(folder).filter((name) => name.endsWith(".json"))) {
       const draft = readJson(path.join(folder, file), {});
@@ -100,6 +110,16 @@ function recentContentIds(date) {
   return ids;
 }
 
+function existingDraftForSlot(date, slot) {
+  const folder = path.join(OUTPUT_ROOT, date);
+  if (!fs.existsSync(folder)) return "";
+  const prefix = `OFFNOTE-${dateKey(date)}-${slot}-`;
+  const files = fs.readdirSync(folder)
+    .filter((file) => file.startsWith(prefix) && file.endsWith(".json"))
+    .sort();
+  return files.length ? path.join(folder, files[0]) : "";
+}
+
 function pickNote(date, slot) {
   const recent = recentContentIds(date);
   const offset = (dayNumber(date) + (slot === "night" ? 1 : 0)) % NOTES.length;
@@ -107,24 +127,11 @@ function pickNote(date, slot) {
     const [seedId, title, text] = NOTES[(offset + index) % NOTES.length];
     if (!recent.has(seedId)) return { seedId, title, text };
   }
-  throw new Error("최근 21일 안에 재사용하지 않을 오프노트 일상 소재가 부족합니다. 새 소재를 추가한 뒤 다시 실행하세요.");
+  throw new Error("최근 21일 안에 재사용하지 않을 오프노트 기록 소재가 부족합니다. 새 소재를 추가한 뒤 다시 실행하세요.");
 }
 
-const REFLECTION_ENDINGS = [
-  "이렇게 한 번 정리해두면, 다음 작업을 시작할 때 무엇부터 열지 선명해진다.",
-  "오늘 정한 순서는 내일 바뀔 수 있어도, 지금 할 일을 흐리지 않게 해준다.",
-  "예전보다 덜 서두르게 된 건, 이 정도의 속도로도 내가 가는 방향은 흔들리지 않는다는 걸 알아서다.",
-  "일은 계속 바뀌지만, 나한테 맞는 리듬을 알아가는 일은 생각보다 오래 남는다.",
-  "그래서 오늘은 이것만 해도 됐다고 생각한다. 다음 일은 내일의 내가 조금 가볍게 열면 된다.",
-  "그런 날들이 모여서 지금의 일을 만든다고 믿는다. 그래서 굳이 하루를 과하게 채우지 않는다.",
-];
-
-function personalNoteText(note, date, slot) {
-  // 이미 구체적인 장면·판단·마무리가 있는 소재에는 범용적인 여운을 덧붙이지 않는다.
-  if (note.seedId === "say_no_project") return note.text;
-  const ending = REFLECTION_ENDINGS[(dayNumber(date) + (slot === "night" ? 1 : 0)) % REFLECTION_ENDINGS.length];
-  const text = `${note.text}\n\n${ending}`;
-  return text.length <= 500 ? text : text.slice(0, 499).trimEnd() + "…";
+function personalNoteText(note) {
+  return note.text.length <= 500 ? note.text : note.text.slice(0, 499).trimEnd() + "…";
 }
 
 function makeDraft(date, slot) {
@@ -145,18 +152,19 @@ function makeDraft(date, slot) {
     source: "github-actions-offnote-digital-nomad-notes",
     recommended_publish_time: slot === "night" ? "21:30 KST" : "15:30 KST",
     content_mode: "digital_nomad_personal_note",
-    pillar: note.seedId.includes("education") || note.seedId.includes("lesson") || note.seedId.includes("class") ? "ten_year_education_work" : "cool_digital_nomad_daily",
-    threads_text: personalNoteText(note, date, slot),
+    pillar: note.seedId.includes("class") || note.seedId.includes("lesson") || note.seedId.includes("course") || note.seedId.includes("student") || note.seedId.includes("workshop") || note.seedId.includes("consult") ? "ten_year_education_work" : "cool_digital_nomad_daily",
+    threads_text: personalNoteText(note),
     thread_comments: [],
     cardnews_slides: [],
     offnote_tone_profile: {
-      voice: "여유 있고 쿨한 IT 교육업계 10년 차 디지털노마드의 짧은 일상 기록",
+      voice: "IT 교육업계 10년 차 디지털노마드가 실제 장면 뒤에 남기는 여유 있고 쿨한 개인 기록",
+      structure: "구체적인 장면 → 내가 고른 방식 → 과장 없는 판단",
       cta_policy: "일상 글에는 CTA 없음. 자료·강의 안내는 전체 게시물의 10% 이하에서만 별도 소재로 사용.",
-      banned_framing: ["불안", "버텼다", "아무것도 못 했다", "성공 비법", "나처럼 해", "수익 보장"],
+      banned_framing: ["불안", "버텼다", "아무것도 못 했다", "성공 비법", "나처럼 해", "수익 보장", "자기계발 조언"],
     },
     safety_rules: [
       "Do not add a KakaoTalk or Instagram CTA to personal-note posts.",
-      "Do not use anxious hustle, scarcity, or income-guarantee framing.",
+      "Do not use anxious hustle, scarcity, income-guarantee, or generic self-help framing.",
       "Do not reuse the same content_id within 21 days.",
     ],
   };
@@ -164,23 +172,25 @@ function makeDraft(date, slot) {
 
 const date = process.argv[2] || kstDate();
 const slot = process.argv[3] || "evening";
-const draft = makeDraft(date, slot);
 const outDir = path.join(OUTPUT_ROOT, date);
 fs.mkdirSync(outDir, { recursive: true });
-const outPath = path.join(outDir, `${draft.id}.json`);
-const portableOutPath = outPath.replaceAll("\\", "/");
 const createdFlagPath = path.join("outputs", "afterwork-profit", "preview-created.txt");
+const existingSlotPath = existingDraftForSlot(date, slot);
 
-if (fs.existsSync(outPath)) {
-  const existing = readJson(outPath, {});
+if (existingSlotPath) {
+  const existing = readJson(existingSlotPath, {});
   if (new Set(["approved", "pending_approval", "published", "held", "publish_failed", "ready_to_review"]).has(existing.status)) {
-    fs.writeFileSync(path.join("outputs", "afterwork-profit", "latest-draft-path.txt"), `${portableOutPath}\n`, "utf8");
+    const portableExistingPath = existingSlotPath.replaceAll("\\", "/");
+    fs.writeFileSync(path.join("outputs", "afterwork-profit", "latest-draft-path.txt"), `${portableExistingPath}\n`, "utf8");
     fs.writeFileSync(createdFlagPath, "false\n", "utf8");
-    console.log(JSON.stringify({ ok: true, created: false, draft: portableOutPath, id: existing.id, status: existing.status }, null, 2));
+    console.log(JSON.stringify({ ok: true, created: false, draft: portableExistingPath, id: existing.id, status: existing.status }, null, 2));
     process.exit(0);
   }
 }
 
+const draft = makeDraft(date, slot);
+const outPath = path.join(outDir, `${draft.id}.json`);
+const portableOutPath = outPath.replaceAll("\\", "/");
 fs.writeFileSync(outPath, `${JSON.stringify(draft, null, 2)}\n`, "utf8");
 fs.writeFileSync(path.join("outputs", "afterwork-profit", "latest-draft-path.txt"), `${portableOutPath}\n`, "utf8");
 fs.writeFileSync(createdFlagPath, "true\n", "utf8");

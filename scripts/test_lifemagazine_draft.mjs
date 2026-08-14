@@ -906,6 +906,32 @@ test("product-scene lifemagazine draft keeps disclosure in comment, not body", (
   assert.equal(validateLifemagazineDraft(draft).ok, true);
 });
 
+test("lifemagazine product scenes rotate contextual CTAs without repeated boilerplate", () => {
+  const cases = [
+    { name: "케이블 정리 클립", scene: "재택근무 책상에서 충전선이 자꾸 떨어질 때" },
+    { name: "작은 소지품 파우치", scene: "가방 안에서 립밤과 보조배터리를 찾을 때" },
+    { name: "싱크대 수세미 거치대", scene: "설거지 뒤 젖은 수세미를 둘 곳이 없을 때" },
+    { name: "현관 잔물건 정리 트레이", scene: "열쇠와 이어폰이 현관에 자꾸 쌓일 때" },
+  ];
+  const drafts = cases.map((item, index) => generateLifemagazineDraft({
+    date: `2026-08-${String(index + 3).padStart(2, "0")}`,
+    slot: index % 2 ? "evening" : "morning",
+    content_mode: "found_product",
+    product_name: item.name,
+    product_candidate: { product_name: item.name, scene_hint: item.scene },
+    product_links: [{ label: "제품 링크", url: `https://link.coupang.com/a/scene-${index}`, platform: "coupang" }],
+  }));
+
+  const endings = drafts.map((draft) => draft.threads_text.trim().split("\n").at(-1));
+  assert.equal(new Set(endings).size, cases.length);
+  for (const draft of drafts) {
+    assert.doesNotMatch(draft.threads_text, /댓글에서 확인해봐|필요했던 사람은 댓글 상품 정보부터 확인해봐|크기·구성·후기는 링크에서 직접 확인하고/);
+    assert.equal((draft.threads_text.match(/\p{Extended_Pictographic}/gu) || []).length, 1);
+    assert.match(draft.thread_comments.join("\n"), new RegExp(COUPANG_DISCLOSURE.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.equal(validateLifemagazineDraft(draft).ok, true);
+  }
+});
+
 test("lifemagazine daily product generator prefers Telegram manual queue", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "lifemagazine-manual-products-"));
   saveManualProductQueue({

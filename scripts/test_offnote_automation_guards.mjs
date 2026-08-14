@@ -65,14 +65,25 @@ try {
   }
 
   const contentIds = new Set();
-  for (const date of ["2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30"]) {
-    const result = runNode(["scripts/generate_offnote_daily_post.mjs", date, "evening"]);
-    if (result.status !== 0) throw new Error(`personal-note generation failed:\n${result.stderr}\n${result.stdout}`);
-    const draft = readJson(path.join(tmp, JSON.parse(result.stdout).draft));
-    assertOffnotePersonalNote(draft);
-    if (contentIds.has(draft.content_id)) throw new Error(`21-day content dedupe failed for ${draft.content_id}`);
-    contentIds.add(draft.content_id);
+  for (let day = 1; day <= 21; day += 1) {
+    const date = `2026-06-${String(day).padStart(2, "0")}`;
+    for (const slot of ["evening", "night"]) {
+      const result = runNode(["scripts/generate_offnote_daily_post.mjs", date, slot]);
+      if (result.status !== 0) throw new Error(`personal-note generation failed:\n${result.stderr}\n${result.stdout}`);
+      const draft = readJson(path.join(tmp, JSON.parse(result.stdout).draft));
+      assertOffnotePersonalNote(draft);
+      const paragraphs = draft.threads_text.split("\n\n");
+      if (paragraphs.length !== 3 || paragraphs.some((paragraph) => paragraph.trim().length < 15)) {
+        throw new Error(`Offnote draft must keep scene → choice → judgment structure:\n${draft.threads_text}`);
+      }
+      if (/오늘도\s*내\s*리듬|오래\s*가는\s*방식|일하는\s*하루가\s*꽤\s*편해진다/.test(draft.threads_text)) {
+        throw new Error(`Offnote draft returned to a generic abstract ending:\n${draft.threads_text}`);
+      }
+      if (contentIds.has(draft.content_id)) throw new Error(`21-day content dedupe failed for ${draft.content_id}`);
+      contentIds.add(draft.content_id);
+    }
   }
+  if (contentIds.size !== 42) throw new Error(`Expected 42 distinct Offnote scenes, got ${contentIds.size}`);
 
   const badTonePath = path.join(tmp, "outputs", "afterwork-profit", "automation", "2026-05-24", "OFFNOTE-20260524-evening-bad-tone.json");
   writeJson(badTonePath, {
