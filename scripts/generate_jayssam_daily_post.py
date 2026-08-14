@@ -66,6 +66,121 @@ OBSERVATION_SEEDS = [
     ("career_non_linear", "돌아가는 경력이 무의미하지 않은 이유", "진로 특강에서 전공이랑 다른 일을 해도 되냐는 질문을 받는다.\n\n당연히 된다. 다만 이전 경험에서 내가 익힌 방식이 새 일에 어떻게 연결되는지는 설명할 수 있어야 한다. 돌아온 길도 그냥 사라지는 건 아니다.\n\n경력은 직선으로 예쁘게 이어져야만 쓸모 있는 게 아니다. 내가 어떤 문제를 잘 다뤄왔는지가 남는다."),
 ]
 
+PRACTICAL_GUIDES = [
+    (("excel_",), [
+        "실무 파일 받으면 Ctrl + G → 옵션 → 빈 셀부터 확인해봐. 병합 셀과 숫자 서식은 그다음에 보는 게 빠르다.",
+        "수식 넣기 전에 숫자가 왼쪽 정렬돼 있는지부터 봐. 텍스트로 저장된 숫자면 함수가 맞아도 결과가 틀어진다.",
+    ], [
+        "💬 실무 엑셀 파일 열었을 때 제일 당황했던 순간 있으면 댓글로 남겨봐.",
+        "📌 오늘 쓰는 파일 하나만 열고, 빈 셀·병합 셀부터 한 번 체크해봐.",
+        "💬 #N/A 때문에 막혔던 적 있으면 어떤 상황이었는지 남겨봐.",
+    ]),
+    (("ppt_",), [
+        "슬라이드마다 ‘그래서 뭘 결정하면 되지?’를 적어봐. 답이 없는 페이지는 먼저 덜어내야 한다.",
+        "발표 전에는 한 장을 3초만 보고도 핵심이 보이는지 확인해봐. 안 보이면 문장부터 줄이는 게 맞다.",
+    ], [
+        "📌 지금 만들고 있는 PPT 한 장만 열어서, 결론 문장이 있는지 먼저 체크해봐.",
+        "💬 보고 끝나고 제일 자주 받는 질문이 있으면 댓글로 남겨봐.",
+        "📌 다음 발표 자료에서는 한 장에 하나만 남겨보길.",
+    ]),
+    (("hwp_",), [
+        "문서 보내기 전 제목과 소제목만 이어서 읽어봐. 그 순서만으로 내용이 보이지 않으면 본문도 다시 잡아야 한다.",
+        "안내문에는 날짜·장소·대상·신청 방법을 먼저 찾아서 표시해봐. 읽는 사람이 다시 물을 부분이 바로 보인다.",
+    ], [
+        "📌 오늘 보내는 문서 하나가 있으면 제목만 먼저 훑어봐.",
+        "💬 문서 작성할 때 가장 자주 되묻는 질문이 있으면 남겨봐.",
+        "📌 양식을 복사하기 전에 이번 문서의 독자가 누군지 한 줄로 적어봐.",
+    ]),
+    (("photoshop_", "illustrator_"), [
+        "홍보물 한 장에는 폰트를 두 종류까지만 남겨봐. 강조는 색과 크기보다 먼저 정보의 순서에서 나온다.",
+        "만들기 전에 ‘이걸 본 사람이 3초 안에 알아야 할 한 가지’를 먼저 적어봐. 그 문장이 디자인 기준이 된다.",
+    ], [
+        "📌 지금 쓰는 홍보물에서 폰트가 몇 개인지 먼저 세어봐.",
+        "💬 광고 만들 때 제일 결정하기 어려운 정보가 뭔지 댓글로 남겨봐.",
+        "📌 오늘 만든 이미지 하나에서 가장 중요한 문장만 남기고 나머지를 한 번 덜어내봐.",
+    ]),
+    (("video_", "youtube_", "creator_"), [
+        "효과 넣기 전에 오디오 파형부터 봐. 말없는 구간과 ‘어…’ 하는 부분만 잘라내도 영상 리듬이 확 달라진다.",
+        "업로드 전에 첫 5초만 따로 봐. 이 영상이 누구의 어떤 문제를 해결하는지 바로 안 보이면 도입부터 다시 잡아야 한다.",
+    ], [
+        "💬 영상 편집에서 제일 오래 붙잡고 있는 작업이 뭔지 댓글로 남겨봐.",
+        "📌 다음 영상은 효과 하나 넣기 전에 말없는 구간부터 먼저 잘라봐.",
+        "💬 제목과 내용이 어긋났던 영상 경험이 있으면 남겨봐.",
+    ]),
+    (("sns_", "smallbiz_", "marketing_"), [
+        "올리기 전에 손님이 바로 찾을 가격·위치·예약 방법 중 하나가 빠지지 않았는지 체크해봐. 예쁜 이미지보다 그 정보가 먼저다.",
+        "홍보 문장을 쓴 뒤에는 ‘그래서 왜 지금 여기여야 하지?’를 붙여봐. 답이 없으면 상품 설명부터 다시 잡아야 한다.",
+    ], [
+        "📌 오늘 올릴 홍보글 하나에서 손님 질문 한 가지를 먼저 답해봐.",
+        "💬 내 가게 홍보에서 제일 설명하기 어려운 부분이 있으면 댓글로 남겨봐.",
+        "📌 손님 입장에서 홍보물 한 번 읽고, 가격·위치·예약 방법이 바로 보이는지 체크해봐.",
+    ]),
+    (("career_", "jobtalk_"), [
+        "관심 있는 채용공고 세 개를 열고 담당 업무와 우대사항만 적어봐. 그다음에 필요한 자격증을 고르면 늦지 않다.",
+        "이력서에 적을 경험 하나를 골라서 ‘문제-내가 한 행동-결과’ 순서로 세 줄만 써봐. 거기서부터 내 이야기가 시작된다.",
+    ], [
+        "💬 지금 준비 중인 직무나 가고 싶은 분야가 있으면 댓글로 남겨봐.",
+        "📌 자격증 검색하기 전에 채용공고 세 개부터 열어보길.",
+        "💬 이력서에서 설명하기 제일 어려운 경험이 있으면 남겨봐.",
+    ]),
+    (("three_d_",), [
+        "출력 전에 슬라이서 미리보기에서 레이어와 지지대를 먼저 확인해봐. 화면에서 멀쩡해도 실제 출력은 다르게 무너질 수 있다.",
+        "첫 출력이 틀어지면 바로 새 파일부터 만들지 말고, 휜 지점과 바닥에서 떨어진 지점부터 표시해봐. 다음 수정이 훨씬 빨라진다.",
+    ], [
+        "💬 3D 출력에서 제일 많이 실패하는 부분이 있으면 댓글로 남겨봐.",
+        "📌 다음 출력 전에 미리보기에서 지지대부터 한 번 확인해봐.",
+        "💬 첫 실패를 어떻게 수정했는지 경험 있으면 나눠봐.",
+    ]),
+    (("practical_", "office_", "class_owner_"), [
+        "막히는 순간에는 지금까지 한 것, 안 된 것, 해보고 싶은 걸 한 줄씩 적어봐. 질문도 답도 훨씬 빨라진다.",
+        "같은 질문이 세 번 나오면 개인 문제가 아니라 수업이나 업무 흐름의 문제일 수 있다. 그 지점부터 다시 봐야 한다.",
+    ], [
+        "💬 실무에서 혼자 막혔던 순간이 있으면 어떤 파일이었는지 남겨봐.",
+        "📌 오늘 막힌 일 하나를 ‘한 것-안 된 것-다음 시도’로 적어봐.",
+        "💬 수업이나 업무에서 반복되는 질문이 있으면 댓글로 알려줘.",
+    ]),
+]
+
+
+SPECIFIC_PRACTICAL_GUIDES = {
+    "excel_certificate_gap": (
+        "처음 보는 파일이면 Ctrl + G → 옵션 → 빈 셀부터 확인해봐. 병합 셀을 풀고, 숫자가 텍스트로 들어간 곳을 찾는 게 함수보다 먼저다.",
+        "💬 실무 엑셀 파일 열었을 때 제일 당황했던 순간이 언제였는지 댓글로 남겨봐.",
+    ),
+    "photoshop_pretty_not_sell": (
+        "홍보물은 한 페이지에 폰트 두 종류까지만 남겨봐. 가장 중요한 한 문장만 키우고, 나머지는 색보다 정보 순서로 정리해야 한다.",
+        "📌 지금 쓰는 홍보물이나 카드뉴스가 있으면 폰트 종류가 몇 개인지 먼저 체크해봐.",
+    ),
+    "youtube_title_promise": (
+        "제목을 정하기 전에 ‘이 영상이 해결해주는 한 가지’를 적어봐. 그 문장이 안 나오면 제목보다 기획부터 다시 잡아야 한다.",
+        "💬 영상 제목과 내용이 어긋났던 경험이 있으면 댓글로 남겨봐.",
+    ),
+    "career_certificate_question": (
+        "관심 있는 채용공고 세 개를 열고 담당 업무와 우대사항을 그대로 적어봐. 그다음에 필요한 자격증을 고르면 돈과 시간을 덜 버린다.",
+        "📩 지금 준비 중인 직무나 가고 싶은 분야가 있으면 댓글로 남겨봐. 먼저 봐야 할 공고 기준부터 같이 짚어볼게.",
+    ),
+}
+
+
+def variant_index(seed_id: str, date_text: str, slot: str, size: int, salt: str) -> int:
+    signature = f"{seed_id}|{date_text}|{slot}|{salt}"
+    return sum((index + 1) * ord(character) for index, character in enumerate(signature)) % size
+
+
+def practical_finish(seed_id: str, date_text: str, slot: str) -> tuple[str, str]:
+    if seed_id in SPECIFIC_PRACTICAL_GUIDES:
+        return SPECIFIC_PRACTICAL_GUIDES[seed_id]
+    for prefixes, tips, ctas in PRACTICAL_GUIDES:
+        if seed_id.startswith(prefixes):
+            tip = tips[variant_index(seed_id, date_text, slot, len(tips), "tip")]
+            cta = ctas[variant_index(seed_id, date_text, slot, len(ctas), "cta")]
+            return tip, cta
+    return (
+        "오늘 다루는 도구가 어떤 문제를 덜어주는지 한 번만 더 적어봐. 그 기준이 있어야 배우는 순서도 정리된다.",
+        "💬 지금 배우는 도구로 해결하고 싶은 일이 있으면 댓글로 남겨봐.",
+    )
+
+
 ANGLES = [("afternoon", "교육 현장 메모"), ("night", "원장님의 수업 생각")]
 
 
@@ -181,9 +296,11 @@ def write_draft(topic: dict, date_text: str, slot: str) -> Path:
             (OUT_ROOT / "latest-draft-path.txt").write_text(f"{draft_path.as_posix()}\n", encoding="utf-8")
             return draft_path
 
-    thread_text = topic["text"]
-    if len(thread_text) > 480:
-        thread_text = thread_text[:479].rstrip() + "…"
+    tip, cta = practical_finish(topic["seed_id"], date_text, slot)
+    thread_text = f"{topic['text']}\n\n📌 {tip}\n\n{cta}"
+    if len(thread_text) > 500:
+        available_body = 500 - len(tip) - len(cta) - len("\n\n📌 \n\n…")
+        thread_text = f"{topic['text'][:available_body].rstrip()}…\n\n📌 {tip}\n\n{cta}"
     draft = {
         "id": draft_id,
         "content_id": topic["content_id"],
@@ -194,7 +311,7 @@ def write_draft(topic: dict, date_text: str, slot: str) -> Path:
         "title": topic["title"],
         "topic": topic["title"],
         "pillar": topic["pillar"],
-        "content_type": "education_philosophy_personal_note",
+        "content_type": "practical_education_participation_note",
         "angle": topic["angle"],
         "threads_text": thread_text,
         "thread_comments": [],
@@ -204,8 +321,8 @@ def write_draft(topic: dict, date_text: str, slot: str) -> Path:
         "created_at": datetime.now(KST).isoformat(timespec="seconds"),
         "editorial_rules": {
             "voice": "현장 경험이 있는 교육 원장이 교육과 실무의 간극을 담담하고 분명하게 짚는 말투",
-            "structure": "실제 질문 또는 장면 → 교육과 현장의 간극 → 목적·문제 해결 기준을 먼저 묻는 교육자로서의 소신",
-            "avoid": ["아동·학부모 소재", "뉴스 요약", "AI 설명체", "억지 CTA", "같은 종결어 반복"],
+            "structure": "실제 실수 또는 질문 → 교육과 현장의 간극 → 바로 써먹을 점검 팁 → 자연스러운 댓글 또는 행동 유도",
+            "avoid": ["아동·학부모 소재", "뉴스 요약", "AI 설명체", "과장된 약속", "같은 종결어 반복"],
             "dedupe_days": RECENT_DEDUPE_DAYS,
         },
     }

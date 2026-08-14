@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 import shutil
 import tempfile
@@ -120,6 +121,40 @@ def test_twenty_one_days_of_two_daily_posts_do_not_reuse_a_course_scene() -> Non
         shutil.rmtree(temp_root, ignore_errors=True)
 
 
+def test_generated_posts_add_a_specific_tip_and_natural_action_prompt() -> None:
+    temp_root = Path(tempfile.mkdtemp(prefix="jayssam-practical-finish-"))
+    original_out_root = MODULE.OUT_ROOT
+    original_publish_log = MODULE.PUBLISH_LOG
+    try:
+        MODULE.OUT_ROOT = temp_root / "outputs" / "automation"
+        MODULE.PUBLISH_LOG = temp_root / "outputs" / "meta-publish-log.json"
+        for seed_id in ("excel_certificate_gap", "photoshop_pretty_not_sell", "youtube_title_promise", "career_certificate_question"):
+            topic = next(
+                item for item in (
+                    {
+                        "content_id": MODULE.content_id_for(source_id, "afternoon"),
+                        "seed_id": source_id,
+                        "title": title,
+                        "text": text,
+                        "angle": "교육 현장 메모",
+                        "pillar": MODULE.pillar_for(source_id),
+                    }
+                    for source_id, title, text in MODULE.OBSERVATION_SEEDS
+                ) if item["seed_id"] == seed_id
+            )
+            draft_path = MODULE.write_draft(topic, "2026-09-15", "afternoon")
+            draft = json.loads(draft_path.read_text(encoding="utf-8"))
+            text = draft["threads_text"]
+            assert "📌 " in text, seed_id
+            assert any(marker in text for marker in ("💬 ", "📌 ", "📩 ")), seed_id
+            assert len(text) <= 500, seed_id
+            assert "인 거지" not in text, seed_id
+    finally:
+        MODULE.OUT_ROOT = original_out_root
+        MODULE.PUBLISH_LOG = original_publish_log
+        shutil.rmtree(temp_root, ignore_errors=True)
+
+
 def test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps() -> None:
     seeds = {seed_id: text for seed_id, _, text in MODULE.OBSERVATION_SEEDS}
     assert "도구함 위치" in seeds["excel_certificate_gap"]
@@ -148,6 +183,7 @@ if __name__ == "__main__":
     test_same_day_slots_use_different_course_materials()
     test_recent_seed_is_blocked_even_when_the_slot_name_changes()
     test_twenty_one_days_of_two_daily_posts_do_not_reuse_a_course_scene()
+    test_generated_posts_add_a_specific_tip_and_natural_action_prompt()
     test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps()
     test_pillars_reflect_practical_education_marketing_career_and_owner_judgment()
     print('{"ok": true, "guard": "jayssam course spectrum and owner-voice content quality passes"}')
