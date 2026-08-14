@@ -27,7 +27,7 @@ BANNED_EXPLANATORY_PHRASES = (
     "링크는 댓글",
 )
 BANNED_CHILD_CENTRIC_TERMS = ("학부모", "부모님", "우리 애", "가방 멘")
-BANNED_TEMPLATE_TONE = ("짚어볼게", "정리해야 한다", "체크해봐", "확인해봐", "같이 짚어")
+BANNED_TEMPLATE_TONE = ("정리해야 한다", "같이 짚어", "핵심을 짚어보자")
 BANNED_DISRESPECTFUL_TONE = ("쓰레기 데이터", "아무 의미 없다", "당연하지", "어이없었던", "봐라", "찾아라", "쳐내야", "스킵당", "어그로", "낚여서", "종이 쪼가리")
 REQUIRED_PILLARS = {
     "practical_tool_education",
@@ -167,6 +167,14 @@ def test_generated_posts_add_a_specific_tip_and_natural_action_prompt() -> None:
                 assert text.count("편집 프로그램을 켜기") == 1
             if seed_id == "career_certificate_question":
                 assert text.count("채용공고 3개") == 1
+                assert "댓글로 알려줘~!" in text
+                assert "같이 찾아보자ㅎㅎ" in text
+            if seed_id == "excel_certificate_gap":
+                assert "언제였어?? 알려줘~!" in text
+            if seed_id == "photoshop_pretty_not_sell":
+                assert "확인해봐!!" in text
+            if seed_id == "youtube_title_promise":
+                assert "알려줘~!" in text
     finally:
         MODULE.OUT_ROOT = original_out_root
         MODULE.PUBLISH_LOG = original_publish_log
@@ -183,7 +191,7 @@ def test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps() -> N
     assert "설득력" in seeds["photoshop_pretty_not_sell"]
     assert "도구일 뿐" in seeds["photoshop_pretty_not_sell"]
     assert "시청자와 하는 약속" in seeds["youtube_title_promise"]
-    assert "의미를 갖기 어렵다" in seeds["youtube_title_promise"]
+    assert "의미가 크지 않아" in seeds["youtube_title_promise"]
 
 
 def test_pillars_reflect_practical_education_marketing_career_and_owner_judgment() -> None:
