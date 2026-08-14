@@ -151,6 +151,11 @@ def test_generated_posts_add_a_specific_tip_and_natural_action_prompt() -> None:
             draft_path = MODULE.write_draft(topic, "2026-09-15", "afternoon")
             draft = json.loads(draft_path.read_text(encoding="utf-8"))
             text = draft["threads_text"]
+            assert draft["topic_tag"] == MODULE.topic_tag_for(seed_id)
+            assert 1 <= len(draft["topic_tag"]) <= 50
+            assert "#" not in draft["topic_tag"]
+            assert draft["editorial_rules"]["strategy_skill"] == "jayssam-threads-content-strategy"
+            assert "한 개만 API에 전달" in draft["editorial_rules"]["topic_tag_policy"]
             assert any(marker in text for marker in ("💬 ", "📌 ", "📩 ")), seed_id
             assert text.rstrip().split("\n")[-1].startswith(("💬 ", "📌 ", "📩 ")), seed_id
             assert len(text) <= 500, seed_id
@@ -194,6 +199,27 @@ def test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps() -> N
     assert "의미가 크지 않아" in seeds["youtube_title_promise"]
 
 
+def test_every_course_seed_maps_to_one_relevant_threads_topic_tag() -> None:
+    expected = {
+        "excel_certificate_gap": "엑셀 실무",
+        "photoshop_pretty_not_sell": "포토샵",
+        "illustrator_logo_before_shape": "일러스트레이터",
+        "video_effect_not_story": "영상 편집",
+        "youtube_title_promise": "유튜브",
+        "career_certificate_question": "진로 상담",
+        "three_d_pen_result": "3D펜",
+        "three_d_printer_file": "3D프린터",
+        "smallbiz_product_explanation": "소상공인 마케팅",
+    }
+    for seed_id, expected_tag in expected.items():
+        assert MODULE.topic_tag_for(seed_id) == expected_tag
+    for seed_id, _, _ in MODULE.OBSERVATION_SEEDS:
+        topic_tag = MODULE.topic_tag_for(seed_id)
+        assert 1 <= len(topic_tag) <= 50
+        assert "#" not in topic_tag
+        assert "," not in topic_tag
+
+
 def test_pillars_reflect_practical_education_marketing_career_and_owner_judgment() -> None:
     pillars = {MODULE.pillar_for(seed_id) for seed_id, _, _ in MODULE.OBSERVATION_SEEDS}
     assert REQUIRED_PILLARS.issubset(pillars)
@@ -212,5 +238,6 @@ if __name__ == "__main__":
     test_twenty_one_days_of_two_daily_posts_do_not_reuse_a_course_scene()
     test_generated_posts_add_a_specific_tip_and_natural_action_prompt()
     test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps()
+    test_every_course_seed_maps_to_one_relevant_threads_topic_tag()
     test_pillars_reflect_practical_education_marketing_career_and_owner_judgment()
     print('{"ok": true, "guard": "jayssam course spectrum and owner-voice content quality passes"}')

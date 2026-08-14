@@ -250,6 +250,28 @@ def pillar_for(seed_id: str) -> str:
     return "education_business_judgment"
 
 
+def topic_tag_for(seed_id: str) -> str:
+    """Return one precise Threads topic tag; the publisher sends it separately from body text."""
+    tag_rules = (
+        (("excel_", "office_"), "엑셀 실무"),
+        (("ppt_",), "파워포인트"),
+        (("hwp_",), "한글 문서"),
+        (("photoshop_",), "포토샵"),
+        (("illustrator_",), "일러스트레이터"),
+        (("video_",), "영상 편집"),
+        (("youtube_", "creator_"), "유튜브"),
+        (("sns_", "smallbiz_", "marketing_"), "소상공인 마케팅"),
+        (("career_", "jobtalk_"), "진로 상담"),
+        (("three_d_pen_",), "3D펜"),
+        (("three_d_printer_", "three_d_design_"), "3D프린터"),
+        (("practical_", "class_owner_"), "직무 교육"),
+    )
+    for prefixes, tag in tag_rules:
+        if seed_id.startswith(prefixes):
+            return tag
+    return "실무 교육"
+
+
 def pick_topic(date_text: str, slot: str) -> dict:
     seed_number = int(date_text.replace("-", "")) + (1 if slot == "night" else 0)
     recent_seed_ids = {seed_id_from_identity(identity) for identity in recent_content_ids(date_text)} - {""}
@@ -312,6 +334,7 @@ def write_draft(topic: dict, date_text: str, slot: str) -> Path:
         "status": "approved",
         "title": topic["title"],
         "topic": topic["title"],
+        "topic_tag": topic_tag_for(topic["seed_id"]),
         "pillar": topic["pillar"],
         "content_type": "practical_education_participation_note",
         "angle": topic["angle"],
@@ -322,8 +345,10 @@ def write_draft(topic: dict, date_text: str, slot: str) -> Path:
         "source_note": "제이쌤의 실무 교육·소상공인 마케팅·진로 강의 현장에서 나온 생각",
         "created_at": datetime.now(KST).isoformat(timespec="seconds"),
         "editorial_rules": {
+            "strategy_skill": "jayssam-threads-content-strategy",
             "voice": "수강생·사장님에게 친근하게 말하되, 공격하거나 하대하지 않는 다정하고 단단한 원장님 반말",
             "structure": "실제 수강생 질문 또는 실수 → 현장의 이유 → 바로 해볼 수 있는 팁 → ‘알려줘~!’처럼 자연스러운 댓글·행동 유도",
+            "topic_tag_policy": "본문 해시태그 나열 없이 내용과 가장 가까운 Threads 토픽 태그 한 개만 API에 전달",
             "avoid": ["아동·학부모 소재", "뉴스 요약", "AI 설명체", "학습지식 해설", "하대형 명령", "공격적·비하 표현", "과장된 약속", "같은 종결어 반복"],
             "dedupe_days": RECENT_DEDUPE_DAYS,
         },
