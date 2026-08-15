@@ -3,7 +3,8 @@
     "18115690142485910",
     "18122586970754232",
     "18027226832853229",
-    "18017791763871748"
+    "18017791763871748",
+    "18113993497980352"
   ],
   "events": [
     {
@@ -45,8 +46,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-15T03:08:38.210Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18113993497980352",
+      "post_id": "18134176270624697",
+      "username": "lifemagazine_",
+      "text": "댓글에 상품 정보 모아둘게!!\n상품명: 꿈꾸는두부 심플 사각 쁘띠스카프 4종 세트\n확인 당시 표시가: 18,210원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=5233709887&itemId=7373944089&vendorItemId=74665108525&traceid=V0-113-814f0e3d01244392\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-15T09:45:20.820Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-15T08:49:45.930Z",
+  "updated_at": "2026-08-15T09:45:21.978Z",
   "timezone": "Asia/Seoul"
 }
