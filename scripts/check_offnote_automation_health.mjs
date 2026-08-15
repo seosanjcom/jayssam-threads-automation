@@ -128,13 +128,13 @@ const todayDrafts = findJsonFiles(todayDir)
   .filter(Boolean)
   .filter((item) => item.data.account === "offnote.kr");
 
-const activeDraft = todayDrafts.find((item) => ["pending_approval", "published"].includes(item.data.status));
+const activeDraft = todayDrafts.find((item) => ["pending_approval", "approved", "published", "held_missing_detail", "held_validation_failed"].includes(item.data.status));
 if (activeDraft) {
-  notes.push(`Today draft: ${activeDraft.data.id} ${activeDraft.data.status}`);
+  notes.push(`Today draft: ${activeDraft.data.id} ${activeDraft.data.status}${activeDraft.data.hold_reason ? ` (${activeDraft.data.hold_reason})` : ""}`);
 } else if (isBeforeDailyPreviewWindow()) {
   notes.push(`Today draft: not created yet before 17:30 KST preview window (${today})`);
 } else {
-  errors.push(`No pending/published offnote draft found for ${today}.`);
+  errors.push(`No approved/published/intentional-hold offnote record found for ${today}.`);
 }
 
 const text = errors.length
@@ -149,4 +149,3 @@ if (errors.length) {
 }
 
 console.log(text);
-

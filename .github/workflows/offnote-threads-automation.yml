@@ -117,6 +117,7 @@ jobs:
           node --check scripts/verify_media_urls.mjs
           node --check scripts/check_offnote_automation_health.mjs
           node --check scripts/test_offnote_automation_guards.mjs
+          node --check scripts/prepare_offnote_daily_facts.mjs
           node scripts/test_offnote_automation_guards.mjs
           python -m py_compile scripts/generate_offnote_cardnews.py
 
@@ -130,7 +131,13 @@ jobs:
             echo "Existing draft found; preview generation skipped."
             exit 0
           fi
-          node scripts/validate_offnote_draft.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+          DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+          DRAFT_STATUS="$(node -e "const fs=require('fs');console.log(JSON.parse(fs.readFileSync(process.argv[1],'utf8')).status)" "$DRAFT_PATH")"
+          node scripts/validate_offnote_draft.mjs "$DRAFT_PATH"
+          if [[ "$DRAFT_STATUS" == "held_missing_detail" || "$DRAFT_STATUS" == "held_validation_failed" ]]; then
+            echo "Offnote slot intentionally held: $DRAFT_STATUS"
+            exit 0
+          fi
           node scripts/send_offnote_auto_publish_notice.mjs "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           echo "Cardnews skipped by default. Generate manually only for high-density posts."
 
@@ -155,7 +162,13 @@ jobs:
         run: |
           node scripts/generate_offnote_daily_post.mjs "$(TZ=Asia/Seoul date +%F)" "${{ steps.route.outputs.slot }}"
           if [[ "$(cat outputs/afterwork-profit/preview-created.txt)" == "true" ]]; then
-            node scripts/validate_offnote_draft.mjs "$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+            DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt)"
+            DRAFT_STATUS="$(node -e "const fs=require('fs');console.log(JSON.parse(fs.readFileSync(process.argv[1],'utf8')).status)" "$DRAFT_PATH")"
+            node scripts/validate_offnote_draft.mjs "$DRAFT_PATH"
+            if [[ "$DRAFT_STATUS" == "held_missing_detail" || "$DRAFT_STATUS" == "held_validation_failed" ]]; then
+              echo "Offnote slot intentionally held: $DRAFT_STATUS"
+              exit 0
+            fi
             echo "Cardnews skipped by default. Publishing text and reply comments only."
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -182,6 +195,11 @@ jobs:
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'manual_publish'
         run: |
           DRAFT_PATH="$(cat outputs/afterwork-profit/latest-draft-path.txt | tr '\\' '/')"
+          DRAFT_STATUS="$(node -e "const fs=require('fs');console.log(JSON.parse(fs.readFileSync(process.argv[1],'utf8')).status)" "$DRAFT_PATH")"
+          if [[ "$DRAFT_STATUS" != "approved" && "$DRAFT_STATUS" != "pending_approval" ]]; then
+            echo "Offnote manual publish requires approved or pending_approval draft, got $DRAFT_STATUS"
+            exit 1
+          fi
           node scripts/validate_offnote_draft.mjs "$DRAFT_PATH"
           THREADS_REQUIRE_MEDIA=false THREADS_DAILY_POST_LIMIT=2 THREADS_MIN_INTERVAL_HOURS=2.5 node scripts/threads_publish.mjs "$DRAFT_PATH"
           node -e "const fs=require('fs');const p=process.argv[1];const d=JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,''));d.status='published';d.published_at=new Date().toISOString();d.manual_publish=true;fs.writeFileSync(p,JSON.stringify(d,null,2)+'\n','utf8');" "$DRAFT_PATH"

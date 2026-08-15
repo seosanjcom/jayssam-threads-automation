@@ -46,6 +46,19 @@ const bannedPositioning = [/나처럼\s*해/, /나처럼\s*수익화/, /성공�
 const thinAbstractPatterns = [/^오늘\s*(?:일|작업|회의).*(?:길|많|늦)/m, /^생각보다\s*일이\s*길/m, /^회의가\s*예상보다\s*길/m];
 
 const errors = [];
+const intentionalHold = ["held_missing_detail", "held_validation_failed"].includes(String(draft.status || ""));
+if (intentionalHold) {
+  if (draft.account !== "offnote.kr") errors.push(`account must be offnote.kr, got ${draft.account}`);
+  if (!String(draft.hold_reason || "").trim()) errors.push("held offnote draft must include hold_reason");
+  if (String(draft.status) === "held_missing_detail" && body.trim()) errors.push("held_missing_detail draft must not contain generated Threads text");
+  if ((draft.thread_comments || []).length > 0 || (draft.cardnews_slides || []).length > 0) errors.push("held offnote draft must not include promotional expansions");
+  if (errors.length) {
+    console.error(JSON.stringify({ ok: false, file, errors }, null, 2));
+    process.exit(1);
+  }
+  console.log(JSON.stringify({ ok: true, file, held: true, status: draft.status, hold_reason: draft.hold_reason }, null, 2));
+  process.exit(0);
+}
 if (draft.account !== "offnote.kr") errors.push(`account must be offnote.kr, got ${draft.account}`);
 if (!["pending_approval", "approved", "published", "held", "publish_failed", "ready_to_review"].includes(String(draft.status || ""))) errors.push(`unsupported offnote status: ${draft.status}`);
 if (draft.content_mode !== "digital_nomad_personal_note" && draft.content_mode !== "offnote_personal_note") errors.push(`offnote draft must use personal-note content mode, got ${draft.content_mode || "empty"}`);

@@ -121,6 +121,14 @@ if (alreadyPublished) {
   process.exit(0);
 }
 
+const intentionalHold = slotDrafts
+  .filter((item) => ["held_missing_detail", "held_validation_failed"].includes(item.data.status))
+  .sort((a, b) => b.mtime - a.mtime)[0];
+if (intentionalHold) {
+  console.log(`Offnote ${slot} slot intentionally held for ${date}: ${intentionalHold.data.hold_reason || intentionalHold.data.status}`);
+  process.exit(0);
+}
+
 if (!pending) {
   console.log(`No pending offnote draft to auto-publish for ${date} ${slot}.`);
   process.exit(0);
@@ -176,4 +184,3 @@ published.auto_publish = {
 writeJson(pending.file, published);
 await sendMessage(`[오프노트 자동 발행 완료]\n${draft.id}\n본문과 댓글 확장까지 발행했습니다.`);
 console.log(result.stdout);
-

@@ -9,7 +9,6 @@ const OUTPUT_ROOT = path.join("outputs", "afterwork-profit", "automation");
 const PUBLISH_LOG = path.join("outputs", "afterwork-profit", "meta-publish-log.json");
 const DAILY_FACTS_ROOT = path.join("outputs", "afterwork-profit", "offnote-daily-facts");
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const LENGTH_SEQUENCE = ["one", "short", "medium", "one", "short", "long", "short", "medium", "one", "short", "medium", "long", "one", "short", "medium", "short", "one", "long", "short", "medium"];
 
 function kstDate(input = new Date()) {
   const parts = new Intl.DateTimeFormat("en-CA", { timeZone: KST, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(input);
@@ -24,8 +23,7 @@ function readJson(file, fallback) {
 }
 
 // 실제 입력이 없을 때는 ‘오늘 무슨 일이 있었다’고 꾸며내지 않는다.
-// 검증된 짧은 관찰형만 사용하며, 실제 사실 입력이 있으면 그것을 최우선으로 쓴다.
-const EVERGREEN_RECORDS = readJson(path.join(SCRIPT_DIR, "offnote_evergreen_observations.json"), []);
+// 보조 관찰형으로 일일 발행 수를 채우지 않고 held_missing_detail로 정상 보류한다.
 
 function daysBetween(from, to) {
   return Math.floor((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86400000);
@@ -85,7 +83,7 @@ function existingDraftForSlot(date, slot) {
 
 function normalizeActualFacts(date) {
   const raw = readJson(path.join(DAILY_FACTS_ROOT, `${date}.json`), []);
-  const items = Array.isArray(raw) ? raw : Array.isArray(raw.records) ? raw.records : [];
+  const items = Array.isArray(raw) ? raw : Array.isArray(raw.facts) ? raw.facts : Array.isArray(raw.records) ? raw.records : [];
   return items.map((item, index) => {
     const value = typeof item === "string" ? { text: item } : item || {};
     return {
@@ -112,9 +110,8 @@ function countBy(rows, key) {
 function pickNote(date, slot) {
   const recentIds = recentContentIds(date);
   const history = readRecentDrafts(date);
-  const actual = normalizeActualFacts(date).filter((note) => !recentIds.has(note.id));
-  const pool = (actual.length ? actual : EVERGREEN_RECORDS).filter((note) => !recentIds.has(String(note.id)));
-  if (!pool.length) throw new Error("최근 21일 안에 재사용하지 않을 오프노트 기록 소재가 부족합니다. 새 실제 입력 또는 관찰형 소재를 추가하세요.");
+  const pool = normalizeActualFacts(date).filter((note) => !recentIds.has(note.id));
+  if (!pool.length) return null;
 
   const endings = countBy(history, "record_ending_family");
   const clusters = countBy(history, "subject_cluster");
@@ -122,7 +119,6 @@ function pickNote(date, slot) {
   const lastTwoFamilies = history.slice(0, 2).map((row) => String(row.record_ending_family || ""));
   const recentClusters = history.slice(0, 4).map((row) => String(row.subject_cluster || ""));
   const offset = (dayNumber(date) + (slot === "night" ? 17 : 0)) % pool.length;
-  const preferredBand = LENGTH_SEQUENCE[(dayNumber(date) + (slot === "night" ? 1 : 0)) % LENGTH_SEQUENCE.length];
 
   return pool
     .map((note, index) => {
@@ -135,7 +131,6 @@ function pickNote(date, slot) {
       if ((clusters.get(cluster) || 0) >= 5) score += 35;
       if ((endings.get(family) || 0) >= 5) score += 24;
       if ((bands.get(band) || 0) >= 7) score += 16;
-      if (band !== preferredBand) score += 42;
       return { note, score };
     })
     .sort((left, right) => left.score - right.score || String(left.note.id).localeCompare(String(right.note.id)))[0].note;
@@ -147,6 +142,34 @@ function personalNoteText(note) {
 
 function makeDraft(date, slot) {
   const note = pickNote(date, slot);
+  if (!note) {
+    return {
+      id: `OFFNOTE-${dateKey(date)}-${slot}-held-missing-detail`,
+      content_id: `held-missing-detail-${dateKey(date)}-${slot}`,
+      account: "offnote.kr",
+      account_name: "오프노트",
+      project: "afterwork-profit",
+      date,
+      slot,
+      topic: "일일 사실 입력 없음",
+      topic_tag: "운영보류",
+      status: "held_missing_detail",
+      held_at: new Date().toISOString(),
+      hold_reason: "No verified daily fact input. Do not invent a personal event or publish a generic observation.",
+      created_at: new Date().toISOString(),
+      source: "github-actions-offnote-daily-fact-pipeline",
+      source_mode: "missing_daily_fact",
+      content_mode: "digital_nomad_personal_note",
+      pillar: "offnote_unfinished_work_record",
+      record_shape: "held",
+      subject_cluster: "missing_input",
+      record_ending_family: "held",
+      line_band: "held",
+      threads_text: "",
+      thread_comments: [],
+      cardnews_slides: [],
+    };
+  }
   const text = personalNoteText(note);
   const family = endingFamily(note);
   return {
@@ -161,7 +184,7 @@ function makeDraft(date, slot) {
     topic_tag: note.tag,
     status: "approved",
     created_at: new Date().toISOString(),
-    source: "github-actions-offnote-digital-nomad-notes",
+    source: "github-actions-offnote-daily-fact-pipeline",
     recommended_publish_time: slot === "night" ? "21:30 KST" : "15:30 KST",
     content_mode: "digital_nomad_personal_note",
     pillar: "offnote_unfinished_work_record",
@@ -175,7 +198,7 @@ function makeDraft(date, slot) {
     cardnews_slides: [],
     offnote_tone_profile: {
       voice: "일을 능숙하게 굴리지만 매번 답을 알고 있는 척하지 않는 사람의 작업·이동 기록",
-      structure: "실제 입력이 있으면 그 사실을 우선하고, 없으면 사실을 주장하지 않는 짧은 관찰형으로 제한",
+      structure: "검증된 실제 일일 입력이 있을 때만 그 사실을 기반으로 발행 후보를 만듦",
       ending_policy: "미결정·완료·관찰·다음 생각·실제 질문을 분산하며, 교훈과 독자 교육으로 닫지 않음",
       ending_variation: "해요체·평서형·명사형·생략형을 상황에 따라 섞고 같은 끝맺음 계열의 연속을 피함",
       cta_policy: "일상 글에는 CTA 없음. 질문은 실제 판단이 필요한 날에만 하나까지 허용.",
@@ -183,7 +206,7 @@ function makeDraft(date, slot) {
     },
     safety_rules: [
       "Do not invent a daily event, time, place, client, performance number, or detailed factual claim.",
-      "Use actual daily fact input first; otherwise use only a curated evergreen observation that makes no false daily claim.",
+      "Use verified daily fact input only. If input is missing, hold the slot and do not publish a generic observation.",
       "Do not add a KakaoTalk, Instagram, materials, or generic comment CTA.",
       "Do not add a lesson, value statement, or polished conclusion after the event.",
       "Avoid repeating subject clusters, length bands, or ending families across recent records.",
