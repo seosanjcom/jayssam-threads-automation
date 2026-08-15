@@ -1,0 +1,53 @@
+{
+  "id": "OFFNOTE-20260815-night-git-status",
+  "content_id": "git-status",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "date": "2026-08-15",
+  "slot": "night",
+  "topic": "git status",
+  "topic_tag": "개발일상",
+  "status": "approved",
+  "created_at": "2026-08-15T11:11:10.473Z",
+  "source": "github-actions-offnote-digital-nomad-notes",
+  "recommended_publish_time": "21:30 KST",
+  "content_mode": "digital_nomad_personal_note",
+  "pillar": "offnote_unfinished_work_record",
+  "record_shape": "one_line",
+  "source_mode": "curated_evergreen_observation",
+  "subject_cluster": "development",
+  "record_ending_family": "fragment",
+  "line_band": "one",
+  "threads_text": "git status는 생각보다 자주 봄",
+  "thread_comments": [],
+  "cardnews_slides": [],
+  "offnote_tone_profile": {
+    "voice": "일을 능숙하게 굴리지만 매번 답을 알고 있는 척하지 않는 사람의 작업·이동 기록",
+    "structure": "실제 입력이 있으면 그 사실을 우선하고, 없으면 사실을 주장하지 않는 짧은 관찰형으로 제한",
+    "ending_policy": "미결정·완료·관찰·다음 생각·실제 질문을 분산하며, 교훈과 독자 교육으로 닫지 않음",
+    "ending_variation": "해요체·평서형·명사형·생략형을 상황에 따라 섞고 같은 끝맺음 계열의 연속을 피함",
+    "cta_policy": "일상 글에는 CTA 없음. 질문은 실제 판단이 필요한 날에만 하나까지 허용.",
+    "banned_framing": [
+      "불안",
+      "버텼다",
+      "아무것도 못 했다",
+      "성공 비법",
+      "나처럼 해",
+      "수익 보장",
+      "자기계발 조언"
+    ]
+  },
+  "safety_rules": [
+    "Do not invent a daily event, time, place, client, performance number, or detailed factual claim.",
+    "Use actual daily fact input first; otherwise use only a curated evergreen observation that makes no false daily claim.",
+    "Do not add a KakaoTalk, Instagram, materials, or generic comment CTA.",
+    "Do not add a lesson, value statement, or polished conclusion after the event.",
+    "Avoid repeating subject clusters, length bands, or ending families across recent records.",
+    "Do not reuse the same content_id within 21 days."
+  ],
+  "telegram_auto_notice_slots": [
+    "night"
+  ],
+  "telegram_auto_notice_sent_at": "2026-08-15T11:11:11.350Z"
+}

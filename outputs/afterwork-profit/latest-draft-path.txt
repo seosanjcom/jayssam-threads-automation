@@ -1,1 +1,1 @@
-outputs/afterwork-profit/automation/2026-08-15/OFFNOTE-20260815-evening-content-after-post.json
+outputs/afterwork-profit/automation/2026-08-15/OFFNOTE-20260815-night-git-status.json
