@@ -2,7 +2,8 @@
   "processed_reply_ids": [
     "18115690142485910",
     "18122586970754232",
-    "18027226832853229"
+    "18027226832853229",
+    "18017791763871748"
   ],
   "events": [
     {
@@ -34,8 +35,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-13T10:32:26.129Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18017791763871748",
+      "post_id": "17865807420643426",
+      "username": "lifemagazine_",
+      "text": "제품 정보는 댓글에 깔끔히 정리해둘게!!\n상품명: 고르나라 젓가락고르기 정리기 약 160개정리\n확인 당시 표시가: 16,500원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=9631771757&itemId=28770480251&vendorItemId=95708360473&traceid=V0-113-0ff1dc6cf4a7d58e\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-15T03:08:38.210Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-15T01:53:25.334Z",
+  "updated_at": "2026-08-15T03:08:39.095Z",
   "timezone": "Asia/Seoul"
 }
