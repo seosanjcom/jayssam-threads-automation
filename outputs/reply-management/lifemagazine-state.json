@@ -4,7 +4,8 @@
     "18122586970754232",
     "18027226832853229",
     "18017791763871748",
-    "18113993497980352"
+    "18113993497980352",
+    "18424184371196148"
   ],
   "events": [
     {
@@ -56,8 +57,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-15T09:45:20.820Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18424184371196148",
+      "post_id": "18063658535773698",
+      "username": "lifemagazine_",
+      "text": "링크랑 기본 정보는 여기 적어둘게!!\n상품명: 디케이켈슨 복스알 콤비네이션 스패너 소켓렌치 수공구 세트 블랙\n확인 당시 표시가: 8,900원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=9042344163&itemId=26531873449&vendorItemId=93234559891&traceid=V0-113-311bf690c8e53d3e\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-16T03:16:38.672Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-16T02:00:19.772Z",
+  "updated_at": "2026-08-16T03:16:39.818Z",
   "timezone": "Asia/Seoul"
 }
