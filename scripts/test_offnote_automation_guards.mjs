@@ -34,7 +34,7 @@ function prepareFacts(date, facts) {
 }
 
 try {
-  for (const name of ["generate_offnote_daily_post.mjs", "publish_offnote_due.mjs", "validate_offnote_draft.mjs", "prepare_offnote_daily_facts.mjs"]) copyScript(name);
+  for (const name of ["generate_offnote_daily_post.mjs", "publish_offnote_due.mjs", "threads_publish.mjs", "validate_offnote_draft.mjs", "prepare_offnote_daily_facts.mjs"]) copyScript(name);
 
   const missing = runNode(["scripts/generate_offnote_daily_post.mjs", "2026-05-23", "evening"]);
   if (missing.status !== 0) throw new Error(`missing-detail hold creation failed:\n${missing.stderr}\n${missing.stdout}`);
@@ -60,6 +60,20 @@ try {
   for (const draftPath of [draftPathFrom(evening), draftPathFrom(night)]) {
     const valid = runNode(["scripts/validate_offnote_draft.mjs", draftPath]);
     if (valid.status !== 0) throw new Error(`Expected fact-backed draft to validate:\n${valid.stderr}\n${valid.stdout}`);
+  }
+
+  const shortFactPublish = runNode(["scripts/threads_publish.mjs", draftPathFrom(evening)], {
+    env: {
+      ...process.env,
+      THREADS_AUTO_PUBLISH: "true",
+      THREADS_ACCESS_TOKEN: "test-token",
+      THREADS_SAFETY_MODE: "false",
+      THREADS_REQUIRE_MEDIA: "true",
+      THREADS_VERIFY_PROFILE_BEFORE_PUBLISH: "false",
+    },
+  });
+  if (shortFactPublish.status === 0 || !shortFactPublish.stderr.includes("without required media_urls")) {
+    throw new Error(`Expected short fact-backed record to pass text safety and stop only at required-media guard:\n${shortFactPublish.stderr}\n${shortFactPublish.stdout}`);
   }
 
   const publishedEvening = { ...eveningDraft, status: "published", published_at: "2026-05-24T08:29:48.793Z" };

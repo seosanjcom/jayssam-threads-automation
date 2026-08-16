@@ -143,16 +143,17 @@ function assertPublishableDraft(draft) {
   const isLifemagazine = draft.account === "lifemagazine_";
 
   if (draft.account === "offnote.kr") {
-    if (threadsText.length < 160) {
-      throw new Error(`Safety stop: offnote.kr threads_text is too short (${threadsText.length}/160).`);
+    const trimmedText = threadsText.trim();
+    if (trimmedText.length < 8) {
+      throw new Error(`Safety stop: offnote.kr record is too short (${trimmedText.length}/8).`);
     }
     if (threadsText.length > 500) {
       throw new Error(`Safety stop: offnote.kr threads_text exceeds Threads API limit (${threadsText.length}/500).`);
     }
-    if (hangul < 120) {
+    if (hangul < 8) {
       throw new Error(`Safety stop: too little Korean text detected (${hangul}).`);
     }
-    if (han > hangul * 0.25 || questionMarks > 5 || replacement > 0 || suspiciousFragments.length > 0) {
+    if (han > hangul * 0.1 || questionMarks > 1 || replacement > 0 || suspiciousFragments.length > 0) {
       throw new Error("Safety stop: possible mojibake detected in offnote.kr draft.");
     }
   }
@@ -346,4 +347,3 @@ if (safetyMode) {
 }
 
 console.log(JSON.stringify({ creation: create, publish, replies: replyPublishes }, null, 2));
-
