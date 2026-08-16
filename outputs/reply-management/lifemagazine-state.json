@@ -6,7 +6,8 @@
     "18017791763871748",
     "18113993497980352",
     "18424184371196148",
-    "17901727413480844"
+    "17901727413480844",
+    "18118393321926250"
   ],
   "events": [
     {
@@ -78,8 +79,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-16T09:46:51.785Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18118393321926250",
+      "post_id": "18180811489413647",
+      "username": "jins_news",
+      "text": "이건 나중에 다시 봐야겠다 스하리 부탁드려요~ 소통해요~",
+      "action": "manual_review",
+      "reason": "unrecognised_question",
+      "detected_at": "2026-08-16T13:05:30.202Z",
+      "reply_status": "sent_for_review"
     }
   ],
-  "updated_at": "2026-08-16T11:39:53.884Z",
+  "updated_at": "2026-08-16T13:05:33.207Z",
   "timezone": "Asia/Seoul"
 }
