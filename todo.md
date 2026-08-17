@@ -136,6 +136,11 @@
 - [x] A remote preview run now creates a real job and passes; scheduled execution is still pending separate confirmation.
 
 ## Schedule trigger isolation probe
-- [ ] Add a temporary minimal schedule-only workflow to distinguish repository scheduler issues from the Jayssam job definition.
-- [ ] Observe one scheduled tick through the GitHub UI or a refreshed remote run list.
+- [x] Add a temporary minimal schedule-only workflow to distinguish repository scheduler issues from the Jayssam job definition.
+- [x] Observe a real scheduled tick through Jayssam run `32035181306`; the repository scheduler is functioning, while the newly-added probe had zero runs before removal.
 - [ ] Remove the probe after diagnosis so it cannot create duplicate automation.
+
+## GitHub sudo reauthentication blocker
+- [x] Wait for the user to complete the GitHub sudo confirmation using their account's normal authentication method.
+- [x] Resume the waiting CLI session only after the user confirms authentication completion.
+- [x] Re-check remote probe and Jayssam schedule runs after GitHub CLI authentication is restored.
