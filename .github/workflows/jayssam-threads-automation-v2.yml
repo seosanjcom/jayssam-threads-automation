@@ -178,9 +178,9 @@ jobs:
           git pull --rebase --autostash origin master
           git push
 
-      - name: Watch publish status
-        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'watchdog'
-        # run: # run: run: node scripts/check_daily_publish_status.mjs "${{ steps.route.outputs.slot }}" # Disabled to stop Telegram spam # Disabled to stop Telegram spam
+      - name: Watch publish status (disabled)
+        if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'watchdog' && false
+        run: echo "Watchdog is intentionally disabled to avoid duplicate Telegram notifications."
 
       - name: Notify failure
         if: failure()
