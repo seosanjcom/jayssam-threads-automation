@@ -42,7 +42,7 @@ function prepareFacts(date, facts) {
 }
 
 try {
-  for (const name of ["generate_offnote_daily_post.mjs", "publish_offnote_due.mjs", "threads_publish.mjs", "validate_offnote_draft.mjs", "prepare_offnote_daily_facts.mjs"]) copyScript(name);
+  for (const name of ["offnote_schedule.mjs", "generate_offnote_daily_post.mjs", "publish_offnote_due.mjs", "threads_publish.mjs", "validate_offnote_draft.mjs", "prepare_offnote_daily_facts.mjs"]) copyScript(name);
   copyFile("scripts/offnote_evergreen_observations.json");
 
   const missing = runNode(["scripts/generate_offnote_daily_post.mjs", "2026-05-23", "evening"]);

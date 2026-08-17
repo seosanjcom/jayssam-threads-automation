@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadSchedule } from "./offnote_schedule.mjs";
 
 const KST = "Asia/Seoul";
 const RECENT_DEDUPE_DAYS = 21;
@@ -75,8 +76,15 @@ function existingDraftForSlot(date, slot) {
   const folder = path.join(OUTPUT_ROOT, date);
   if (!fs.existsSync(folder)) return "";
   const prefix = `OFFNOTE-${dateKey(date)}-${slot}-`;
-  const files = fs.readdirSync(folder).filter((file) => file.startsWith(prefix) && file.endsWith(".json")).sort();
-  return files.length ? path.join(folder, files[0]) : "";
+  const files = fs.readdirSync(folder)
+    .filter((file) => file.startsWith(prefix) && file.endsWith(".json"))
+    .map((file) => path.join(folder, file))
+    .filter((file) => {
+      const draft = readJson(file, {});
+      return !["superseded_by_manual_input", "deleted", "deleted_by_operator"].includes(draft.status);
+    })
+    .sort();
+  return files.length ? files[0] : "";
 }
 
 function normalizeActualFacts(date) {
@@ -92,7 +100,9 @@ function normalizeActualFacts(date) {
       text: String(value.text || "").trim(),
       subject_cluster: String(value.subject_cluster || "actual_work"),
       ending_family: String(value.ending_family || "input_record"),
-      source_mode: "daily_fact_input",
+      source_mode: String(value.source_mode || (value.source === "telegram_manual_input" ? "telegram_manual_input" : "daily_fact_input")),
+      priority: Boolean(value.priority || value.source_mode === "telegram_manual_input"),
+      priority_slot: String(value.priority_slot || ""),
     };
   }).filter((item) => item.text.length >= 8 && item.text.length <= 500);
 }
@@ -124,7 +134,10 @@ function pickNote(date, slot) {
   const recentIds = recentContentIds(date);
   const history = readRecentDrafts(date);
   const actualPool = normalizeActualFacts(date).filter((note) => !recentIds.has(note.id));
-  const pool = actualPool.length ? actualPool : loadEvergreenPool().filter((note) => !recentIds.has(note.id));
+  const priorityPool = actualPool.filter((note) => note.priority || note.source_mode === "telegram_manual_input");
+  const slotPriorityPool = priorityPool.filter((note) => !note.priority_slot || note.priority_slot === slot);
+  const selectedActualPool = slotPriorityPool.length ? slotPriorityPool : actualPool;
+  const pool = selectedActualPool.length ? selectedActualPool : loadEvergreenPool().filter((note) => !recentIds.has(note.id));
   if (!pool.length) {
     const fallbackPool = loadEvergreenPool();
     if (!fallbackPool.length) return null;
@@ -160,6 +173,7 @@ function personalNoteText(note) {
 
 function makeDraft(date, slot) {
   const note = pickNote(date, slot);
+  const schedule = loadSchedule(process.cwd());
   if (!note) {
     return null;
   }
@@ -178,11 +192,12 @@ function makeDraft(date, slot) {
     status: "approved",
     created_at: new Date().toISOString(),
     source: "github-actions-offnote-auto-generator",
-    recommended_publish_time: slot === "night" ? "21:30 KST" : "15:30 KST",
+    recommended_publish_time: `${schedule.slots[slot] || (slot === "night" ? "21:30" : "15:30")} KST`,
     content_mode: "digital_nomad_personal_note",
     pillar: "offnote_unfinished_work_record",
     record_shape: note.shape,
     source_mode: note.source_mode || "curated_evergreen_observation",
+    manual_input_id: note.source_mode === "telegram_manual_input" ? note.id : "",
     subject_cluster: note.subject_cluster || "unknown",
     record_ending_family: family,
     line_band: lineBand(text),
@@ -210,6 +225,16 @@ fs.mkdirSync(outDir, { recursive: true });
 
 const existingPath = existingDraftForSlot(date, slot);
 let draft = existingPath ? readJson(existingPath, null) : null;
+const availableFacts = normalizeActualFacts(date);
+const hasPriorityForSlot = availableFacts.some((note) =>
+  (note.priority || note.source_mode === "telegram_manual_input") && (!note.priority_slot || note.priority_slot === slot)
+);
+if (draft && hasPriorityForSlot && draft.source_mode !== "telegram_manual_input") {
+  draft.status = "superseded_by_manual_input";
+  draft.superseded_at = new Date().toISOString();
+  fs.writeFileSync(existingPath, JSON.stringify(draft, null, 2), "utf8");
+  draft = null;
+}
 if (!draft || String(draft.status || "").startsWith("deleted_")) {
   draft = makeDraft(date, slot);
   if (draft) {

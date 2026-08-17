@@ -1,0 +1,11 @@
+{
+  "timezone": "Asia/Seoul",
+  "slots": {
+    "evening": "15:30",
+    "night": "21:30"
+  },
+  "preview_lead_minutes": 90,
+  "health_time": "22:15",
+  "updated_at": "",
+  "updated_by": "initial-default"
+}

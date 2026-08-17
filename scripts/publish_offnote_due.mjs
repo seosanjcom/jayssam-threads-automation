@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { loadSchedule } from "./offnote_schedule.mjs";
 
 function loadEnv() {
   if (!fs.existsSync(".env")) return;
@@ -18,6 +19,18 @@ function readJson(file) {
 function writeJson(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function markManualInputUsed(root, draft) {
+  if (!draft.manual_input_id) return;
+  const factsPath = path.join(root, "outputs", "afterwork-profit", "offnote-daily-facts", `${draft.date}.json`);
+  if (!fs.existsSync(factsPath)) return;
+  const facts = readJson(factsPath);
+  const rows = Array.isArray(facts) ? facts : Array.isArray(facts.facts) ? facts.facts : [];
+  const updated = rows.map((fact) => fact?.id === draft.manual_input_id
+    ? { ...fact, consumed: true, consumed_at: new Date().toISOString(), consumed_by_draft: draft.id }
+    : fact);
+  writeJson(factsPath, Array.isArray(facts) ? updated : { ...facts, facts: updated });
 }
 
 function findJsonFiles(dir) {
@@ -179,8 +192,10 @@ published.status = "published";
 published.published_at = new Date().toISOString();
 published.auto_publish = {
   slot,
+  scheduled_time: `${loadSchedule(root).slots[slot] || (slot === "night" ? "21:30" : "15:30")} KST`,
   approved_at: draft.approved_at,
 };
 writeJson(pending.file, published);
+markManualInputUsed(root, published);
 await sendMessage(`[오프노트 자동 발행 완료]\n${draft.id}\n본문과 댓글 확장까지 발행했습니다.`);
 console.log(result.stdout);

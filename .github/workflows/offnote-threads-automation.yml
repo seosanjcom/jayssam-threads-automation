@@ -26,14 +26,10 @@ on:
         required: false
         type: string
   schedule:
-    # KST 14:00, 20:00 - generate and announce the upcoming automatic post.
-    - cron: "0 5 * * *"
-    - cron: "0 11 * * *"
-    # KST 15:30, 21:30 - automatically publish each daily slot.
-    - cron: "30 6 * * *"
-    - cron: "30 12 * * *"
-    # KST 22:15 - health watchdog.
-    - cron: "15 13 * * *"
+    # GitHub Actions runs on a 5-minute cadence. The runtime schedule in
+    # config/offnote-schedule.json decides whether this run previews,
+    # publishes, checks health, or exits without doing work.
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
@@ -65,6 +61,7 @@ jobs:
       THREADS_CAROUSEL_ENABLED: "false"
       OFFNOTE_TELEGRAM_BOT_TOKEN: ${{ secrets.OFFNOTE_TELEGRAM_BOT_TOKEN }}
       OFFNOTE_TELEGRAM_CHAT_ID: ${{ secrets.OFFNOTE_TELEGRAM_CHAT_ID }}
+      OFFNOTE_TELEGRAM_DRY_RUN: "false"
 
     steps:
       - name: Checkout
@@ -77,6 +74,24 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Process Telegram commands and manual records
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: node scripts/telegram_check_offnote_approvals.mjs
+
+      - name: Commit Telegram input and schedule changes
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f config/offnote-schedule.json outputs/afterwork-profit/offnote-daily-facts outputs/afterwork-profit/telegram-approval-state.json outputs/afterwork-profit/automation/offnote-telegram-approval-checker-last-error.json || true
+          if git diff --cached --quiet; then
+            echo "No Telegram input or schedule change to commit."
+          else
+            git commit -m "Record Offnote Telegram input and schedule settings"
+            git pull --rebase
+            git push
+          fi
+
       - name: Resolve mode
         id: route
         shell: bash
@@ -88,14 +103,11 @@ jobs:
             exit 0
           fi
 
-          case "${{ github.event.schedule }}" in
-            "0 5 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "30 6 * * *") echo "mode=auto_publish" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "0 11 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "30 12 * * *") echo "mode=auto_publish" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            "15 13 * * *") echo "mode=health" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-            *) echo "mode=skip" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"; echo "run=false" >> "$GITHUB_OUTPUT" ;;
-          esac
+          node scripts/offnote_schedule.mjs | tee /tmp/offnote-route.txt
+          grep '^mode=' /tmp/offnote-route.txt >> "$GITHUB_OUTPUT"
+          grep '^slot=' /tmp/offnote-route.txt >> "$GITHUB_OUTPUT"
+          mode="$(grep '^mode=' /tmp/offnote-route.txt | cut -d= -f2-)"
+          if [[ "$mode" == "skip" ]]; then echo "run=false" >> "$GITHUB_OUTPUT"; else echo "run=true" >> "$GITHUB_OUTPUT"; fi
 
       - name: Setup card image runtime
         if: steps.route.outputs.run == 'true' && false
@@ -108,6 +120,8 @@ jobs:
       - name: Validate scripts
         if: steps.route.outputs.run == 'true'
         run: |
+          node --check scripts/offnote_schedule.mjs
+          node --check scripts/telegram_check_offnote_approvals.mjs
           node --check scripts/generate_offnote_daily_post.mjs
           node --check scripts/publish_offnote_due.mjs
           node --check scripts/send_offnote_auto_publish_notice.mjs
@@ -118,7 +132,10 @@ jobs:
           node --check scripts/check_offnote_automation_health.mjs
           node --check scripts/test_offnote_automation_guards.mjs
           node --check scripts/prepare_offnote_daily_facts.mjs
+          node --check scripts/send_offnote_auto_publish_notice.mjs
+          node --check scripts/test_offnote_telegram_controls.mjs
           node scripts/test_offnote_automation_guards.mjs
+          node scripts/test_offnote_telegram_controls.mjs
           python -m py_compile scripts/generate_offnote_cardnews.py
 
       - name: Create automatic publishing draft

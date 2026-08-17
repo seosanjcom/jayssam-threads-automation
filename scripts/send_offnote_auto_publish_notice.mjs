@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { loadSchedule } from "./offnote_schedule.mjs";
 
 function loadEnv() {
   if (!fs.existsSync(".env")) return;
@@ -28,7 +29,8 @@ function findJsonFiles(dir) {
 }
 
 function scheduledTime(slot) {
-  return slot === "night" ? "21:30 KST" : "15:30 KST";
+  const schedule = loadSchedule(process.cwd());
+  return `${schedule.slots[slot] || (slot === "night" ? "21:30" : "15:30")} KST`;
 }
 
 loadEnv();
