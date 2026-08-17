@@ -15,7 +15,7 @@
       "minIntervalHours": 6,
       "defaultSlots": ["15:00 KST", "21:00 KST"],
       "telegramEnvPrefix": "TELEGRAM",
-      "workflowName": "jayssam-threads-automation.yml",
+      "workflowName": "jayssam-threads-automation-v2.yml",
       "editorialRulesPath": "docs/jayssam-automation-roadmap.md"
     },
     {

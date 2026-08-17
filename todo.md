@@ -115,3 +115,11 @@
 - [ ] Add regression tests for all three account failure paths and recovery behavior.
 - [ ] Run remote dry-run/health validation and confirm no new failures.
 - [ ] Report the verified root causes without claiming success where no public post occurred.
+
+## Workflow registration mismatch discovered after push
+- [ ] Confirm GitHub API still reports the old Jayssam workflow without workflow_dispatch after BOM removal.
+- [ ] Force a clean workflow registration by renaming the Jayssam workflow file and updating account metadata references.
+- [ ] Preserve the same workflow name, 15:00/21:00 routing, and preview-only validation path.
+- [ ] Push the registration fix and verify GitHub exposes workflow_dispatch for the new workflow ID.
+- [ ] Run the new Jayssam workflow in preview mode and confirm jobs/steps complete.
+- [ ] Check new scheduled runs and ensure old invalid registration no longer creates failures.
