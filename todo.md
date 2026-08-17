@@ -117,15 +117,25 @@
 - [ ] Report the verified root causes without claiming success where no public post occurred.
 
 ## Workflow registration mismatch discovered after push
-- [ ] Confirm GitHub API still reports the old Jayssam workflow without workflow_dispatch after BOM removal.
-- [ ] Force a clean workflow registration by renaming the Jayssam workflow file and updating account metadata references.
-- [ ] Preserve the same workflow name, 15:00/21:00 routing, and preview-only validation path.
-- [ ] Push the registration fix and verify GitHub exposes workflow_dispatch for the new workflow ID.
-- [ ] Run the new Jayssam workflow in preview mode and confirm jobs/steps complete.
+- [x] Confirm GitHub API still reports the old Jayssam workflow without workflow_dispatch after BOM removal.
+- [x] Force a clean workflow registration by renaming the Jayssam workflow file and updating account metadata references.
+- [x] Preserve the same workflow name, 15:00/21:00 routing, and preview-only validation path.
+- [x] Push the registration fix and verify GitHub exposes workflow_dispatch for the new workflow ID.
+- [x] Run the new Jayssam workflow in preview mode and confirm jobs/steps complete.
 - [ ] Check new scheduled runs and ensure old invalid registration no longer creates failures.
 
+### Additional parser findings
+- [x] Removed two U+0080 control characters from a mojibake comment at line 172; local YAML parsing then exposed the next error.
+- [x] Replaced the empty `Watch publish status` step at line 181 with a valid disabled `run` step.
+- [x] GitHub preview run `32030704604` completed successfully with Resolve mode, validation, and Telegram preview steps passing.
+
 ## Dispatch registration still unresolved
-- [ ] Investigate why GitHub API returns HTTP 422 for workflow_dispatch even though the raw YAML and new workflow ID show the trigger block.
-- [ ] Compare the new workflow against a minimal known-valid workflow trigger shape, including input types and YAML parsing.
-- [ ] Use GitHub workflow metadata/check APIs to distinguish registration lag from parser or repository policy failure.
-- [ ] Do not claim the Jayssam workflow is fixed until a remote preview run creates a real job and passes.
+- [x] Investigate why GitHub API returned HTTP 422 for workflow_dispatch even though the raw YAML and new workflow ID showed the trigger block.
+- [x] Compare the new workflow trigger shape with the working Offnote workflow and run local YAML parsing.
+- [x] Use GitHub workflow metadata/check APIs and the UI to distinguish parser failure from repository policy failure.
+- [x] A remote preview run now creates a real job and passes; scheduled execution is still pending separate confirmation.
+
+## Schedule trigger isolation probe
+- [ ] Add a temporary minimal schedule-only workflow to distinguish repository scheduler issues from the Jayssam job definition.
+- [ ] Observe one scheduled tick through the GitHub UI or a refreshed remote run list.
+- [ ] Remove the probe after diagnosis so it cannot create duplicate automation.
