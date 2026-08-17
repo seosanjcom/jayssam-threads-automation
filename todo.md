@@ -47,3 +47,14 @@
 - [ ] Work in progress.
 - [ ] Awaiting validation.
 - [ ] Completed.
+
+## Immediate Telegram validation run
+- [ ] Run an urgent manual-input dry-run without calling the Threads publish API.
+- [ ] Verify a valid manual message is stored as the next-slot priority input.
+- [ ] Verify inputs shorter than 8 characters are rejected.
+- [ ] Verify inputs longer than 500 characters are rejected.
+- [ ] Verify product, affiliate, and link-like inputs are rejected.
+- [ ] Verify `/시간` returns the current two-slot schedule.
+- [ ] Verify `/시간 HH:MM HH:MM` persists a valid schedule change.
+- [ ] Verify invalid or equal times do not change the stored schedule.
+- [ ] Report the exact results and easy Telegram examples.

@@ -188,7 +188,7 @@ function saveManualFact(root, text, update) {
   const cleanText = cleanManualText(text);
   if (cleanText.length < 8) throw new Error("수동 기록은 8자 이상 보내줘.");
   if (cleanText.length > 500) throw new Error("수동 기록은 500자 이내로 보내줘.");
-  if (/쿠팡\s*상품|상품\s*링크|제휴\s*링크|카톡방|댓글.*(?:남겨|알려|달아)/.test(cleanText)) {
+  if (/(?:https?:\/\/|www\.)\S+/i.test(cleanText) || /쿠팡\s*상품|상품\s*링크|제휴\s*링크|카톡방|댓글.*(?:남겨|알려|달아)/.test(cleanText)) {
     throw new Error("오프노트 기록에는 상품 링크·제휴 문구·댓글 유도 문장을 넣을 수 없어.");
   }
 

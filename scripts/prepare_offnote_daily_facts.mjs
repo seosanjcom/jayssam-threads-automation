@@ -24,7 +24,7 @@ const normalized = facts.map((value, index) => {
   const id = String(item.id || `fact-${date.replaceAll("-", "")}-${index + 1}`);
   if (text.length < 8 || text.length > 500) throw new Error(`Fact ${index + 1} must be between 8 and 500 characters.`);
   if (ids.has(id)) throw new Error(`Duplicate fact id: ${id}`);
-  if (/쿠팡\s*상품|상품\s*링크|제휴\s*링크|카톡방|댓글.*(?:남겨|알려|달아)/.test(text)) throw new Error(`Fact ${id} is not an offnote personal record.`);
+  if (/(?:https?:\/\/|www\.)\S+/i.test(text) || /쿠팡\s*상품|상품\s*링크|제휴\s*링크|카톡방|댓글.*(?:남겨|알려|달아)/.test(text)) throw new Error(`Fact ${id} is not an offnote personal record.`);
   ids.add(id);
   return {
     id,
