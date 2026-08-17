@@ -169,7 +169,7 @@ jobs:
           git commit -m "Add generated Jayssam assets $(TZ=Asia/Seoul date +%F)-${{ steps.route.outputs.slot }}" || true
           git pull --rebase --autostash origin master
           git push
-          # ?쒖씠?ㅼ? ?띿뒪???꾩슜 諛쒗뻾?대떎. 移대뱶?댁뒪 ?낅줈?쑣룸??붿뼱 URL 寃利앹쓣 嫄곗튂吏 ?딅뒗??
+          # Publish the text draft only; this path does not require card-media upload or URL verification.
           node scripts/publish_latest_approved.mjs "$DRAFT_PATH"
           node scripts/mark_jayssam_news_queue_posted.mjs "$DRAFT_PATH"
           node scripts/send_telegram_message.mjs "[?쒖씠??寃뚯떆 ?꾨즺] ${{ steps.route.outputs.slot }} ?щ’ 寃뚯떆 ?꾨즺"

@@ -123,3 +123,9 @@
 - [ ] Push the registration fix and verify GitHub exposes workflow_dispatch for the new workflow ID.
 - [ ] Run the new Jayssam workflow in preview mode and confirm jobs/steps complete.
 - [ ] Check new scheduled runs and ensure old invalid registration no longer creates failures.
+
+## Dispatch registration still unresolved
+- [ ] Investigate why GitHub API returns HTTP 422 for workflow_dispatch even though the raw YAML and new workflow ID show the trigger block.
+- [ ] Compare the new workflow against a minimal known-valid workflow trigger shape, including input types and YAML parsing.
+- [ ] Use GitHub workflow metadata/check APIs to distinguish registration lag from parser or repository policy failure.
+- [ ] Do not claim the Jayssam workflow is fixed until a remote preview run creates a real job and passes.
