@@ -37,6 +37,12 @@ try {
   copyFile("scripts/offnote_evergreen_observations.json");
   copyFile("config/offnote-schedule.json");
 
+  const routeCli = runNode(["scripts/offnote_schedule.mjs"]);
+  requireSuccess(routeCli, "Offnote schedule CLI route");
+  if (!/^mode=(?:skip|preview|auto_publish|health)\nslot=(?:evening|night)\n/m.test(routeCli.stdout)) {
+    throw new Error(`Schedule CLI did not emit parseable route output:\n${routeCli.stdout}`);
+  }
+
   const fixture = path.join(tmp, "telegram-updates.json");
   writeJson(fixture, [
     { update_id: 101, message: { chat: { id: 777 }, text: "/시간" } },

@@ -58,3 +58,10 @@
 - [ ] Verify `/시간 HH:MM HH:MM` persists a valid schedule change.
 - [ ] Verify invalid or equal times do not change the stored schedule.
 - [ ] Report the exact results and easy Telegram examples.
+
+## Live status follow-up: Resolve mode failure
+- [ ] Fix the CLI entry-point detection in scripts/offnote_schedule.mjs so direct execution always prints mode and slot.
+- [ ] Add a deterministic regression test for `node scripts/offnote_schedule.mjs` CLI output.
+- [ ] Re-run Offnote guard, Telegram controls, and full 52-test suite.
+- [ ] Push the routing fix to master without including unrelated temporary files.
+- [ ] Confirm a post-fix GitHub Actions run passes Resolve mode and report today's actual status honestly.

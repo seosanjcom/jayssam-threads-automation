@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 export const KST = "Asia/Seoul";
 export const SCHEDULE_PATH = path.join("config", "offnote-schedule.json");
@@ -144,6 +145,15 @@ export function resolveRoute(input = new Date(), root = process.cwd()) {
 function withinFiveMinuteWindow(current, target) {
   const distance = (current - target + 1440) % 1440;
   return distance >= 0 && distance < 5;
+}
+
+const isDirectExecution = Boolean(process.argv[1]) && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+if (isDirectExecution) {
+  const route = resolveRoute(new Date(), process.cwd());
+  console.log(`mode=${route.mode}`);
+  console.log(`slot=${route.slot}`);
+  console.log(`schedule_evening=${route.schedule.slots.evening}`);
+  console.log(`schedule_night=${route.schedule.slots.night}`);
 }
 
 export default {
