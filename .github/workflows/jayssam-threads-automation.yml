@@ -1,4 +1,4 @@
-﻿name: Jayssam Threads Automation
+name: Jayssam Threads Automation
 
 on:
   workflow_dispatch:
@@ -30,17 +30,10 @@ on:
         required: false
         default: ""
   schedule:
-    # KST 10:05 - collect previous reaction metrics
+    # KST 10:05 - collect previous reaction metrics.
     - cron: "5 1 * * *"
-    # KST 13:00 post route: 10:30 preview, 13:00 publish.
-    - cron: "30 1 * * *"
-    - cron: "0 4 * * *"
-    - cron: "20 4 * * *"
-    # KST 20:00 post route: 17:00 preview, 20:00 publish.
-    - cron: "0 8 * * *"
-    - cron: "0 11 * * *"
-    - cron: "20 11 * * *"
-    # ?뱀젙 ?쒓컖 cron 吏???? ?쒓컙 ?먯젙 紐⑤뱢???덉젙 ?쒓컖??吏???щ’留??덉쟾?섍쾶 ?ъ떆?꾪븳??
+    # A single ten-minute cadence handles GitHub schedule delay and routes
+    # the configured 15:00 and 21:00 KST slots at runtime.
     - cron: "*/10 * * * *"
 
 permissions:
@@ -100,16 +93,7 @@ jobs:
             echo "slot=$SLOT" >> "$GITHUB_OUTPUT"
             echo "run=$RUN" >> "$GITHUB_OUTPUT"
           else
-            case "${{ github.event.schedule }}" in
-              "5 1 * * *") echo "mode=metrics" >> "$GITHUB_OUTPUT"; echo "slot=lunch" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "30 1 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 4 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "20 4 * * *") echo "mode=watchdog" >> "$GITHUB_OUTPUT"; echo "slot=afternoon" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 8 * * *") echo "mode=preview" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "0 11 * * *") echo "mode=publish" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              "20 11 * * *") echo "mode=watchdog" >> "$GITHUB_OUTPUT"; echo "slot=night" >> "$GITHUB_OUTPUT"; echo "run=true" >> "$GITHUB_OUTPUT" ;;
-              *) node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT" ;;
-            esac
+            node scripts/github_resolve_run.mjs "${{ github.event.schedule }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Create runtime env
@@ -140,6 +124,7 @@ jobs:
           node --check scripts/send_telegram_message.mjs
           node --check scripts/mark_jayssam_news_queue_posted.mjs
           node --check scripts/check_daily_publish_status.mjs
+          node --test scripts/test_jayssam_schedule_routing.mjs
 
       - name: Collect Threads metrics
         if: steps.route.outputs.run == 'true' && steps.route.outputs.mode == 'metrics'

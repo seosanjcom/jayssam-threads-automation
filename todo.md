@@ -65,3 +65,53 @@
 - [ ] Re-run Offnote guard, Telegram controls, and full 52-test suite.
 - [ ] Push the routing fix to master without including unrelated temporary files.
 - [ ] Confirm a post-fix GitHub Actions run passes Resolve mode and report today's actual status honestly.
+
+## Latest automatic-publish error investigation
+- [x] Inspect the newest GitHub Actions runs and identify any failed jobs or steps.
+- [x] Inspect failure logs and correlate each failure with the exact workflow commit and stage.
+- [x] Fix every confirmed error without masking real publish failures.
+- [x] Run Offnote-specific guards, Telegram controls, CLI route checks, and the full 52-test suite.
+- [x] Trigger a safe remote validation run and verify the result on the latest master SHA.
+- [x] Report whether there were errors, why they happened, what was changed, and any remaining uncertainty.
+
+### Latest confirmed result
+- [x] Six scheduled runs on 2026-08-17 failed at Resolve mode because the schedule CLI emitted no mode/slot lines.
+- [x] Restored direct CLI output and added a regression test.
+- [x] Safe health-mode run 32021471303 passed on master SHA 9519480.
+
+## Today's Offnote publishing status check
+- [x] Read the current KST schedule and determine which slots remain today.
+- [x] List today's generated drafts and their planned publish times.
+- [x] Compare GitHub Actions runs with the publish log and draft status.
+- [x] Distinguish scheduled, skipped, failed, successfully published, and remaining items.
+- [x] Report the results in a concise table with exact timestamps and uncertainty notes.
+
+### Status result: 2026-08-17 20:50 KST
+- [x] 15:30 KST evening draft existed but no 2026-08-17 publish record was found; the slot was blocked while Resolve mode failures were active.
+- [x] 21:30 KST night slot remains upcoming; no night draft exists yet in the local checkout because the 20:00 preview window did not receive a matching scheduled run.
+- [x] Latest Offnote scheduled run 32025937011 at 20:38 KST passed and skipped normally outside the 5-minute route window.
+
+## All Threads accounts daily status check
+- [x] Check @offnote.kr today’s schedule, drafts, publish log, and remaining slot.
+- [x] Check @jayssam_edu today’s schedule, drafts, publish log, and remaining slot.
+- [x] Check @lifemagazine_ today’s schedule, drafts, publish log, and remaining slot.
+- [x] Compare scheduled workflows and account-specific automation runs.
+- [x] Report whether each account has published zero, one, or two posts today.
+- [x] Clearly distinguish missed, failed, skipped, upcoming, and successful posts.
+
+### Account-wide status result: 2026-08-17 21:10 KST
+- [x] @offnote.kr: 15:30 slot missed during Resolve mode failures; 21:30 slot still upcoming; no today publish-log entry.
+- [x] @jayssam_edu: no scheduled run and no today draft/publish-log entry; today’s 15:00 and 21:00 default slots were not completed.
+- [x] @lifemagazine_: scheduled runs succeeded but latest publish step reported no due approved post; no today draft/publish-log entry; today’s slots were not completed.
+
+## Reinvestigate all-account publishing failures
+- [ ] Reconstruct @offnote.kr: route, draft creation, due-publish, publish log, and slot timing.
+- [ ] Reconstruct @jayssam_edu: scheduled trigger, route mode, draft generation, publish step, and publish log.
+- [ ] Reconstruct @lifemagazine_: scheduled trigger, approval/due-draft lookup, publish step, and publish log.
+- [ ] Separate workflow failure, intentional skip, missing draft, missing approval, and actual Threads API failure.
+- [ ] Verify whether schedule timing and GitHub schedule delays can create missed preview windows.
+- [ ] Implement a no-slot-left-behind recovery path without bypassing safety or approval rules.
+- [ ] Add observability so every account/slot records route, draft ID, publish attempt, skip reason, or error.
+- [ ] Add regression tests for all three account failure paths and recovery behavior.
+- [ ] Run remote dry-run/health validation and confirm no new failures.
+- [ ] Report the verified root causes without claiming success where no public post occurred.
