@@ -1,0 +1,37 @@
+{
+  "id": "JAY-20260818-night-class_owner_consulting-night",
+  "content_id": "class_owner_consulting-night",
+  "date": "2026-08-18",
+  "slot": "night",
+  "account": "27960473083547672",
+  "status": "approved",
+  "title": "상담에서 기술 이름부터 묻지 않는 이유",
+  "topic": "상담에서 기술 이름부터 묻지 않는 이유",
+  "topic_tag": "직무 교육",
+  "pillar": "education_business_judgment",
+  "content_type": "practical_education_participation_note",
+  "angle": "원장님의 수업 생각",
+  "threads_text": "상담할 때 ‘포토샵 배울까요, 엑셀 배울까요?’부터 답하지 않는다.\n\n지금 어떤 일을 하고 있고, 무엇이 반복해서 불편한지부터 듣는다. 같은 엑셀도 취준생에게 필요한 것과 자영업자에게 필요한 건 전혀 다르다.\n\n과목은 답이 아니라 수단이다. 내 상황을 먼저 알아야 맞는 수단도 고를 수 있다.\n\n📌 막히는 순간에는 지금까지 한 것, 안 된 것, 해보고 싶은 걸 한 줄씩 적어봐. 질문도 답도 훨씬 빨라진다.\n\n💬 실무에서 혼자 막혔던 순간이 있으면 어떤 파일이었는지 남겨봐.",
+  "thread_comments": [],
+  "local_media_paths": [],
+  "source_urls": [],
+  "source_note": "제이쌤의 실무 교육·소상공인 마케팅·진로 강의 현장에서 나온 생각",
+  "created_at": "2026-08-18T21:35:07+09:00",
+  "editorial_rules": {
+    "strategy_skill": "jayssam-threads-content-strategy",
+    "voice": "수강생·사장님에게 친근하게 말하되, 공격하거나 하대하지 않는 다정하고 단단한 원장님 반말",
+    "structure": "실제 수강생 질문 또는 실수 → 현장의 이유 → 바로 해볼 수 있는 팁 → ‘알려줘~!’처럼 자연스러운 댓글·행동 유도",
+    "topic_tag_policy": "본문 해시태그 나열 없이 내용과 가장 가까운 Threads 토픽 태그 한 개만 API에 전달",
+    "avoid": [
+      "아동·학부모 소재",
+      "뉴스 요약",
+      "AI 설명체",
+      "학습지식 해설",
+      "하대형 명령",
+      "공격적·비하 표현",
+      "과장된 약속",
+      "같은 종결어 반복"
+    ],
+    "dedupe_days": 21
+  }
+}
