@@ -8,7 +8,8 @@
     "18424184371196148",
     "17901727413480844",
     "18118393321926250",
-    "18146399374537590"
+    "18146399374537590",
+    "17863580310658624"
   ],
   "events": [
     {
@@ -100,8 +101,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-18T03:12:40.140Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "17863580310658624",
+      "post_id": "18095160950074804",
+      "username": "lifemagazine_",
+      "text": "링크랑 기본 정보는 여기 적어둘게!!\n상품명: 매직캔 매직롤 280 화이트 로고 인쇄 리필\n확인 당시 표시가: 14,860원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=8366355412&itemId=23368486877&vendorItemId=90398752493&traceid=V0-113-b216333ece2ff72f\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-18T09:53:23.359Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-18T08:57:56.116Z",
+  "updated_at": "2026-08-18T09:53:23.812Z",
   "timezone": "Asia/Seoul"
 }
