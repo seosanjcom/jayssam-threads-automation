@@ -207,3 +207,80 @@
 - [x] Implement strict name/category consistency check in `validate_lifemagazine_draft.mjs` to block mismatch between draft topic and product metadata.
 - [x] Create regression test suite for evidence-led storytelling and mismatch blocking (63 tests passing).
 - [x] Run test suite, verify clean exit, and push changes to remote master.
+
+## Coupang price-trend and cross-account metrics review: 2026-08-19 KST
+- [x] Inventory recent Coupang product records, draft metadata, and any stored historical prices: 46 records, 22 product groups.
+- [x] Determine whether true price-change trends can be calculated or whether only point-in-time prices exist: no product had more than one distinct stored price; true trend cannot be calculated.
+- [x] Assess suitable evidence signals for Offnote and Jayssam without turning them into shopping accounts.
+- [x] Compare persona-safe storytelling examples and identify what would require new data collection.
+- [x] Report findings, limitations, and recommended next implementation scope.
+
+## Offnote/Jayssam collaboration fit review: 2026-08-19 KST
+- [x] Map each account's actual audience promise and collaboration assets.
+- [x] Identify realistic inbound collaboration categories and required proof points.
+- [x] Separate strong-fit, conditional-fit, and poor-fit proposals for each account.
+- [x] Define media-kit, profile, contact, and sample-content preparation needs.
+- [x] Report the realistic collaboration outlook without guaranteeing inbound offers.
+
+## Account pivot for inbound collaboration (Offnote & Jayssam): 2026-08-19 KST
+- [x] Define Offnote's pivot to service/agency client work + SaaS/tech gear partnerships.
+- [x] Define Jayssam's pivot from abstract teaching commentary to actionable instructor-brand/platform partnership style.
+- [x] Update structural posting templates and guidelines for both accounts.
+- [x] Report the revised strategy and how automation will produce these collaboration-ready posts.
+
+## Revised collaboration positioning (Offnote & Jayssam): 2026-08-19 KST
+- [x] Broaden Offnote from automation-only to versatile digital execution (content, design, web, AI, SNS operations) + client service/agency inbound.
+- [x] Redesign Jayssam's review/partnership style to reflect an authentic instructor testing a tool or platform in class without salesy language ("수업자료에 넣어야겠다" 금지).
+- [x] Draft exact sample threads matching the refined tones for both accounts.
+- [x] Confirm alignment with user expectations.
+
+## Client-case and Jayssam accuracy correction: 2026-08-19 KST
+- [x] Search stored notes and content inputs for the interior-company client case, actual changes, and client feedback.
+- [x] Separate verified facts from details that require the user's confirmation before writing the story.
+- [x] Replace the technically incorrect Excel sentence with a real, natural classroom problem.
+- [x] Draft corrected Offnote and Jayssam samples and request only missing facts if needed.
+
+## Narrative storytelling and high-value instructor partnership (Offnote & Jayssam): 2026-08-19 KST
+- [x] Rewrite Offnote samples into compelling client-agency narratives showing before/after relief and genuine gratitude.
+- [x] Redesign Jayssam from basic teaching tips to high-impact curriculum, software testbed, and platform partnership storytelling.
+- [x] Ensure both styles naturally attract high-ticket inbound offers without looking salesy.
+- [x] Finalize account positioning rules for automated generation.
+
+## Diversified Offnote narratives & Jayssam 3 specific collaboration topics: 2026-08-19 KST
+- [x] Establish distinct narrative angles for Offnote (e.g., Craft workshop structural clarity vs. Interior visual storytelling vs. Local café operational routines).
+- [x] Draft a non-repetitive workshop/café case story for Offnote.
+- [x] Formulate 3 specific, platform/tool-partnership-friendly content topics for Jayssam without sales fluff.
+- [x] Review tone, natural expression, and alignment.
+
+## Offnote rotation pool & Jayssam tone correction: 2026-08-19 KST
+- [x] Keep existing Offnote evergreen observations and actual work logs, adding client narrative pools to the random rotation.
+- [x] Rewrite Jayssam's topics into punchy, realistic instructor scenes (no boring lecture notes).
+- [x] Update generation scripts/fixtures and run regression suite.
+
+## Real revenue streams & Jayssam tone reset: 2026-08-19 KST
+- [x] Inventory Offnote's actual agency services, digital product sales, affiliate/partnership income, and content ops.
+- [x] Build a flexible story-source generator that varies by business type instead of hardcoding 3 industries.
+- [x] Discard Jayssam's current unsatisfactory voice and analyze user-provided samples or establish a clean instructor tone.
+- [x] Request user confirmation on actual service lines and Jayssam's authentic tone preferences.
+
+## 20 Offnote business models & Jayssam collaboration personas: 2026-08-19 KST
+- [x] Compile 20 distinct digital nomad business/work models for Offnote spanning agency, digital products, content, curation, and micro-services.
+- [x] Formulate 4 distinct collaboration personas for Jayssam (e.g., Practical Software Tester, Corporate Skill Consultant, Solo-preneur Instructor, Educational Content Creator).
+- [x] Present both lists clearly for user selection.
+
+## Finalized Offnote portfolio & Jayssam B-centric persona: 2026-08-19 KST
+- [x] Structure Offnote's full service/content/ad/affiliate lines into an inbound funnel that naturally converts clients and leads to upcoming online courses.
+- [x] Define Jayssam's core persona around practical skill consulting (B) supported by tool testing (A), solo-preneur mentoring (C), and master instruction (D).
+- [x] Ensure generation prompts use concrete, granular situations without generic fluff.
+
+## Portfolio draft & Jayssam B-axis sample & 3-step funnel: 2026-08-19 KST
+- [x] Write Offnote portfolio sample draft (Website/Place setup or digital product).
+- [x] Write Jayssam B-axis sample draft (Practical skill consulting in action).
+- [x] Design 3 specific Offnote content pieces leading naturally into future online courses.
+- [x] Report draft and funnel plan clearly to the user.
+
+## Jayssam 30s-female warm conversational tone implementation: 2026-08-19 KST
+- [x] Update Jayssam's generation templates and practical tips in `generate_jayssam_daily_post.py` to use a warm, conversational 30s female instructor tone (`ㅎㅎ`, `ㅠㅠ`, `있거든`, `그런 거지`, `~해`, `알려줘~!`).
+- [x] Block authoritarian or textbook endings (`찾아라`, `외워라`, `백배`, `당연하다`, `~해야 한다`) in Jayssam generator and quality test.
+- [x] Run full test suite including content quality guards and verify clean execution.
+- [x] Commit and push changes to remote master so upcoming automatic runs use the new tone immediately.

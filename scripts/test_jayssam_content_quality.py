@@ -228,6 +228,31 @@ def test_pillars_reflect_practical_education_marketing_career_and_owner_judgment
     assert title
 
 
+def test_persona_mix_is_b_centric_and_concrete() -> None:
+    axes = [MODULE.persona_axis_for(seed_id) for seed_id, _, _ in MODULE.OBSERVATION_SEEDS]
+    assert axes.count("B") > axes.count("A") + axes.count("C") + axes.count("D")
+    for prefix, axis in (("a_", "A"), ("b_", "B"), ("c_", "C"), ("d_", "D")):
+        matching = [seed_id for seed_id, _, _ in MODULE.OBSERVATION_SEEDS if seed_id.startswith(prefix)]
+        assert matching, prefix
+        assert all(MODULE.persona_axis_for(seed_id) == axis for seed_id in matching)
+
+
+def test_persona_selection_exposes_collaboration_fit() -> None:
+    for current in ("2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04"):
+        topic = MODULE.pick_topic(current, "afternoon")
+        assert topic["persona_axis"] in {"A", "B", "C", "D"}
+        assert topic["persona_label"]
+        assert topic["pillar"] in REQUIRED_PILLARS
+
+
+def test_new_persona_seeds_avoid_generic_lesson_finish() -> None:
+    new_ids = tuple(seed_id for seed_id, _, _ in MODULE.OBSERVATION_SEEDS if seed_id.startswith(("a_", "b_", "c_", "d_")))
+    assert len(new_ids) >= 20
+    for seed_id in new_ids:
+        tip, cta = MODULE.practical_finish(seed_id, "2026-10-01", "afternoon")
+        assert tip == "" and cta == ""
+
+
 if __name__ == "__main__":
     test_inventory_covers_two_posts_a_day_without_recycling()
     test_inventory_covers_the_actual_course_and_learner_spectrum()
@@ -240,4 +265,7 @@ if __name__ == "__main__":
     test_core_philosophy_uses_purpose_before_tool_and_concrete_field_gaps()
     test_every_course_seed_maps_to_one_relevant_threads_topic_tag()
     test_pillars_reflect_practical_education_marketing_career_and_owner_judgment()
+    test_persona_mix_is_b_centric_and_concrete()
+    test_persona_selection_exposes_collaboration_fit()
+    test_new_persona_seeds_avoid_generic_lesson_finish()
     print('{"ok": true, "guard": "jayssam course spectrum and owner-voice content quality passes"}')

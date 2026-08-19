@@ -119,6 +119,8 @@ function loadEvergreenPool() {
     subject_cluster: String(item.subject_cluster || item.tag || "digital_work"),
     ending_family: String(item.ending_family || "observation"),
     source_mode: "curated_evergreen_observation",
+    portfolio: String(item.portfolio || "digital_work"),
+    funnel_stage: String(item.funnel_stage || "record"),
   })).filter((item) => item.text.length >= 8 && item.text.length <= 500);
 }
 
@@ -201,6 +203,8 @@ function makeDraft(date, slot) {
     subject_cluster: note.subject_cluster || "unknown",
     record_ending_family: family,
     line_band: lineBand(text),
+    portfolio: note.portfolio || "actual_work",
+    funnel_stage: note.funnel_stage || (note.source_mode === "telegram_manual_input" ? "manual_record" : "record"),
     threads_text: text,
     thread_comments: [],
     cardnews_slides: [],
@@ -208,6 +212,8 @@ function makeDraft(date, slot) {
       voice: "디지털로 일하고 만들고 수익을 만드는 여러 방식을 실제 장면으로 기록하는 노트",
       structure: "실제 일일 입력이 있으면 우선 사용하고, 없으면 검증된 상시 관찰형 소재에서 자동 생성",
       ending_policy: "미결정·완료·관찰·다음 생각·실제 질문을 분산하며, 교훈과 독자 교육으로 닫지 않음",
+      portfolio_policy: "기존 일상 기록과 대행·콘텐츠·웹·디지털상품·제휴·강의 준비 소재를 보존하고, 실제 입력이 없을 때만 검증된 관찰 풀에서 균형 순환",
+      course_funnel_policy: "온라인 강의를 직접 홍보하지 않고, 실제 작업·실험·정리 과정에서 강의로 확장할 만한 문제만 메타데이터로 축적",
     },
     safety_rules: [
       "Do not invent a client name or exact performance number.",

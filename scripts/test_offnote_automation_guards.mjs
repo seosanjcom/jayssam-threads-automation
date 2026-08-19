@@ -50,6 +50,14 @@ try {
   const autoPath = draftPathFrom(missing, "2026-05-23", "evening");
   const autoDraft = readJson(autoPath);
   assertApprovedFactDraft(autoDraft);
+  if (!autoDraft.portfolio || !autoDraft.funnel_stage) throw new Error("Evergreen draft must preserve portfolio and funnel metadata.");
+  const evergreen = readJson(path.join(tmp, "scripts", "offnote_evergreen_observations.json"));
+  if (evergreen.length < 20) throw new Error(`Expected an expanded Offnote portfolio pool, got ${evergreen.length}`);
+  const requiredPortfolios = ["blog_agency", "sns_agency", "website_build", "youtube_operation", "online_course", "naver_place_setup", "sponsorship_experience"];
+  for (const portfolio of requiredPortfolios) {
+    if (!evergreen.some((item) => item.portfolio === portfolio)) throw new Error(`Missing Offnote portfolio: ${portfolio}`);
+  }
+  if (new Set(evergreen.map((item) => item.id)).size !== evergreen.length) throw new Error("Offnote evergreen IDs must be unique.");
 
   prepareFacts("2026-05-24", [
     { id: "actual-deploy-log", title: "배포 로그", text: "배포 눌렀는데\n로그 하나가 아직 빨강\n다시 봄", tag: "개발일상", subject_cluster: "development", shape: "status", ending_family: "fragment" },
