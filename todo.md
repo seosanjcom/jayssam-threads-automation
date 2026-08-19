@@ -165,7 +165,7 @@
 - [x] Distinguish workflow failure, skipped publish, missing draft/approval, and Threads API failure.
 - [x] Inspect the actual publish logs and media IDs for the affected date.
 - [x] Fix any still-active root cause and add regression coverage.
-- [ ] Re-run safe remote validation and report the verified result.
+- [x] Re-run safe remote validation and report the verified result: workflow run 32215694567 on `520a812` completed successfully; publish step logged a normal safety skip.
 
 ### Confirmed finding: 2026-08-18 KST
 - [x] Offnote failures: 0; Jayssam failures: 0.
