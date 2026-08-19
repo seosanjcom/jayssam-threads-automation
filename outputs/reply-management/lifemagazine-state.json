@@ -9,7 +9,8 @@
     "17901727413480844",
     "18118393321926250",
     "18146399374537590",
-    "17863580310658624"
+    "17863580310658624",
+    "18071292587451066"
   ],
   "events": [
     {
@@ -111,8 +112,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-18T09:53:23.359Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18071292587451066",
+      "post_id": "18239611249313902",
+      "username": "lifemagazine_",
+      "text": "링크랑 기본 정보는 여기 적어둘게!!\n상품명: 더블에이 복사용지\n확인 당시 표시가: 26,090원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=264493817&itemId=18570222822&vendorItemId=95887113260&traceid=V0-113-09b2ccee4618fa29\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-19T04:04:01.836Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-19T03:14:54.497Z",
+  "updated_at": "2026-08-19T04:04:02.712Z",
   "timezone": "Asia/Seoul"
 }
