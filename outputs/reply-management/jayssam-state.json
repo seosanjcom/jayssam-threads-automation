@@ -1,6 +1,19 @@
 {
-  "processed_reply_ids": [],
-  "events": [],
-  "updated_at": "2026-08-19T11:41:48.705Z",
+  "processed_reply_ids": [
+    "18109503260321105"
+  ],
+  "events": [
+    {
+      "reply_id": "18109503260321105",
+      "post_id": "18154743244492588",
+      "username": "automanager.kr",
+      "text": "함수는 저도 외운 적이 없어요. 늘 검색해서 썼고, 진짜로 막힌 건 열 때마다 다르게 생긴 파일이었습니다. 그 정리 순서를 먼저 정하고 나서야 월 310건이 제 손을 안 거치게 됐어요.",
+      "action": "manual_review",
+      "reason": "unrecognised_question",
+      "detected_at": "2026-08-19T13:09:45.916Z",
+      "reply_status": "sent_for_review"
+    }
+  ],
+  "updated_at": "2026-08-19T13:09:47.780Z",
   "timezone": "Asia/Seoul"
 }
