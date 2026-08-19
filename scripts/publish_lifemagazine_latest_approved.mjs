@@ -95,6 +95,33 @@ async function notifyPublishResult(draft, outcome, detail = "") {
   }
 }
 
+export function getLifemagazineSafetySkipReason({
+  publishLogPath: logPath = publishLogPath,
+  account: targetAccount = account,
+  now = new Date(),
+  dailyLimit = 2,
+  minIntervalHours = 5,
+} = {}) {
+  const referenceTime = new Date(now).getTime();
+  const recent = readJsonIfExists(logPath, []).filter((item) => {
+    if (item.account !== targetAccount) return false;
+    if (String(item.status || "").startsWith("deleted_")) return false;
+    const publishedAt = Date.parse(item.published_at);
+    return Number.isFinite(publishedAt) && referenceTime - publishedAt < 24 * 60 * 60 * 1000;
+  });
+  if (recent.length >= dailyLimit) {
+    return `Safety stop: ${targetAccount} already has ${recent.length} post(s) in the last 24h. Limit=${dailyLimit}.`;
+  }
+  const latest = recent.sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at))[0];
+  if (latest) {
+    const hoursSinceLatest = (referenceTime - Date.parse(latest.published_at)) / (60 * 60 * 1000);
+    if (hoursSinceLatest < minIntervalHours) {
+      return `Safety stop: last post was ${hoursSinceLatest.toFixed(2)}h ago. Minimum interval=${minIntervalHours}h.`;
+    }
+  }
+  return "";
+}
+
 export function latestApprovedLifemagazineDraft(options = {}) {
   const root = options.root || process.cwd();
   const now = options.now || new Date();
@@ -144,6 +171,12 @@ if (isDirectRun) {
   const latest = latestApprovedLifemagazineDraft();
   if (!latest) {
     console.log("No due approved lifemagazine_ Threads post found.");
+    process.exit(0);
+  }
+
+  const safetySkipReason = getLifemagazineSafetySkipReason();
+  if (safetySkipReason) {
+    console.log(`Lifemagazine publish skipped: ${safetySkipReason}`);
     process.exit(0);
   }
 

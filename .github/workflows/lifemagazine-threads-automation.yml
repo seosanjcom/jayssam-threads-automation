@@ -101,7 +101,7 @@ jobs:
           node --check scripts/generate_lifemagazine_product_daily.mjs
           node --check scripts/publish_lifemagazine_latest_approved.mjs
           node --check scripts/ensure_lifemagazine_due_draft.mjs
-          node --test scripts/test_lifemagazine_due_draft.mjs
+          node --test scripts/test_lifemagazine_due_draft.mjs scripts/test_lifemagazine_publish_safety.mjs
           node --check scripts/threads_publish.mjs
           node --check scripts/delete_threads_posts.mjs
           node --test scripts/test_lifemagazine_draft.mjs

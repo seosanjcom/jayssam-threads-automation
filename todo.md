@@ -144,3 +144,33 @@
 - [x] Wait for the user to complete the GitHub sudo confirmation using their account's normal authentication method.
 - [x] Resume the waiting CLI session only after the user confirms authentication completion.
 - [x] Re-check remote probe and Jayssam schedule runs after GitHub CLI authentication is restored.
+
+## Today's all-account schedule table
+- [x] Confirm today's KST date and the configured slots for @offnote.kr, @jayssam_edu, and @lifemagazine_.
+- [x] Identify the planned topic/draft for every slot.
+- [x] Compare each slot with actual workflow and publish logs.
+- [x] Mark each row as successful, failed, skipped, upcoming, or not generated.
+- [x] Deliver one account-wide table with no unsupported claims.
+
+### Status result: 2026-08-18 07:29 KST
+- [x] No 2026-08-18 Threads publish-log entry exists for any of the three accounts at the time of checking.
+- [x] Offnote and Jayssam have not generated today's due drafts yet; their early-morning runs completed successfully but skipped the publish steps.
+- [x] Lifemagazine's latest run completed successfully with `not_due` and no due approved post.
+- [x] Effective Lifemagazine publish crons are 11:30 and 18:00 KST; config metadata still lists 11:30, 16:30, and 21:30 KST, which is documented as a configuration mismatch rather than silently presented as fact.
+
+## Yesterday's repeated automation failures
+- [x] Determine the exact KST date meant by “어제” from the current system time: 2026-08-18 KST.
+- [x] List all failed and successful workflow runs for @offnote.kr, @jayssam_edu, and @lifemagazine_.
+- [x] Group failures by step and compare identical error messages.
+- [x] Distinguish workflow failure, skipped publish, missing draft/approval, and Threads API failure.
+- [x] Inspect the actual publish logs and media IDs for the affected date.
+- [x] Fix any still-active root cause and add regression coverage.
+- [ ] Re-run safe remote validation and report the verified result.
+
+### Confirmed finding: 2026-08-18 KST
+- [x] Offnote failures: 0; Jayssam failures: 0.
+- [x] Lifemagazine failures: 13; all were local safety-gate exits, not Threads Graph API errors.
+- [x] Twelve failures hit `already has 2 post(s) in the last 24h. Limit=2`; one hit `last post was 0.75h ago. Minimum interval=5h`.
+- [x] Root cause: the wrapper selected a due approved draft and invoked the shared publisher even when the account was already inside its local safety window, causing expected protection to appear as workflow failure every 10 minutes.
+- [x] Fix: preflight the same safety window in the Lifemagazine wrapper, log a normal skip, exit 0, and align metadata with the effective 11:30/18:00 KST and 2-post/5-hour policy.
+- [x] Local related regression suite: 61 passed, 0 failed.

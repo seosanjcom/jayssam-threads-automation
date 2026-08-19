@@ -7,7 +7,7 @@
   "type": "module",
   "main": "desktop/main.cjs",
   "scripts": {
-    "test": "node --test scripts/test_lifemagazine_draft.mjs",
+    "test": "node --test scripts/test_lifemagazine_draft.mjs scripts/test_lifemagazine_due_draft.mjs scripts/test_lifemagazine_publish_safety.mjs",
     "check": "node --check scripts/threads_studio_server.mjs && node --check desktop/main.cjs",
     "desktop": "electron .",
     "build:win": "electron-builder --win dir"
