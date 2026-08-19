@@ -233,6 +233,26 @@ function productSceneLines(input) {
   const combined = `${name} ${scene}`;
   const variant = (key, options) => productCopyVariant(input, key, options);
 
+  const rank = Number(candidate.category_rank || input.product_metadata?.category_rank || 0);
+  const price = Number(candidate.price || input.product_metadata?.price || 0);
+  const categoryName = String(candidate.category || input.product_metadata?.category_name || "").trim();
+
+  // 평범한 소모품이나 일반 생활템이라도 카테고리 순위나 가격 같은 검증된 지표를 첫 훅에 자연스럽게 녹여낸다.
+  if (/복사용지|a4|용지/.test(combined)) {
+    const priceText = price > 0 ? ` (${price.toLocaleString("ko-KR")}원대)` : "";
+    const rankText = rank > 0 ? ` 문구 카테고리 베스트 ${rank}위에 올라와서` : "";
+    return [
+      `프린트할 일이 은근 자주 생기는데 막상 사려고 하면 규격이랑 매수 고민되는 거 알지~ 📄`,
+      `${name}${priceText}은(는)${rankText} 꾸준히 찾는 이유가 있나 봄.`,
+      "쟁여두고 쓰는 소모품인 만큼 평소 쓰는 인쇄 매수나 종이 두께(평량)가 맞는지 먼저 확인하고 담아.",
+      variant("paper-cta", [
+        "댓글에 가격이랑 상품 링크 남겨둘게!! 자주 쓰는 용도에 맞을 때만 골라.",
+        "필요했던 분들은 댓글 정보에서 규격이랑 수량부터 가볍게 살펴봐~",
+        "댓글에 기본 정보 정리해둘게~ 인쇄할 때 쓸 곳이 떠오르면 그때 담아줘!!",
+      ]),
+    ];
+  }
+
   if (/링티/.test(combined)) {
     return [
       "더위 진짜 장난 아니지… 아이가 뛰어놀고 온 날엔 물만으로는 괜히 마음이 쓰이더라 🥵",

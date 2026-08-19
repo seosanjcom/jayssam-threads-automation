@@ -174,3 +174,36 @@
 - [x] Root cause: the wrapper selected a due approved draft and invoked the shared publisher even when the account was already inside its local safety window, causing expected protection to appear as workflow failure every 10 minutes.
 - [x] Fix: preflight the same safety window in the Lifemagazine wrapper, log a normal skip, exit 0, and align metadata with the effective 11:30/18:00 KST and 2-post/5-hour policy.
 - [x] Local related regression suite: 61 passed, 0 failed.
+
+## Today's all-account workflow and schedule recheck: 2026-08-19 KST
+- [x] Collect today's GitHub Actions runs for Offnote, Jayssam, and Lifemagazine.
+- [x] Inspect each latest run's conclusion and publish-stage log.
+- [x] Reconcile configured KST slots with today's draft and publish logs.
+- [x] Distinguish published, normal safety skip, not due, failed, and upcoming slots.
+- [x] Report today's account-wide schedule table with exact timestamps and uncertainty notes.
+
+### Confirmed result: 2026-08-19 13:37 KST
+- [x] Offnote latest scheduled run 32214631469 at 13:08 KST: success; route `mode=skip`, evening slot 15:30 KST not due yet; no today publish-log entry.
+- [x] Jayssam latest scheduled run 32215782582 at 13:26 KST: success; afternoon draft was generated and Telegram preview sent; publish step was skipped before the 15:00 KST slot; no today publish-log entry.
+- [x] Lifemagazine morning slot: published at 12:24:48 KST with media ID `18239611249313902`; latest safety-preflight validation run 32215694567 at 13:25 KST succeeded with a normal safety skip; evening slot 18:00 KST remains upcoming.
+- [x] One Lifemagazine scheduled failure at 13:05 KST was on pre-fix SHA `39719e6`, not the current safety-skip fix; latest master validation is successful on `520a812`.
+
+## Lifemagazine product ranking verification: 2026-08-19 KST
+- [x] Trace the selected Double A copy-paper product back to its candidate source and selection score.
+- [x] Verify whether the automatic candidate source contains real best-seller or sales-ranking evidence.
+- [x] Compare the published product with the configured category, duplicate, quality, and ranking rules.
+- [x] Report whether the product was genuinely ranked or merely selected as a safe candidate.
+- [x] If ranking evidence is missing, define and implement a safer evidence threshold before future auto-selection.
+
+## Lifemagazine evidence-led product storytelling: 2026-08-19 KST
+- [x] Identify which real product signals are available from the Coupang Partners API and existing draft history.
+- [x] Define evidence-backed hooks such as category rank, current price, price-change history, review volume, package quantity, or timing; never infer unavailable signals.
+- [x] Store the evidence and chosen hook with each candidate so the draft can explain why this product is worth noticing now.
+- [x] Block auto-publish when the product has no concrete evidence-backed hook or when body, metadata, and affiliate link describe different products.
+- [x] Add regression tests and produce one truthful sample for an ordinary product.
+
+## Lifemagazine implementation of evidence-led storytelling and consistency guard: 2026-08-19 KST
+- [x] Implement evidence-led product storytelling in `generate_lifemagazine_draft.mjs` using verified rank, price, brand, and category signals.
+- [x] Implement strict name/category consistency check in `validate_lifemagazine_draft.mjs` to block mismatch between draft topic and product metadata.
+- [x] Create regression test suite for evidence-led storytelling and mismatch blocking (63 tests passing).
+- [x] Run test suite, verify clean exit, and push changes to remote master.

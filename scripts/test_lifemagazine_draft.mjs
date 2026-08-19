@@ -1036,3 +1036,47 @@ test("Coupang API candidate requires a partner link and keeps sensitive products
   assert.equal(selectDailyProductCandidates([safe, sensitive], 2).length, 1);
 });
 
+
+test("evidence-led copy paper draft includes rank and price signals without generic fluff", () => {
+  const draft = generateLifemagazineDraft({
+    date: "2026-08-19",
+    slot: "morning",
+    topic: "오전 생활템: 더블에이 복사용지",
+    content_mode: "found_product",
+    product_candidate: {
+      product_name: "더블에이 복사용지",
+      category: "문구/오피스",
+      category_rank: 3,
+      price: 26090,
+      affiliate_url: "https://link.coupang.com/a/sample-paper",
+    },
+    product_metadata: { price: 26090, category_name: "문구/오피스", category_rank: 3 },
+    product_links: [{ label: "제품 링크", url: "https://link.coupang.com/a/sample-paper" }],
+  });
+  assert.match(draft.threads_text, /복사용지/);
+  assert.match(draft.threads_text, /베스트 3위/);
+  assert.match(draft.threads_text, /26,090원/);
+  assert.equal(validateLifemagazineDraft(draft).ok, true);
+});
+
+test("validation blocks draft when product name and body text conflict", () => {
+  const draft = {
+    account: "lifemagazine_",
+    project: "lifemagazine",
+    id: "LIFE-CONFLICT",
+    topic: "오전 생활템: 더블에이 복사용지",
+    product_name: "더블에이 복사용지",
+    content_mode: "found_product",
+    threads_text: "책상 아래로 충전선 툭 떨어질 때마다… 몸 숙여 줍는 거 너무 귀찮지 않나 😵\n케이블 정리 클립은 책상을 예쁘게 꾸미는 것보다 선 자리를 딱 잡아두는 용도야.",
+    thread_comments: [
+      "제품 링크: https://link.coupang.com/a/sample\n" + COUPANG_DISCLOSURE,
+    ],
+    product_links: [{ label: "제품 링크", url: "https://link.coupang.com/a/sample" }],
+    visual_mode: "ai_lifestyle_reference",
+    visual_prompt: "Realistic casual photo on desk.",
+    visual_avoid_list: ["hands"],
+  };
+  const res = validateLifemagazineDraft(draft);
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((err) => err.includes("conflicts")));
+});

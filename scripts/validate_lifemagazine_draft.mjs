@@ -68,6 +68,16 @@ export function validateLifemagazineDraft(draft) {
     errors.push("direct-use claims require usage_status actual_used.");
   }
 
+  // 상품명(또는 주제)과 본문 텍스트 간 명백한 불일치(예: 복사용지인데 케이블 클립 설명)를 차단한다.
+  const productName = String(draft.product_name || "").trim();
+  const threadsText = String(draft.threads_text || "");
+  if (/복사용지|a4|용지/.test(productName) && /케이블|충전선|정리\s*클립/.test(threadsText)) {
+    errors.push("product_name (copy paper) conflicts with threads_text describing cable clips.");
+  }
+  if (/케이블|충전/.test(productName) && /복사용지|a4|용지/.test(threadsText)) {
+    errors.push("product_name (cable) conflicts with threads_text describing copy paper.");
+  }
+
   const visualResult = validateVisualPlan({
     visual_mode: draft.visual_mode,
     visual_prompt: draft.visual_prompt,
