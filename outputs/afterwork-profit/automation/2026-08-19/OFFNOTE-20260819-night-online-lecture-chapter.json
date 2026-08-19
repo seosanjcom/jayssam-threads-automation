@@ -1,0 +1,37 @@
+{
+  "id": "OFFNOTE-20260819-night-online-lecture-chapter",
+  "content_id": "online-lecture-chapter",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "date": "2026-08-19",
+  "slot": "night",
+  "topic": "온라인 강의",
+  "topic_tag": "온라인강의",
+  "status": "approved",
+  "created_at": "2026-08-19T11:03:26.493Z",
+  "source": "github-actions-offnote-auto-generator",
+  "recommended_publish_time": "21:30 KST",
+  "content_mode": "digital_nomad_personal_note",
+  "pillar": "offnote_unfinished_work_record",
+  "record_shape": "memo",
+  "source_mode": "curated_evergreen_observation",
+  "manual_input_id": "",
+  "subject_cluster": "education",
+  "record_ending_family": "observation",
+  "line_band": "medium",
+  "threads_text": "강의 커리큘럼 자료 만들면서 수강생들이 자주 막히는 구간을\n아예 챕터 하나로 따로 빼서 정리해 둠\n미리 피드백 반영해 두니까 질문도 확 줄어들고\n작업 속도도 엄청 빨라지네 ㅠㅠ 진작 분리해 둘 걸 그랬음",
+  "thread_comments": [],
+  "cardnews_slides": [],
+  "offnote_tone_profile": {
+    "voice": "디지털로 일하고 만들고 수익을 만드는 여러 방식을 실제 장면으로 기록하는 노트",
+    "structure": "실제 일일 입력이 있으면 우선 사용하고, 없으면 검증된 상시 관찰형 소재에서 자동 생성",
+    "ending_policy": "미결정·완료·관찰·다음 생각·실제 질문을 분산하며, 교훈과 독자 교육으로 닫지 않음"
+  },
+  "safety_rules": [
+    "Do not invent a client name or exact performance number.",
+    "Use daily fact input if available, otherwise use curated observation pool safely.",
+    "Do not add a KakaoTalk, Instagram, materials, or generic comment CTA.",
+    "Do not add a lesson, value statement, or polished conclusion after the event."
+  ]
+}
