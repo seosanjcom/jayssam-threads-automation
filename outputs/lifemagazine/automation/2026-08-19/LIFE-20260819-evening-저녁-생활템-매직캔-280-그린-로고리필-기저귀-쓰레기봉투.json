@@ -87,5 +87,8 @@
     "lifestyle_group": "육아가정"
   },
   "approval_source": "automatic_safe_coupang_selection",
-  "auto_publish_allowed": true
+  "auto_publish_allowed": true,
+  "published_reply_ids": [
+    "17902564218542394"
+  ]
 }
