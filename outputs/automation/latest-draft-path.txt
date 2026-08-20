@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-20/JAY-20260820-afternoon-excel_manual_cleanup-afternoon.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-20/JAY-20260820-night-c_solo_brand_page-night.json
