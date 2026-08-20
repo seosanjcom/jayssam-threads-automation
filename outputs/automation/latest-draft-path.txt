@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-19/JAY-20260819-night-excel_function_definition-night.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-20/JAY-20260820-afternoon-excel_manual_cleanup-afternoon.json
