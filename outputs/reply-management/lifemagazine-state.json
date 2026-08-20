@@ -11,7 +11,8 @@
     "18146399374537590",
     "17863580310658624",
     "18071292587451066",
-    "17902564218542394"
+    "17902564218542394",
+    "18623983522032035"
   ],
   "events": [
     {
@@ -133,8 +134,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-19T09:53:32.558Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18623983522032035",
+      "post_id": "17949724998038049",
+      "username": "lifemagazine_",
+      "text": "댓글에 상품 정보 모아둘게!!\n상품명: 매직캔 250 그린 로고리필 기저귀 쓰레기봉투\n확인 당시 표시가: 16,020원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=8703221845&itemId=25274318917&vendorItemId=3000064341&traceid=V0-113-805caef5080dc2bd\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-20T04:03:18.714Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-20T03:14:14.619Z",
+  "updated_at": "2026-08-20T04:03:19.451Z",
   "timezone": "Asia/Seoul"
 }
