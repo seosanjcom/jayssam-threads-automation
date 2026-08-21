@@ -14,7 +14,8 @@
     "17902564218542394",
     "18623983522032035",
     "18138632941592676",
-    "18112463540326738"
+    "18112463540326738",
+    "18092534021537461"
   ],
   "events": [
     {
@@ -166,8 +167,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-21T04:58:42.226Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18092534021537461",
+      "post_id": "17981520263889261",
+      "username": "lifemagazine_",
+      "text": "제품 정보는 댓글에 깔끔히 정리해둘게!!\n상품명: 크리넥스 안심 3겹 키친타올\n확인 당시 표시가: 6,700원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=7134558328&itemId=20247515510&vendorItemId=3158599929&traceid=V0-113-1640d8dc2891e05d\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-21T10:53:03.239Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-21T09:55:47.153Z",
+  "updated_at": "2026-08-21T10:53:04.265Z",
   "timezone": "Asia/Seoul"
 }
