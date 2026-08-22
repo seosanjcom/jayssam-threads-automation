@@ -15,7 +15,8 @@
     "18623983522032035",
     "18138632941592676",
     "18112463540326738",
-    "18092534021537461"
+    "18092534021537461",
+    "18109719599067537"
   ],
   "events": [
     {
@@ -177,8 +178,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-21T10:53:03.239Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18109719599067537",
+      "post_id": "17972864988129042",
+      "username": "lifemagazine_",
+      "text": "제품 정보는 댓글에 깔끔히 정리해둘게!!\n상품명: 듀라셀 알카라인 AA 건전지\n확인 당시 표시가: 13,900원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=130164876&itemId=21326386046&vendorItemId=4949572331&traceid=V0-113-f0e7e0b4d5b695e9\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-22T04:00:31.837Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-22T03:11:11.486Z",
+  "updated_at": "2026-08-22T04:00:34.923Z",
   "timezone": "Asia/Seoul"
 }
