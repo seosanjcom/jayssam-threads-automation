@@ -18,7 +18,8 @@
     "18092534021537461",
     "18109719599067537",
     "18615568186034428",
-    "18084735212689411"
+    "18084735212689411",
+    "18619664776063201"
   ],
   "events": [
     {
@@ -210,8 +211,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-23T04:56:43.163Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18619664776063201",
+      "post_id": "17982348867054755",
+      "username": "lifemagazine_",
+      "text": "댓글에 상품 정보 모아둘게!!\n상품명: 에너자이저 알카라인 맥스 AA 건전지\n확인 당시 표시가: 9,450원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=6408714556&itemId=21554382913&vendorItemId=88606993484&traceid=V0-113-e7d093673f389992\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-23T10:45:23.176Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-23T09:47:48.457Z",
+  "updated_at": "2026-08-23T10:45:24.691Z",
   "timezone": "Asia/Seoul"
 }
