@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-22/JAY-20260822-night-class_owner_material-night.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-08-23/JAY-20260823-afternoon-class_owner_standard-afternoon.json
