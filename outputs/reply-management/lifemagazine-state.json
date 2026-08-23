@@ -17,7 +17,8 @@
     "18112463540326738",
     "18092534021537461",
     "18109719599067537",
-    "18615568186034428"
+    "18615568186034428",
+    "18084735212689411"
   ],
   "events": [
     {
@@ -199,8 +200,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-22T10:44:22.547Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18084735212689411",
+      "post_id": "18177544498440954",
+      "username": "lifemagazine_",
+      "text": "링크랑 기본 정보는 여기 적어둘게!!\n상품명: 플러스 수정테이프 WH-605\n확인 당시 표시가: 3,470원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=9710745&itemId=8381798197&vendorItemId=93604096607&traceid=V0-113-4097d266de4e8cc7\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-23T04:56:43.163Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-23T03:26:14.837Z",
+  "updated_at": "2026-08-23T04:56:44.297Z",
   "timezone": "Asia/Seoul"
 }
