@@ -1,0 +1,41 @@
+{
+  "id": "OFFNOTE-20260824-night-copy-hook-package",
+  "content_id": "copy-hook-package",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "date": "2026-08-24",
+  "slot": "night",
+  "topic": "카피라이팅",
+  "topic_tag": "카피라이팅",
+  "status": "approved",
+  "created_at": "2026-08-24T11:02:24.875Z",
+  "source": "github-actions-offnote-auto-generator",
+  "recommended_publish_time": "21:30 KST",
+  "content_mode": "digital_nomad_personal_note",
+  "pillar": "offnote_unfinished_work_record",
+  "record_shape": "scene",
+  "source_mode": "curated_evergreen_observation",
+  "manual_input_id": "",
+  "subject_cluster": "content",
+  "record_ending_family": "observation",
+  "line_band": "medium",
+  "portfolio": "copywriting",
+  "funnel_stage": "service_inbound",
+  "threads_text": "홍보 문구를 여러 개 뽑아달라는 요청을 받으면\n처음부터 멋있는 문장을 만들기보다 누가 읽을지부터 물어봄\n같은 상품도 처음 보는 사람과 이미 써본 사람에게 할 말이 달라서\n카피는 단어를 고르는 일보다 대상을 좁히는 데 시간이 더 들어감",
+  "thread_comments": [],
+  "cardnews_slides": [],
+  "offnote_tone_profile": {
+    "voice": "디지털로 일하고 만들고 수익을 만드는 여러 방식을 실제 장면으로 기록하는 노트",
+    "structure": "실제 일일 입력이 있으면 우선 사용하고, 없으면 검증된 상시 관찰형 소재에서 자동 생성",
+    "ending_policy": "미결정·완료·관찰·다음 생각·실제 질문을 분산하며, 교훈과 독자 교육으로 닫지 않음",
+    "portfolio_policy": "기존 일상 기록과 대행·콘텐츠·웹·디지털상품·제휴·강의 준비 소재를 보존하고, 실제 입력이 없을 때만 검증된 관찰 풀에서 균형 순환",
+    "course_funnel_policy": "온라인 강의를 직접 홍보하지 않고, 실제 작업·실험·정리 과정에서 강의로 확장할 만한 문제만 메타데이터로 축적"
+  },
+  "safety_rules": [
+    "Do not invent a client name or exact performance number.",
+    "Use daily fact input if available, otherwise use curated observation pool safely.",
+    "Do not add a KakaoTalk, Instagram, materials, or generic comment CTA.",
+    "Do not add a lesson, value statement, or polished conclusion after the event."
+  ]
+}
