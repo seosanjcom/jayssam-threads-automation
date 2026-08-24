@@ -19,7 +19,8 @@
     "18109719599067537",
     "18615568186034428",
     "18084735212689411",
-    "18619664776063201"
+    "18619664776063201",
+    "18092177210541170"
   ],
   "events": [
     {
@@ -221,8 +222,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-08-23T10:45:23.176Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18092177210541170",
+      "post_id": "18076349312342891",
+      "username": "lifemagazine_",
+      "text": "링크랑 기본 정보는 여기 적어둘게!!\n상품명: 듀라셀 오리지널 AAA 건전지, 20개입, 1개\n확인 당시 표시가: 13,900원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=7104553961&itemId=14516512583&vendorItemId=4949572312&traceid=V0-113-a288cfa2bb3e4d06\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-08-24T10:07:52.137Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-08-24T09:08:49.114Z",
+  "updated_at": "2026-08-24T10:07:53.240Z",
   "timezone": "Asia/Seoul"
 }
