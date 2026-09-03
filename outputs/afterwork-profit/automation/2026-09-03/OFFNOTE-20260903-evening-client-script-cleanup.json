@@ -1,0 +1,41 @@
+{
+  "id": "OFFNOTE-20260903-evening-client-script-cleanup",
+  "content_id": "client-script-cleanup",
+  "account": "offnote.kr",
+  "account_name": "오프노트",
+  "project": "afterwork-profit",
+  "date": "2026-09-03",
+  "slot": "evening",
+  "topic": "반복 작업 정리",
+  "topic_tag": "업무자동화",
+  "status": "approved",
+  "created_at": "2026-09-03T05:01:17.306Z",
+  "source": "github-actions-offnote-auto-generator",
+  "recommended_publish_time": "15:30 KST",
+  "content_mode": "digital_nomad_personal_note",
+  "pillar": "offnote_unfinished_work_record",
+  "record_shape": "scene",
+  "source_mode": "curated_evergreen_observation",
+  "manual_input_id": "",
+  "subject_cluster": "automation",
+  "record_ending_family": "open_thought",
+  "line_band": "medium",
+  "portfolio": "automation_build",
+  "funnel_stage": "service_proof",
+  "threads_text": "반복되는 파일 정리 작업을 계속 손으로 하고 있길래\n어떤 순서로 움직이는지 먼저 적어봤음\n코드를 짜는 건 그다음이고, 의외로 중간에 사람이 판단하는 부분이 제일 많더라\n자동화는 버튼 하나보다 일을 쪼개보는 데서 시작되는 듯",
+  "thread_comments": [],
+  "cardnews_slides": [],
+  "offnote_tone_profile": {
+    "voice": "디지털로 일하고 만들고 수익을 만드는 여러 방식을 실제 장면으로 기록하는 노트",
+    "structure": "실제 일일 입력이 있으면 우선 사용하고, 없으면 검증된 상시 관찰형 소재에서 자동 생성",
+    "ending_policy": "미결정·완료·관찰·다음 생각·실제 질문을 분산하며, 교훈과 독자 교육으로 닫지 않음",
+    "portfolio_policy": "기존 일상 기록과 대행·콘텐츠·웹·디지털상품·제휴·강의 준비 소재를 보존하고, 실제 입력이 없을 때만 검증된 관찰 풀에서 균형 순환",
+    "course_funnel_policy": "온라인 강의를 직접 홍보하지 않고, 실제 작업·실험·정리 과정에서 강의로 확장할 만한 문제만 메타데이터로 축적"
+  },
+  "safety_rules": [
+    "Do not invent a client name or exact performance number.",
+    "Use daily fact input if available, otherwise use curated observation pool safely.",
+    "Do not add a KakaoTalk, Instagram, materials, or generic comment CTA.",
+    "Do not add a lesson, value statement, or polished conclusion after the event."
+  ]
+}
