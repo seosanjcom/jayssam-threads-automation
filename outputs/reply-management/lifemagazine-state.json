@@ -22,7 +22,8 @@
     "18619664776063201",
     "18092177210541170",
     "18125222332700446",
-    "18289764772292636"
+    "18289764772292636",
+    "18024105647697361"
   ],
   "events": [
     {
@@ -254,8 +255,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-09-09T09:53:27.487Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18024105647697361",
+      "post_id": "18157103701507140",
+      "username": "lifemagazine_",
+      "text": "댓글에 상품 정보 모아둘게!!\n상품명: 코멧 깨끗한 천연펄프 2겹 키친타올 150매\n확인 당시 표시가: 6,990원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=169280610&itemId=484461411&vendorItemId=4220116848&traceid=V0-113-4ae8b097aa58b84c&pt=0&slot=1\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-09-10T09:51:12.131Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-09-10T04:54:43.779Z",
+  "updated_at": "2026-09-10T09:51:12.354Z",
   "timezone": "Asia/Seoul"
 }
