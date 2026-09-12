@@ -23,7 +23,8 @@
     "18092177210541170",
     "18125222332700446",
     "18289764772292636",
-    "18024105647697361"
+    "18024105647697361",
+    "17902167408579316"
   ],
   "events": [
     {
@@ -265,8 +266,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-09-10T09:51:12.131Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "17902167408579316",
+      "post_id": "18115729507957980",
+      "username": "lifemagazine_",
+      "text": "링크랑 기본 정보는 여기 적어둘게!!\n상품명: 홈플래닛 스테인레스 디지털 백라이팅 주방저울 1kg\n확인 당시 표시가: 6,590원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=1541104559&itemId=2249520008&vendorItemId=70246910450&traceid=V0-113-b1d4661f7e1becc5&pt=0&slot=5\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-09-12T13:39:31.846Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-09-12T09:27:02.780Z",
+  "updated_at": "2026-09-12T13:39:32.506Z",
   "timezone": "Asia/Seoul"
 }
