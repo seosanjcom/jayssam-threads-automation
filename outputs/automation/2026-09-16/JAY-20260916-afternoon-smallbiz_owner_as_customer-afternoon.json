@@ -1,0 +1,47 @@
+{
+  "id": "JAY-20260916-afternoon-smallbiz_owner_as_customer-afternoon",
+  "content_id": "smallbiz_owner_as_customer-afternoon",
+  "date": "2026-09-16",
+  "slot": "afternoon",
+  "account": "27960473083547672",
+  "status": "approved",
+  "title": "사장님이 손님 자리에서 보면 달라지는 것",
+  "topic": "사장님이 손님 자리에서 보면 달라지는 것",
+  "topic_tag": "소상공인 마케팅",
+  "pillar": "small_business_marketing_education",
+  "persona_axis": "B",
+  "persona_label": "직장인·소상공인 실무 스킬 컨설턴트",
+  "collaboration_fit": [
+    "교육 플랫폼",
+    "러닝 커뮤니티",
+    "기업 실무교육",
+    "직무 전환 프로그램"
+  ],
+  "content_type": "practical_education_participation_note",
+  "angle": "교육 현장 메모",
+  "threads_text": "가게 홍보물을 만들 때 사장님께 손님 입장에서 한 번 읽어보라고 한다.\n\n당연히 알 거라고 생각했던 위치, 가격, 예약 방법이 빠져 있는 경우가 정말 많다. 운영하는 사람에게 익숙한 건 손님에겐 처음 보는 정보다.\n\n내 사업을 제3자 눈으로 보는 연습. 마케팅 수업에서 그게 제일 어렵고 제일 중요하다.\n\n📌 문장 쓰기 전에 ‘손님이 여기서 제일 궁금해할 게 뭘까’ 먼저 적어보면 글이 훨씬 선명해져.\n\n💬 내 가게 홍보하면서 제일 설명하기 까다로웠던 적 있지? 알려줘~!",
+  "thread_comments": [],
+  "local_media_paths": [],
+  "source_urls": [],
+  "source_note": "제이쌤의 실무 교육·소상공인 마케팅·진로 강의 현장에서 나온 생각",
+  "created_at": "2026-09-16T15:48:04+09:00",
+  "editorial_rules": {
+    "strategy_skill": "jayssam-threads-content-strategy",
+    "voice": "30대 초반 여성 강사의 따뜻하고 편안한 대화체 (ㅎㅎ, ㅠㅠ, 있거든, 그런 거지, ~해, 알려줘~!)",
+    "persona_mix": "B 55% 내외, A 15%, C 15%, D 15%; 같은 과목이 아니라 문제 장면 기준으로 순환",
+    "structure": "첫 장면의 문제 → 현장에서 드러난 원인 → 강사가 바꾼 판단 또는 작업 순서 → 독자가 다음 장면을 상상할 수 있는 끝",
+    "collaboration_rule": "제품·플랫폼을 먼저 칭찬하지 않고 실제 파일·수강생 반응·운영 장면에서 필요성이 생길 때만 언급",
+    "topic_tag_policy": "본문 해시태그 나열 없이 내용과 가장 가까운 Threads 토픽 태그 한 개만 API에 전달",
+    "avoid": [
+      "아동·학부모 소재",
+      "뉴스 요약",
+      "AI 설명체",
+      "학습지식 해설",
+      "하대형 명령",
+      "공격적·비하 표현",
+      "과장된 약속",
+      "같은 종결어 반복"
+    ],
+    "dedupe_days": 21
+  }
+}
