@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-09-18/JAY-20260918-afternoon-smallbiz_real_customer-afternoon.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-09-20/JAY-20260920-afternoon-sns_customer_not_algorithm-afternoon.json
