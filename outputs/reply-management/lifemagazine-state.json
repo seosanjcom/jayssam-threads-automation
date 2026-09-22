@@ -25,7 +25,8 @@
     "18289764772292636",
     "18024105647697361",
     "17902167408579316",
-    "18124924606883051"
+    "18124924606883051",
+    "18182573527422607"
   ],
   "events": [
     {
@@ -287,8 +288,18 @@
       "reason": "owned_by_me",
       "detected_at": "2026-09-18T11:28:11.293Z",
       "reply_status": "ignored"
+    },
+    {
+      "reply_id": "18182573527422607",
+      "post_id": "18126907867828568",
+      "username": "lifemagazine_",
+      "text": "제품 정보는 댓글에 깔끔히 정리해둘게!!\n상품명: 로이잠 짱짱한 논슬립 어깨뿔방지 회전형 옷걸이\n확인 당시 표시가: 7,800원 (가격은 변동될 수 있어요)\n제품 링크: https://link.coupang.com/re/AFFSDP?lptag=AF4242160&pageKey=9647786550&itemId=28833800915&vendorItemId=95768222541&traceid=V0-113-7bb2f275c1194cbe&pt=0&slot=5\n\n이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+      "action": "ignore",
+      "reason": "owned_by_me",
+      "detected_at": "2026-09-22T07:47:32.609Z",
+      "reply_status": "ignored"
     }
   ],
-  "updated_at": "2026-09-22T01:38:59.628Z",
+  "updated_at": "2026-09-22T07:47:32.774Z",
   "timezone": "Asia/Seoul"
 }
