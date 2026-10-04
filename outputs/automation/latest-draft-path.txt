@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-10-03/JAY-20261003-night-b_ai_result_check-night.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-10-04/JAY-20261004-afternoon-b_career_job_posting_tool-afternoon.json
