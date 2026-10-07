@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-10-04/JAY-20261004-night-c_solo_channel_stack-night.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-10-07/JAY-20261007-night-b_excel_invoice_cleanup-night.json
