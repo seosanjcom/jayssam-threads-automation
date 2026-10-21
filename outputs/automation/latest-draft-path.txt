@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-10-20/JAY-20261020-night-c_solo_content_routine-night.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-10-21/JAY-20261021-afternoon-c_solo_price_sheet-afternoon.json
