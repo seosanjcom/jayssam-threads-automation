@@ -1,1 +1,1 @@
-/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-11-03/JAY-20261103-night-excel_wrong_total-night.json
+/home/runner/work/jayssam-threads-automation/jayssam-threads-automation/outputs/automation/2026-11-04/JAY-20261104-afternoon-hwp_official_document-afternoon.json
