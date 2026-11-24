@@ -1,0 +1,47 @@
+{
+  "id": "JAY-20261124-afternoon-photoshop_banner_question-afternoon",
+  "content_id": "photoshop_banner_question-afternoon",
+  "date": "2026-11-24",
+  "slot": "afternoon",
+  "account": "27960473083547672",
+  "status": "approved",
+  "title": "배너를 만들기 전에 묻는 질문",
+  "topic": "배너를 만들기 전에 묻는 질문",
+  "topic_tag": "포토샵",
+  "pillar": "practical_tool_education",
+  "persona_axis": "B",
+  "persona_label": "직장인·소상공인 실무 스킬 컨설턴트",
+  "collaboration_fit": [
+    "교육 플랫폼",
+    "러닝 커뮤니티",
+    "기업 실무교육",
+    "직무 전환 프로그램"
+  ],
+  "content_type": "practical_education_participation_note",
+  "angle": "교육 현장 메모",
+  "threads_text": "포토샵으로 배너를 만들기 전에 나는 늘 묻는다. 이걸 본 사람이 3초 안에 뭘 알아야 하냐고.\n\n사진이 예쁘고 글자가 많아도 답이 안 나오면 그냥 복잡한 이미지가 된다. 할인인지, 예약인지, 신메뉴인지 하나부터 정해야 한다.\n\n디자인 감각은 색을 많이 쓰는 데서 안 나온다. 뺄 말을 고르는 데서 나온다.\n\n📌 홍보물 만들 때 폰트 종류만 두 개 이하로 줄여도 디자인이 훨씬 정돈돼 보여 ㅎㅎ\n\n💬 광고 만들 때 제일 고민되는 부분이 뭔지 댓글로 남겨봐~!",
+  "thread_comments": [],
+  "local_media_paths": [],
+  "source_urls": [],
+  "source_note": "제이쌤의 실무 교육·소상공인 마케팅·진로 강의 현장에서 나온 생각",
+  "created_at": "2026-11-24T15:20:21+09:00",
+  "editorial_rules": {
+    "strategy_skill": "jayssam-threads-content-strategy",
+    "voice": "30대 초반 여성 강사의 따뜻하고 편안한 대화체 (ㅎㅎ, ㅠㅠ, 있거든, 그런 거지, ~해, 알려줘~!)",
+    "persona_mix": "B 55% 내외, A 15%, C 15%, D 15%; 같은 과목이 아니라 문제 장면 기준으로 순환",
+    "structure": "첫 장면의 문제 → 현장에서 드러난 원인 → 강사가 바꾼 판단 또는 작업 순서 → 독자가 다음 장면을 상상할 수 있는 끝",
+    "collaboration_rule": "제품·플랫폼을 먼저 칭찬하지 않고 실제 파일·수강생 반응·운영 장면에서 필요성이 생길 때만 언급",
+    "topic_tag_policy": "본문 해시태그 나열 없이 내용과 가장 가까운 Threads 토픽 태그 한 개만 API에 전달",
+    "avoid": [
+      "아동·학부모 소재",
+      "뉴스 요약",
+      "AI 설명체",
+      "학습지식 해설",
+      "하대형 명령",
+      "공격적·비하 표현",
+      "과장된 약속",
+      "같은 종결어 반복"
+    ],
+    "dedupe_days": 21
+  }
+}
